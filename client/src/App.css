@@ -4,6 +4,6 @@
   box-sizing: border-box;
 }
 
-.cardHighlight {
-  min-height: 100%;
+.nav {
+  background-color: aquamarine;
 }

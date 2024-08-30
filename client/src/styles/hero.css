@@ -1,0 +1,27 @@
+.hero-carousel {
+  position: relative;
+  height: 100vh; /* Full viewport height */
+  overflow: hidden; /* Hide overflow */
+}
+
+.carousel-item img {
+  width: 100vw; /* Full viewport width */
+  height: 100vh; /* Full viewport height */
+  object-fit: cover; /* Ensure images cover the area */
+}
+
+.carousel-caption {
+  bottom: 20%; /* Adjust caption position if needed */
+  text-align: center; /* Center align text */
+  color: #fff; /* White text color */
+  background: rgba(0, 0, 0, 0.5); /* Semi-transparent background for readability */
+  padding: 10px; /* Padding around caption text */
+  border-radius: 5px; /* Optional: Rounded corners for the caption */
+}
+
+.carousel-fade .carousel-item-next,
+.carousel-fade .carousel-item-prev,
+.carousel-fade .carousel-item.active {
+  transition: opacity 0.5s ease;
+  opacity: 1;
+}
