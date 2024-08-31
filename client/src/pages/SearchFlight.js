@@ -1,13 +1,21 @@
 // import Banner from "../components/Banner";
 // import Highlights from "../components/Highlights";
 // import Course from "../components/Course"
-import FlightSelector from "../components/FlightSearchSelector";
+import FlightSearchSelector from "../components/FlightSearch";
+import { Button, Row, Col } from "react-bootstrap";
+import { DepartureSearchSelector } from "../components/FlightSearch";
+import NavBar from "../components/NavBar";
 
 export default function SearchFlight() {
   return (
     <div>
-        <h1>Search Flight Page</h1>
-        <FlightSelector />
+      <NavBar />
+      <div class='container fluid'>
+          
+          <h1>Where would you like to go? </h1>
+          <FlightSearchSelector />
+          <DepartureSearchSelector />
+      </div>
     </div>
   );
 }

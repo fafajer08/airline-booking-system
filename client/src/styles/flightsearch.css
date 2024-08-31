@@ -1,0 +1,66 @@
+* {
+    font-family: "Manrope", sans-serif;
+}
+
+.flight-search-selector {
+    padding: 10px 40px 10px 10px; /* Padding to make room for the custom logo */
+    border: none;
+    border-radius: 10px; 
+    background-color: #fff;
+    color: #336749;
+    font-size: 20px;
+    /* width: 25%;*/
+    display: block; /* Ensures it takes up space */
+    margin: 0 auto; /* Horizontally center the select element */
+    background-image: url('../../public/dropdownicon.png'); /*Custom logo */
+    background-repeat: no-repeat; /* Prevent repeating the logo */
+    background-position: right 10px center; /* Position logo on the right side */
+    background-size: 20px 20px; /* Adjust size of the logo */
+    -webkit-appearance: none; /* Remove default styling in some browsers */
+    -moz-appearance: none; /* Remove default styling in some browsers */
+    appearance: none; /* Remove default styling in all browsers */
+    font-weight: 600;
+  }
+  
+  .flight-search-selector option:hover {
+    background-color: #336749 !important; /* Change color on hover */
+    color: #fff; /* Optional: Change text color on hover */
+  }
+
+  /* offset the input element title */
+  .flight-search p {
+    display: inline-flex; 
+    position: relative; 
+    top: -15px; /* offset the label to touch border */
+    left: 10px; /* offset the label to touch border */
+    font-size: 12px; 
+    font-weight: bold; 
+    color: #336749; 
+    background-color: white; /* set back ground to white so it cuts the border */
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  /* element border */
+  .box {
+    border: 2px solid #d4d4d4;
+    border-radius: 12px;
+    min-width: 300px;
+    height: 60px;
+  }
+
+  /* set all icons size (plane, calendar) */
+  img {
+    width: 25px;
+    height: 25px;
+  }
+
+  .swap-icon {
+    width: 35px;
+    height: 35px;
+  }
+
+  .departure-port-code {
+    font-size: 20px;
+    font-weight: 600;
+  }
