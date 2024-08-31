@@ -1,27 +1,140 @@
-.hero-carousel {
+/* Basic Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.hero {
+  background-image: url("../images/hero.png"); /* Use your image path here */
+  background-size: cover;
+  background-position: center;
+  color: white;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 20px;
+}
+
+.hero-content {
+  max-width: 800px;
   position: relative;
-  height: 100vh; /* Full viewport height */
-  overflow: hidden; /* Hide overflow */
+  z-index: 10;
 }
 
-.carousel-item img {
-  width: 100vw; /* Full viewport width */
-  height: 100vh; /* Full viewport height */
-  object-fit: cover; /* Ensure images cover the area */
+.hero h1 {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
 }
 
-.carousel-caption {
-  bottom: 20%; /* Adjust caption position if needed */
-  text-align: center; /* Center align text */
-  color: #fff; /* White text color */
-  background: rgba(0, 0, 0, 0.5); /* Semi-transparent background for readability */
-  padding: 10px; /* Padding around caption text */
-  border-radius: 5px; /* Optional: Rounded corners for the caption */
+.hero p {
+  font-size: 1.2rem;
+  margin-bottom: 20px;
 }
 
-.carousel-fade .carousel-item-next,
-.carousel-fade .carousel-item-prev,
-.carousel-fade .carousel-item.active {
-  transition: opacity 0.5s ease;
-  opacity: 1;
+.form-container {
+  width: 100%;
+  max-width: 800px;
+}
+
+.button-group {
+  margin-bottom: -1px; /* Adjust the space between buttons and form */
+  display: flex;
+  justify-content: center;
+}
+
+.trip-btn {
+  padding: 10px 20px;
+  border-radius: 4px;
+  background-color: #336749;
+  color: white;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin: 0 5px;
+}
+
+.trip-btn:hover {
+  background-color: #ff3b3b;
+}
+
+.search-form-wrapper {
+  background-color: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  height: auto;
+  max-width: 600px; /* Adjust the maximum width */
+}
+
+.search-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.row-cols-1 {
+  display: flex;
+  flex-direction: column;
+}
+
+.row-cols-md-4 {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.col {
+  flex: 1;
+  padding: 10px;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 5px;
+  color: black;
+  text-align: left;
+}
+
+.form-control {
+  width: 100%;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ced4da;
+  font-size: 1rem;
+}
+
+.text-muted {
+  color: #6c757d;
+}
+
+.btn-container {
+  margin-top: 20px;
+}
+
+.btn-search {
+  padding: 10px 20px;
+  border-radius: 4px;
+  background-color: #336749;
+  color: white;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-search:hover {
+  background-color: #ff3b3b;
+}
+
+/* Media Queries for Responsiveness */
+@media (min-width: 768px) {
+  .row-cols-md-4 {
+    flex-direction: row;
+  }
 }
