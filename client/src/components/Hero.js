@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "../styles/hero.css"; 
+import  'bootstrap-icons/font/bootstrap-icons.css';
 
 const HeroSection = () => {
   const [formType, setFormType] = useState('round-trip');
@@ -95,7 +96,7 @@ const HeroSection = () => {
               {/* Search Flight Button */}
               <div className="btn-container d-flex justify-content-center mt-3">
                 <button type="submit" className="btn btn-primary btn-search">
-                  Search Flights <i className="bi bi-search"></i>
+                  Search Flights <i className="bi bi-search ms-2"></i>
                 </button>
               </div>
             </form>

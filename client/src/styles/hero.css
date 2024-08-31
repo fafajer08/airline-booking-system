@@ -167,6 +167,7 @@
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
+
 .btn-search:hover{
   background-color: #007A8C;
   transform: scale(1.1);
