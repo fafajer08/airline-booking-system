@@ -6,7 +6,7 @@
 }
 
 .hero {
-  background-image: url("../images/hero.png"); /* Use your image path here */
+  background-image: url("../images/hero.png");
   background-size: cover;
   background-position: center;
   color: white;
@@ -17,6 +17,7 @@
   justify-content: center;
   text-align: center;
   padding: 20px;
+  overflow: hidden;
 }
 
 .hero-content {
@@ -29,7 +30,7 @@
 }
 
 .hero h1 {
-  font-size: 2.5rem;
+  font-size: 3rem;
   margin-bottom: 10px;
 }
 

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../styles/hero.css"; // Import the corresponding CSS file
+import "../styles/hero.css"; 
 
 const HeroSection = () => {
   const [formType, setFormType] = useState('round-trip');
