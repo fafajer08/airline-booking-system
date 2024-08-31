@@ -23,6 +23,9 @@
   max-width: 800px;
   position: relative;
   z-index: 10;
+  /* Apply the slide-in effect here */
+  transform: translateY(-100%);
+  animation: slide-in 1s forwards;
 }
 
 .hero h1 {
@@ -41,7 +44,7 @@
 }
 
 .button-group {
-  margin-bottom: -1px; /* Adjust the space between buttons and form */
+  margin-bottom: 0; /* Adjust the space between buttons and form */
   display: flex;
   justify-content: center;
 }
@@ -55,21 +58,26 @@
   font-size: 1rem;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  margin: 0 5px;
+  margin: 0;
+}
+
+.trip-btn.active {
+  background-color: white;
+  color: #007A8C;
 }
 
 .trip-btn:hover {
-  background-color: #ff3b3b;
+  background-color: #007A8C;
 }
 
 .search-form-wrapper {
   background-color: white;
-  border-radius: 8px;
+  border-radius: 30px;
   padding: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   width: 100%;
-  height: auto;
   max-width: 600px; /* Adjust the maximum width */
+  position: relative;
 }
 
 .search-form {
@@ -87,18 +95,19 @@
 .row-cols-md-4 {
   display: flex;
   flex-wrap: wrap;
+  gap: 15px; /* Add spacing between columns */
 }
 
 .col {
   flex: 1;
+  display: flex;
+  flex-direction: column;
   padding: 10px;
 }
 
-.form-label {
-  display: block;
-  margin-bottom: 5px;
-  color: black;
-  text-align: left;
+.input-wrapper {
+  position: relative;
+  width: 100%;
 }
 
 .form-control {
@@ -109,17 +118,45 @@
   font-size: 1rem;
 }
 
-.text-muted {
+.input-hint {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: white;
   color: #6c757d;
+  font-size: 0.9rem;
+  padding-left: 5px;
+  border-left: 1px solid #ced4da; /* Vertical line */
+  height: 100%;
+  line-height: 32px; /* Adjust based on input height */
+}
+
+.form-label {
+  display: block;
+  font-size: 15px;
+  margin-bottom: 5px;
+  color: black;
+  text-align: left;
 }
 
 .btn-container {
   margin-top: 20px;
 }
 
+.btn-container {
+  position: absolute; /* Position the button container absolutely */
+  bottom: -25px; /* Distance from the bottom of the wrapper */
+  left: 50%; /* Center horizontally */
+  transform: translateX(-50%); /* Center the button container horizontally */
+  width: 100%; /* Ensure it takes the full width of the wrapper */
+  display: flex;
+  justify-content: center; /* Center the button horizontally */
+}
+
 .btn-search {
   padding: 10px 20px;
-  border-radius: 4px;
+  border-radius: 10px;
   background-color: #336749;
   color: white;
   border: none;
@@ -127,9 +164,21 @@
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
+.btn-search:hover{
+  background-color: #007A8C;
+  transform: scale(1.1);
+}
 
-.btn-search:hover {
-  background-color: #ff3b3b;
+/* Slide-in Effect */
+@keyframes slide-in {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 /* Media Queries for Responsiveness */

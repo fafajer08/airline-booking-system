@@ -2,13 +2,15 @@
   background-color: #007A8C;
 }
 
-.logo-name{
+.logo-name {
   font-size: 28px;
 }
+
 .nav .navbar-brand,
 .nav .nav-link {
   color: white;
 }
+
 .nav-link {
   font-size: 20px;
 }
@@ -19,6 +21,7 @@
 
 .logo {
   width: 165px;
+  height: 60px;
   margin-right: 15px;
   padding: 10px;
 }
