@@ -18,35 +18,52 @@
     background-size: 20px 20px; /* Adjust size of the logo */
     -webkit-appearance: none; /* Remove default styling in some browsers */
     -moz-appearance: none; /* Remove default styling in some browsers */
-    appearance: none; /* Remove default styling in all browsers */
+    appearance: none; /* Remove default styling in all browsers  */
     font-weight: 600;
   }
   
+  .flight-search-selector {
+    cursor: pointer; /* Change cursor to pointer */
+  }
+
   .flight-search-selector option:hover {
     background-color: #336749 !important; /* Change color on hover */
     color: #fff; /* Optional: Change text color on hover */
   }
 
+  .flight-search {
+  
+    border: 2px solid black;
+  }
+
+
+
+
   /* offset the input element title */
   .flight-search p {
     display: inline-flex; 
     position: relative; 
-    top: -15px; /* offset the label to touch border */
-    left: 10px; /* offset the label to touch border */
+    top: -15px; 
+    left: 10px; 
     font-size: 12px; 
-    font-weight: bold; 
+    font-weight: 400; 
     color: #336749; 
     background-color: white; /* set back ground to white so it cuts the border */
     padding-left: 10px;
     padding-right: 10px;
   }
 
-  /* element border */
+  /* set border for containers*/
   .box {
     border: 2px solid #d4d4d4;
     border-radius: 12px;
     min-width: 300px;
-    height: 60px;
+    height: 65px;
+  }
+
+  /* set the date selector container size */
+  .departure-date {
+    min-width: 190px;
   }
 
   /* set all icons size (plane, calendar) */
@@ -55,12 +72,33 @@
     height: 25px;
   }
 
+  /* swap icon between departure and arrival container */
   .swap-icon {
     width: 35px;
     height: 35px;
   }
 
-  .departure-port-code {
+
+  .hidden-datepicker {
+    display: none; /* Hide the DatePicker input if desired */
+  }
+  
+  .date-display {
     font-size: 20px;
     font-weight: 600;
+  }
+  
+  .day-display {
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+
+  .date-selector-container {
+    display: flex;
+    /* justify-content: space-between; */
+    align-items: center;
+    padding: 10px;
+    position: relative;
+    top: -45px;
   }

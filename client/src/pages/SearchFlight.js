@@ -13,8 +13,10 @@ export default function SearchFlight() {
       <div class='container fluid'>
           
           <h1>Where would you like to go? </h1>
-          <FlightSearchSelector />
-          <DepartureSearchSelector />
+          <div>
+            <FlightSearchSelector />
+            <DepartureSearchSelector />
+          </div>
       </div>
     </div>
   );
