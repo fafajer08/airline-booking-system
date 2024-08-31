@@ -68,7 +68,9 @@
 
 .trip-btn:hover {
   background-color: #007A8C;
+  color: white;
 }
+
 
 .search-form-wrapper {
   background-color: white;
