@@ -345,19 +345,21 @@ function FlightSearchSelector() {
 
       {tripType === 'oneWay' && (
         <div className=''>
-          <div className=''>      
+          <div className='d-inline-flex'>      
             <PortSelector  label="DEPARTURE AIRPORT"  selectedPort={departureAirport} setSelectedPort={setDepartureAirport} />
             <SwapIcon onSwap={swapAirports} />
             <PortSelector label="DESTINATION AIRPORT" selectedPort={destinationAirport} setSelectedPort={setDestinationAirport}  />
-            <DateSelector label="DEPARTURE DATE" />
+            <DateSelector className="" label="DEPARTURE DATE" />
           </div> 
-          <div className=''>      
+          <div className=' d-inline-flex'>      
               <PaxSelector type="ADULTS" />
               <PaxSelector type="CHILDREN" />
               <PaxSelector type="INFANTS" />
               <PromoCodeInput /> 
           </div> 
-          <SearchFlightButton />
+          <div className='d-flex'>
+            <SearchFlightButton className='ms-auto'/>
+          </div>
         </div>
       )}
       {tripType === 'roundTrip' && (

@@ -20,6 +20,7 @@
 
 
 .swap-icon {
+  display: inline-block;
   height: 50px !important;
   width: 50px !important;
 }

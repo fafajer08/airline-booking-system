@@ -11,12 +11,11 @@ export default function SearchFlight() {
   return (
     <div>
       <NavBar />
-      <div className=''>
+      <div className='container'>
           
           <h1>Where would you like to go? </h1>
           <form>
           <div className="">
-          <DateSelector label="DEPARTURE DATE" />
             <FlightSearchSelector />
           </div>
           </form>
