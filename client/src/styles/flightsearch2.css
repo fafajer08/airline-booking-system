@@ -1,0 +1,229 @@
+* {
+  font-family: "Manrope", sans-serif;
+}
+
+.swap-icon {
+  position: relative;
+  height: 32px !important;
+  width: 32px !important;
+  left: -7px;
+  z-index: 99;
+}
+
+#destination-shift-left {
+  position: relative;
+  left: -12px;
+}
+.flight-search-selector {
+  padding: 10px 40px 10px 10px; /* Padding to make room for the custom logo */
+  border: none;
+  border-radius: 10px; 
+  background-color: #fff;
+  color: #336749;
+  font-size: 20px;
+  /* width: 25%;*/
+  display: block; /* Ensures it takes up space */
+  margin: 0 auto; /* Horizontally center the select element */
+  background-image: url('../../public/dropdownicon.png'); /*Custom logo */
+  background-repeat: no-repeat; /* Prevent repeating the logo */
+  background-position: right 10px center; /* Position logo on the right side */
+  background-size: 25px 25px; /* Adjust size of the logo */
+  -webkit-appearance: none; /* Remove default styling in some browsers */
+  -moz-appearance: none; /* Remove default styling in some browsers */
+  appearance: none; /* Remove default styling in all browsers  */
+  font-weight: 600;
+}
+
+.flight-search-selector {
+  cursor: pointer; /* Change cursor to pointer */
+}
+
+
+/* DATE SELECTOR */
+
+.date-selector-hidden-datepicker {
+  display: none; /* Hide the DatePicker input if desired */
+}
+
+.date-selector-outer-container {
+  border: 2px solid #d4d4d4;
+  border-radius: 12px;
+  height: 65px;
+  width: 190px;
+}
+
+.date-selector-inner-container {
+  display: inline-flex;
+  /* justify-content: space-between; */
+  align-items: center;
+  padding-top: 12px;
+  padding-left: 10px;
+  padding-right: 10px;
+  position: relative;
+  top: -40px;
+  width: 190px;
+}
+
+.date-selector-label {
+  display: inline-flex; 
+  position: relative; 
+  top: -15px; 
+  left: 8px; 
+  font-size: 12px; 
+  font-weight: 400; 
+  color: #336749; 
+  background-color: white; /* set back ground to white so it cuts the border */
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.date-selector-icons {
+  width: 25px;
+  height: 25px;
+}
+
+.date-selector-date-display {
+  font-size: 20px;
+  font-weight: 600;
+  position: absolute;
+  left: 42px;
+  color: #1F2937;
+}
+
+
+.date-selector-division-icon {
+  position: relative;
+  left: 35px;
+  width: 6px;
+  height: 25px;
+}
+
+.date-selector-day-month-display {
+  position: relative;
+  left: 48px;
+  color: #1F2937;
+}
+
+.date-selector-day-display {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.date-selector-mmmyy-display {
+  font-size: 12px;
+  color: #737373;
+  font-weight: 400;
+}
+
+.date-selector-dropdown-icon {
+  position: relative;
+  left: 75px;
+  width: 25px;
+  height: 25px;
+}
+
+/* PORT SELECTOR */
+
+.port-selector-outer-container {
+  border: 2px solid #d4d4d4;
+  border-radius: 12px;
+  height: 65px;
+  width: 300px;
+}
+
+.port-selector-inner-container {
+  display: inline-flex;
+  /* justify-content: space-between; */
+  align-items: center;
+  padding-top: 12px;
+  padding-left: 10px;
+  padding-right: 10px;
+  position: relative;
+  top: -40px;
+  width: 300px;
+}
+
+.port-selector-label {
+  display: inline-flex; 
+  position: relative; 
+  top: -15px; 
+  left: 8px; 
+  font-size: 12px; 
+  font-weight: 400; 
+  color: #336749; 
+  background-color: white; /* set back ground to white so it cuts the border */
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.port-selector-icons {
+  width: 25px;
+  height: 25px;
+}
+
+.port-selector-port-code {
+  font-size: 20px;
+  font-weight: 600;
+  position: absolute;
+  left: 40px;
+  color: #1F2937;
+}
+
+.port-selector-division-icon {
+  position: relative;
+  left: 50px; 
+  width: 6px;
+  height: 25px;
+}
+
+.port-selector-city-display {
+  font-size: 16px;
+  position: relative;
+  left: 60px;
+  color: #1F2937;
+}
+
+.port-selector-airport-display {
+  font-size: 12px;
+  position: relative;
+  left: 60px; 
+  color: #737373;
+  font-weight: 400;
+}
+
+.port-selector-dropdown-icon {
+  position: absolute;
+  right: 25px;
+}
+
+.port-selector-dropdown {
+  position: absolute;
+  top: 100%;
+  left: -2px;
+  width: 300px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  max-height: 200px; /* Optional: limit height for large lists and make it scrollable */
+  overflow-y: auto;
+  margin-top: 5px;
+}
+
+.port-selector-dropdown-item {
+  padding: 10px 15px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.port-selector-dropdown-item:hover {
+  background-color: #f0f0f0;
+}
+
+.port-select-dropdown-options {
+  font-size: 12px;
+  color: #555;
+}

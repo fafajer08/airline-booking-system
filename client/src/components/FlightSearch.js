@@ -1,6 +1,6 @@
 import Form from 'react-bootstrap/Form';
 import 'react-bootstrap';
-import '../styles/flightsearch.css';
+// import '../styles/flightsearch.css';
 import React, { useState, useRef } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -27,16 +27,58 @@ const flights = [
   }
 ];
 
-
-
 // One way / round trip / multi city picker
 function FlightSearchSelector() {
+  const [tripType, setTripType] = useState('oneway'); // Initialize state with 'oneway'
+
+  const handleTripTypeChange = (event) => {
+    setTripType(event.target.value);
+  };
+
   return (
-    <select className="flight-search-selector">
-      <option value="oneway">ONE WAY</option>
-      <option value="roundTrip">ROUND TRIP</option>
-      <option value="multiCity">MULTI-CITY</option>
-    </select>
+    <div>   
+      <select className="flight-search-selector" value={tripType} onChange={handleTripTypeChange}>
+        <option value="oneWay">ONE WAY</option>
+        <option value="roundTrip">ROUND TRIP</option>
+        <option value="multiCity">MULTI CITY</option>
+      </select>
+
+      {tripType === 'oneWay' && (
+        <div className='d-flex flex-inline container'>
+            <FlightDepartureSelector />
+            <FlightDestinationSelector />
+            <DepartureDateSelector />
+            <PaxSelector type="ADULT" />
+        </div>
+      )}
+
+
+      {tripType === 'roundTrip' && (
+        <div className='d-flex flex-inline container'>
+            <FlightDepartureSelector />
+            <FlightDestinationSelector />
+            <DepartureDateSelector />
+            <ReturnDateSelector /> 
+        </div>
+      )}
+
+      {tripType === 'multiCity' && (
+        <div >
+          <div className='d-flex flex-inline container'>
+              <FlightDepartureSelector />
+              <FlightDestinationSelector />
+              <DepartureDateSelector />
+              <ReturnDateSelector /> 
+          </div>
+          <div className='d-flex flex-inline container'>
+              <FlightDepartureSelector />
+              <FlightDestinationSelector />
+              <DepartureDateSelector />
+              <ReturnDateSelector /> 
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -114,25 +156,6 @@ function ReturnDateSelector() {
   );
 }
 
-
-// function PortSelector() {
-
-//   return (
-//     <div>
-//       <select className="port-selector">
-//         {flights.map((flight, index) => (
-//           <option key={index} value={flight.airportCode.toLowerCase()}>
-//             {flight.cityName} ({flight.airportCode})
-//           </option>
-//         ))}
-//       </select>
-
-
-
-//     </div>
-//   );
-// }
-
 function PortSelector() {
   const [selectedPort, setSelectedPort] = useState({
     cityName: 'Davao',
@@ -151,18 +174,25 @@ function PortSelector() {
     setIsDropdownOpen(false);
   };
 
+  const truncateText = (text, maxLength) => {
+    return text.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
+  };
 
-  
+ const port = selectedPort.airportCode;
+ const cityName = selectedPort.cityName;
+ const airportName = truncateText(selectedPort.airportName, 30);
+
+
 
   return (
     <div className="port-selector-inner-container container" onClick={handlePortClick}>
       <img className="port-selector-plane-icon" src={planeUp} alt='plane icon' />
-      <span className="port-selector-port-code">{selectedPort.airportCode}</span>
+      <span className="port-selector-port-code">{port}</span>
       <img className="port-selector-division-icon" src={division} alt='division icon' />
 
       <div className="port-selector-city-airport-display">
-        <div className="port-selector-city-display">{selectedPort.cityName}</div>
-        <div className="port-selector-airport-display">{selectedPort.airportName}</div>
+        <div className="port-selector-city-display">{cityName}</div>
+        <div className="port-selector-airport-display">{airportName}</div>
       </div>
 
       <img
@@ -172,7 +202,7 @@ function PortSelector() {
         // style={{ cursor: 'pointer' }} // Optionally, make the icon clickable
       />
 
-      {isDropdownOpen && (
+ {isDropdownOpen && (
         <div className="port-selector-dropdown" ref={dropdownRef}>
           {flights.map((flight, index) => (
             <div
@@ -180,7 +210,9 @@ function PortSelector() {
               className="port-selector-dropdown-item"
               onClick={() => handlePortSelect(flight)}
             >
-              {flight.cityName} ({flight.airportCode})
+            <div className='port-select-dropdown-options'>
+              <div className="port-selector-dropdown-city">{flight.cityName} - {flight.airportName}</div>
+            </div>
             </div>
           ))}
         </div>
@@ -189,16 +221,11 @@ function PortSelector() {
   );
 }
 
-
-
-
-
 function FlightDepartureSelector() {
   return (
     <div className="return-date port-selector-outer-container container">
       <p>DEPARTURE AIRPORT</p>
       <div>
-
         <PortSelector />
       </div>
     </div>
@@ -207,7 +234,7 @@ function FlightDepartureSelector() {
 
 function FlightDestinationSelector() {
   return (
-    <div className="return-date flight-selector-outer-container">
+    <div className="return-date port-selector-outer-container container">
       <p>DESTINATION AIRPORT</p>
       <div>
         <PortSelector />
@@ -219,14 +246,67 @@ function FlightDestinationSelector() {
 
 function FlightSelector() {
   return (
-    <div className='flight-search-selector d-flex flex-inline container'>
+    <div className='d-flex flex-inline container'>
       <FlightDepartureSelector />
-      {/* <FlightDestinationSelector /> */}
+      <FlightDestinationSelector />
       <DepartureDateSelector />
-      {/* <ReturnDateSelector /> */}
+      <ReturnDateSelector /> 
     </div>
   );
 }
+
+function PaxSelector({ type }) { // Accepts type as a prop
+  const [paxCount, setPaxCount] = useState(1); // Initialize with 1 passenger
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  const handlePaxClick = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  const handlePaxSelect = (pax) => {
+    setPaxCount(pax);
+    setIsDropdownOpen(false);
+  };
+
+  const paxOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+  const typeLabel = {
+    ADULT: '(12+ YEARS)',
+    CHILD: '(2-11 YEARS)',
+    INFANT: '(UNDER 2 YEARS)',
+  }[type] || 'Passengers';
+
+  return (
+    <div className="pax-selector-outer-container">
+    <div className="pax-selector-inner-container container" onClick={handlePaxClick}>
+      <span className="pax-selector-label">{type} <span className="type-label">{typeLabel}</span> </span> 
+      <div className="pax-selector-count">{paxCount}</div>
+      <img
+        className="pax-selector-dropdown-icon"
+        src={dropDownIcon}
+        alt="dropdown icon"
+      />
+
+      {isDropdownOpen && (
+        <div className="pax-selector-dropdown" ref={dropdownRef}>
+          {paxOptions.map((pax, index) => (
+            <div
+              key={index}
+              className="pax-selector-dropdown-item"
+              onClick={() => handlePaxSelect(pax)}
+            >
+              {pax}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+    </div>
+  );
+}
+
+
 
 export default FlightSelector;
 export { FlightSearchSelector, DateSelector, DepartureDateSelector, ReturnDateSelector, PortSelector, FlightDepartureSelector, FlightDestinationSelector };
