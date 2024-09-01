@@ -9,6 +9,7 @@ import dropDownIcon from '../assets/dropdown.png';
 import calendar from '../assets/calendar.png';
 import swapIcon from '../assets/swapicon.png';
 import searchIcon from '../assets/searchicon.png';
+import '../styles/searchflight.css';
 
 
 const flights = [
@@ -343,7 +344,7 @@ function FlightSearchSelector() {
       </select>
 
       {tripType === 'oneWay' && (
-        <div className='container'>
+        <div className=''>
           <div className=''>      
             <PortSelector  label="DEPARTURE AIRPORT"  selectedPort={departureAirport} setSelectedPort={setDepartureAirport} />
             <SwapIcon onSwap={swapAirports} />

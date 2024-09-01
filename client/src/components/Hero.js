@@ -1,65 +1,6 @@
-<<<<<<< HEAD
-// import { Carousel } from 'react-bootstrap';
-// import Img from '../images/hero.png';
-// import Img2 from '../images/hero-2.png';
-// import Img3 from '../images/hero-3.png';
-// import '../styles/hero.css';
-
-// export default function HeroCarousel() {
-//   return (
-//     <div className="hero-carousel">
-//       <Carousel className="carousel-fade">
-//         <Carousel.Item>
-//           <img
-//             className="d-block w-100"
-//             src={Img}
-//             alt="First slide"
-//           />
-//           <Carousel.Caption className="carousel-caption">
-//           </Carousel.Caption>
-//         </Carousel.Item>
-//         <Carousel.Item>
-//           <img
-//             className="d-block w-100"
-//             src={Img2}
-//             alt="Second slide"
-//           />
-//           <Carousel.Caption className="carousel-caption">
-//           </Carousel.Caption>
-//         </Carousel.Item>
-//         <Carousel.Item>
-//           <img
-//             className="d-block w-100"
-//             src={Img3}
-//             alt="Third slide"
-//           />
-//           <Carousel.Caption className="carousel-caption">
-//           </Carousel.Caption>
-//         </Carousel.Item>
-//       </Carousel>
-//     </div>
-//   );
-// }
-
-import React from "react";
-import "../styles/hero.css"; // Import the corresponding CSS file
-import {
-  DateSelector,
-  PortSelector,
-  FlightDepartureSelector,
-  FlightDestinationSelector,
-  PaxSelector,
-  PromoCodeInput,
-  SearchFlightButton,
-  SwapIcon,
-  FlightSearchSelector
-} from "./SearchFlight.js";
-import '../styles/searchflight.css';
-=======
 import React, { useState } from "react";
 import "../styles/hero.css"; 
-import  'bootstrap-icons/font/bootstrap-icons.css';
->>>>>>> dbbd3fc5fde4e11ebfbbae816dd1ac2052bca376
+// import  'bootstrap-icons/font/bootstrap-icons.css';
 
 const HeroSection = () => {
   const [formType, setFormType] = useState('round-trip');
