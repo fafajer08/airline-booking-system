@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "../styles/hero.css"; 
-import  'bootstrap-icons/font/bootstrap-icons.css';
+// import  'bootstrap-icons/font/bootstrap-icons.css';
 
 const HeroSection = () => {
   const [formType, setFormType] = useState('round-trip');
@@ -99,7 +99,10 @@ const HeroSection = () => {
                   Search Flights <i className="bi bi-search ms-2"></i>
                 </button>
               </div>
+
+              
             </form>
+
           </div>
         </div>
       </div>

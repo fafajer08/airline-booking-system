@@ -1,22 +1,25 @@
-// import Banner from "../components/Banner";
-// import Highlights from "../components/Highlights";
-// import Course from "../components/Course"
-import FlightSearchSelector from "../components/FlightSearch";
+
 import { Button, Row, Col } from "react-bootstrap";
-import { DepartureSearchSelector } from "../components/FlightSearch";
+import FlightSearchSelector from "../components/SearchFlight.js";
 import NavBar from "../components/NavBar";
+import { DateSelector } from "../components/SearchFlight.js";
+
+
+
 
 export default function SearchFlight() {
   return (
     <div>
       <NavBar />
-      <div class='container fluid'>
+      <div className=''>
           
           <h1>Where would you like to go? </h1>
-          <div>
+          <form>
+          <div className="">
+          <DateSelector label="DEPARTURE DATE" />
             <FlightSearchSelector />
-            <DepartureSearchSelector />
           </div>
+          </form>
       </div>
     </div>
   );
