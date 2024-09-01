@@ -12,6 +12,7 @@ import swapIcon from '../assets/swapicon.png';
 import dropDownIcon from '../assets/dropdowngray.png';
 import calendar from '../assets/calendar.png';
 
+// One way / round trip / multi city picker
 function FlightSearchSelector() {
   return (
     <select className="flight-search-selector">
@@ -23,6 +24,7 @@ function FlightSearchSelector() {
 }
 
 
+// date selector 
 function DateSelector() {
   const [startDate, setStartDate] = useState(new Date());
   const datePickerRef = useRef(null); // Use a ref to control the DatePicker
@@ -42,22 +44,21 @@ function DateSelector() {
   const date = startDate.getDate(); // Day of the month
   const year = startDate.getFullYear().toString().slice(-2); // Last 2 digits of the year
 
-
-
   return (
-    <div className="date-selector-container d-flex flex-row">
+    <div className="date-selector-inner-container d-flex flex-row">
 
       <img src={calendar} alt='calendar icon' />
-      <span className="date-display">{startDate.getDate()}</span>
-      <img src={division} alt='divisions icon' />
+      <span className="date-display">{date}</span>
+      <img className="division-icon" src={division} alt='divisions icon' />
   
 
-      <div className="">
-        <div className="day-display">{startDate.toLocaleString('en-US', { weekday: 'short' })}</div>
-        <div className="mmmyy-display">{startDate.toLocaleString('en-US', { month: 'short' })}'{startDate.getFullYear().toString().slice(-2)}</div>
+      <div className="day-month-display">
+        <div className="day-display">{day}</div>
+        <div className="mmmyy-display">{month}'{year}</div>
       </div>
 
       <img 
+        className="dropdown-icon"
         src={dropDownIcon} 
         alt="dropdown icon" 
         onClick={handleIconClick} 
@@ -68,12 +69,36 @@ function DateSelector() {
         ref={datePickerRef}
         selected={startDate}
         onChange={handleDateChange}
-        className="hidden-datepicker" // Hide the default input if needed
+        className="hidden-datepicker date-picker" // Hide the default input if needed
         onClickOutside={() => datePickerRef.current.setOpen(false)} // Close calendar when clicking outside
       />
     </div>
   );
 }
+
+
+function DepartureDateSelector() {
+  return (
+    <div className="departure-date date-selector-outer-container">
+      <p>DEPARTURE DATE</p>
+      <div>
+        <DateSelector />
+      </div>
+    </div>
+  );
+}
+
+function ReturnDateSelector() {
+  return (
+    <div className="return-date date-selector-outer-container">
+      <p>RETURN DATE</p>
+      <div>
+        <DateSelector />
+      </div>
+    </div>
+  );
+}
+
 
 function PortSelector() {
   return (
@@ -115,6 +140,10 @@ function DepartureSearchSelector() {
           <DateSelector />
         </div>
       </div>
+
+      <DepartureDateSelector />
+      <ReturnDateSelector />
+
     </div>
   );
 }
