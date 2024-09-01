@@ -15,7 +15,7 @@
     background-image: url('../../public/dropdownicon.png'); /*Custom logo */
     background-repeat: no-repeat; /* Prevent repeating the logo */
     background-position: right 10px center; /* Position logo on the right side */
-    background-size: 20px 20px; /* Adjust size of the logo */
+    background-size: 25px 25px; /* Adjust size of the logo */
     -webkit-appearance: none; /* Remove default styling in some browsers */
     -moz-appearance: none; /* Remove default styling in some browsers */
     appearance: none; /* Remove default styling in all browsers  */
@@ -32,32 +32,8 @@
   }
 
   .flight-search {
-  
+
     border: 2px solid black;
-  }
-
-
-
-
-  /* offset the input element title */
-  .flight-search p {
-    display: inline-flex; 
-    position: relative; 
-    top: -15px; 
-    left: 10px; 
-    font-size: 12px; 
-    font-weight: 400; 
-    color: #336749; 
-    background-color: white; /* set back ground to white so it cuts the border */
-    padding-left: 6px;
-    padding-right: 6px;
-  }
-
-
-  /* set all icons size (plane, calendar) */
-  img {
-    width: 25px;
-    height: 25px;
   }
 
   /* swap icon between departure and arrival container */
@@ -67,54 +43,156 @@
   }
 
 
-  .hidden-datepicker {
+
+  .date-selector-hidden-datepicker {
     display: none; /* Hide the DatePicker input if desired */
   }
   
-
-  .day-display {
-    font-size: 16px;
-    font-weight: 600;
+  .date-selector-outer-container {
+    border: 2px solid #d4d4d4;
+    border-radius: 12px;
+    width: 190px;
+    height: 65px;
   }
 
+  .date-selector-outer-container p {
+    display: inline-flex; 
+    position: relative; 
+    top: -19px; 
+    left: 10px; 
+    font-size: 12px; 
+    font-weight: 400; 
+    color: #336749; 
+    background-color: white; /* set back ground to white so it cuts the border */
+    padding-left: 5px;
+    padding-right: 5px;
+  }
 
   .date-selector-inner-container {
     display: flex;
     /* justify-content: space-between; */
     align-items: center;
     padding-top: 12px;
-    padding-left: 5px;
+    padding-left: 0px;
     position: relative;
     top: -45px;
+    width: 190px;
   }
 
-  .date-selector-outer-container {
-    border: 2px solid #d4d4d4;
-    border-radius: 12px;
-    min-width: 190px;
-    height: 65px;
+  .date-selector-calendar-icon {
+    width: 25px;
+    height: 25px;
   }
 
-  .date-display {
+  .date-selector-date-display {
     font-size: 20px;
     font-weight: 600;
     position: absolute;
     left: 38px;
+    color: #1F2937;
   }
   
-  .division-icon {
+  .date-selector-division-icon {
     position: relative;
-    left: 37px;
-    width: 4px;
+    left: 35px;
+    width: 6px;
+    height: 25px;
   }
 
-  .day-month-display {
+  .date-selector-day-month-display {
     position: relative;
     left: 48px;
+    color: #1F2937;
   }
 
-  .dropdown-icon {
+  .date-selector-mmmyy-display {
+    font-size: 12px;
+    color: #737373;
+    font-weight: 400;
+  }
+
+  .date-selector-dropdown-icon {
     position: relative;
     left: 70px;
+    width: 25px;
+    height: 25px;
   }
 
+  .date-selector-day-display {
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .port-selector-outer-container p {
+    display: inline-flex; 
+    position: relative; 
+    top: -19px; 
+    left: 10px; 
+    font-size: 12px; 
+    font-weight: 400; 
+    color: #336749; 
+    background-color: white; /* set back ground to white so it cuts the border */
+    padding-left: 6px;
+    padding-right: 6px;
+  }
+  
+  .port-selector-outer-container {
+    border: 2px solid #d4d4d4;
+    border-radius: 12px;
+    width: 350px;
+    height: 65px;
+  }
+
+  .port-selector-inner-container {
+    display: flex;
+    /* justify-content: space-between; */
+    align-items: center;
+    padding-top: 12px;
+    padding-left: 0px;
+    position: relative;
+    top: -45px; 
+    width: 350px;
+  }
+
+
+  .port-selector-plane-icon {
+    width: 25px;
+    height: 25px;
+  }
+
+  .port-selector-port-code {
+    font-size: 20px;
+    font-weight: 600;
+    position: relative;
+    left: 10px;
+    color: #1F2937;
+  }
+
+  .port-selector-division-icon {
+    position: relative;
+    left: 15px; 
+    width: 6px;
+    height: 25px;
+  }
+
+  .port-selector-city-display {
+    font-size: 16px;
+    position: relative;
+    left: 30px;
+    color: #1F2937;
+  }
+
+  .port-selector-airport-display {
+    font-size: 12px;
+    position: relative;
+    left: 30px; 
+    color: #737373;
+    font-weight: 400;
+  }
+
+  .port-selector-dropdown-icon {
+    position: relative;
+    left: 17px;
+    width: 25px;
+    height: 25px;
+  }

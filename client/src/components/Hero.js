@@ -42,6 +42,7 @@
 
 import React from "react";
 import "../styles/hero.css"; // Import the corresponding CSS file
+import {DateSelector, DepartureDateSelector, ReturnDateSelector} from "./FlightSearch.js";
 
 const HeroSection = () => {
   return (
@@ -82,6 +83,7 @@ const HeroSection = () => {
                   Search Flights <i className="bi bi-search"></i>
                 </button>
               </div>
+              <DepartureDateSelector />
             </form>
           </div>
         </div>
