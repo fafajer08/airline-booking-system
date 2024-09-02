@@ -13,7 +13,7 @@ export default function SearchFlight() {
       <NavBar />
       <div className='container'>
           
-          <h1>Where would you like to go? </h1>
+          <h1 className="my-5">Where would you like to go? </h1>
           <form>
           <div className="">
             <FlightSearchSelector />

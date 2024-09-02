@@ -7,17 +7,17 @@ import Carousel from "../components/Carousel";
 import { BackButton, ContinueButton } from '../components/Buttons';
 
 
-export default function FlightOptions() {
+export default function BookingSummary() {
   return (
     <div>
     <NavBar />
       <div className="container">
-        <h5 className="mt-5 ms-5 px-5" > Select you flight</h5>
-        <h2 className="ms-5 px-5">Davao DVO bound for Manila MNL</h2>
-        <Carousel />
+        <h5 className="mt-5 ms-5 px-5" > Please review your booking before processing to payment</h5>
+        <h2 className="ms-5 px-5">Booking Summary</h2>
+
         <div>
-          <BackButton link="http://localhost:3000/searchflight" />
-          <ContinueButton link="http://localhost:3000/guestdetails" />
+          <BackButton link="http://localhost:3000/guestdetails" />
+          <ContinueButton link="http://localhost:3000/payment" />
         </div>
       </div>
     </div>

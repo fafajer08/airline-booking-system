@@ -30,36 +30,6 @@
   left: -12px;
 }
 
-.flight-search-button-link {
-  text-decoration: none; 
-  display: inline-block;
-  border: none; 
-  background: none; 
-  cursor: pointer; 
-}
-
-.flight-search-button-container {
-  width: 230px;
-  height: 64px;
-  background-color: #336749;
-  border-radius: 12px;
-  color: white !important;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 10px;
-}
-
-.flight-search-button-text {
-  margin-left: 10px;
-}
-
-.flight-search-button-icon {
-  width: 48px;
-  height: 48px;
-  margin-right: 10px;
-}
-
 
 .flight-search-selector {
   padding: 10px 40px 10px 10px;

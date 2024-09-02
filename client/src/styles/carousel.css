@@ -1,0 +1,107 @@
+/* Global box-sizing */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+.carousel-container {
+    display: flex;
+    align-items: center;
+    position: relative;
+    width: calc(7 * 150px); /* Exactly 7 cards, each 150px wide */
+    margin: 0 auto; /* Center the carousel container */
+    padding: 0; /* Remove padding to eliminate gaps */
+}
+
+.carousel {
+    display: flex;
+    overflow-x: auto; /* Enable horizontal scrolling */
+    scroll-behavior: smooth; /* Smooth scrolling */
+    scroll-snap-type: x mandatory; /* Enable scroll snapping */
+    scrollbar-width: none; /* Hide scrollbar in Firefox */
+    -ms-overflow-style: none;  /* Hide scrollbar in IE and Edge */
+    margin: 0;
+    padding: 0;
+}
+
+.carousel::-webkit-scrollbar {
+    display: none; /* Hide scrollbar in Chrome, Safari, and Opera */
+}
+
+.card {
+    width: 150px; /* Fixed width for each card */
+    flex: 0 0 150px; /* Prevent flexing: don't grow or shrink, stay 150px */
+    padding: 16px;
+    background-color: #f5f5f5;
+    border-radius: 0px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center; /* Center text inside the card */
+    scroll-snap-align: start; /* Snap to the start of each card */
+    margin: 0; /* Remove any margin */
+    cursor: pointer; /* Change cursor to pointer to indicate clickability */
+    transition: background-color 1s ease, transform 0.3s ease; /* Smooth transition */
+}
+
+.card:hover {
+    background-color: #336749; /* Slightly darker on hover */
+    color: white
+}
+
+/* Style for selected card */
+.card.selected {
+    background-color: #336749 !important; /* Blue background for selected card */
+    color: white !important; /* White text for contrast */
+    /*transform: scale(1.1); /* Slightly enlarge the selected card */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Enhance shadow for emphasis */
+}
+
+.card p {
+    margin: 8px 0; /* Ensure some space between date and price */
+    font-size: 14px; /* Adjust font size for better readability */
+}
+
+.scroll-button {
+    background-color: #D9D9D9;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-size: 24px;
+    border-radius: 4px;
+    position: absolute;
+    z-index: 1;
+    top: 50%;
+    transform: translateY(-50%);
+    margin: 0; /* Remove any margin */
+    height: 100%;
+}
+
+
+/* Position buttons directly adjacent to the carousel */
+.scroll-button.left {
+    left: -50px; /* Adjust as needed to place the button right next to the carousel */
+    border-radius: 20px 0px 0px 20px;
+}
+
+.scroll-button.right {
+    right: -50px; /* Adjust as needed to place the button right next to the carousel */
+    border-radius: 0px 20px 20px 0px;
+}
+
+.scroll-button:hover {
+    background-color: #336749;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 1200px) {
+    .carousel-container {
+        width: calc(7 * 150px); /* Adjust if necessary */
+    }
+    .scroll-button.left {
+        left: -40px;
+    }
+    .scroll-button.right {
+        right: -40px;
+    }
+}
