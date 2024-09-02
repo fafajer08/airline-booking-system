@@ -9,10 +9,11 @@ import dropDownIcon from '../assets/dropdown.png';
 import calendar from '../assets/calendar.png';
 import swapIcon from '../assets/swapicon.png';
 import searchIcon from '../assets/searchicon.png';
+import SearchFlightButton from './Buttons';
 import '../styles/searchflight.css';
 
 
-const flights = [
+const flights = () => ([
   {
     cityName: 'Davao', 
     airportCode: 'DVO',
@@ -73,7 +74,7 @@ const flights = [
     airportCode: 'GES',
     airportName: 'General Santos International Airport'
   },
-];
+])
 
 
 const truncateText = (text, maxLength) => {
@@ -99,17 +100,6 @@ function useDropdown() {
   }, []);
 
   return { isOpen, toggleDropdown, dropdownRef };
-}
-
-function SearchFlightButton() {
-  return (
-    <button type="submit" className="flight-search-button-link">
-      <div className="flight-search-button-container">
-        <span className="flight-search-button-text">Search Flights</span>
-        <img className="flight-search-button-icon" src={searchIcon} alt="flight search button" />
-      </div>
-    </button>
-  );
 }
 
 function SwapIcon({ onSwap }) {
@@ -209,7 +199,7 @@ function PortSelector({ label, selectedPort, setSelectedPort }) {
         />
         {isDropdownOpen && (
           <div className="port-selector-dropdown">
-            {flights.map((flight, index) => (
+            {flights().map((flight, index) => (
               <div
                 key={index}
                 className="port-selector-dropdown-item"
@@ -358,7 +348,7 @@ function FlightSearchSelector() {
               <PromoCodeInput /> 
           </div> 
           <div className='submit-btn d-flex justify-content-center justify-content-lg-end'>
-            <SearchFlightButton />
+          <SearchFlightButton link="http://localhost:3000/flightoptions" />
           </div>
         </div>
       )}
@@ -378,7 +368,7 @@ function FlightSearchSelector() {
               <PromoCodeInput /> 
           </div>
           <div className='submit-btn d-flex justify-content-center justify-content-lg-end'>
-            <SearchFlightButton />
+          <SearchFlightButton link="http://localhost:3000/flightoptions" />
           </div>
         </div>
       )}
@@ -404,7 +394,7 @@ function FlightSearchSelector() {
               <PromoCodeInput /> 
           </div>
           <div className='ubmit-btn d-flex justify-content-center justify-content-lg-end'>
-            <SearchFlightButton />
+          <SearchFlightButton link="http://localhost:3000/flightoptions" />
           </div>
         </div>
       )}
@@ -421,5 +411,6 @@ export {
   PaxSelector,
   PromoCodeInput,
   SearchFlightButton,
-  SwapIcon
+  SwapIcon,
+  flights
 };

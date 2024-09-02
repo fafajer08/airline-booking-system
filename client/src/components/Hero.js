@@ -1,8 +1,33 @@
 import React, { useState } from "react";
 import "../styles/hero.css"; 
 // import  'bootstrap-icons/font/bootstrap-icons.css';
+import {
+  DateSelector,
+  PortSelector,
+  FlightDepartureSelector,
+  FlightDestinationSelector,
+  PaxSelector,
+  PromoCodeInput,
+  SearchFlightButton,
+  SwapIcon,
+  flights
+} from "../components/SearchFlight.js";
+
+
+
 
 const HeroSection = () => {
+
+  const [departureAirport, setDepartureAirport] = useState({
+    cityName: '',
+    airportCode: '',
+    airportName: ''
+  });
+
+
+
+
+
   const [formType, setFormType] = useState('round-trip');
 
   return (
@@ -92,6 +117,8 @@ const HeroSection = () => {
                   </div>
                 )}
               </div>
+              {/* <PortSelector  label="DEPARTURE AIRPORT"  selectedPort={departureAirport} setSelectedPort={setDepartureAirport}  />
+              <DateSelector label="DEPARTURE DATE" /> */}
 
               {/* Search Flight Button */}
               <div className="btn-container d-flex justify-content-center mt-3">

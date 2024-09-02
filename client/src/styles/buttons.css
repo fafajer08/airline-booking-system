@@ -1,0 +1,138 @@
+/* Global box-sizing */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    font-family: 'Manrope', sans-serif; 
+}
+
+button {
+    padding: 10px;
+}
+
+.search-flight-button-link,
+.continue-button-link,
+.back-button-link,
+.submit-button-link {
+    text-decoration: none;
+    display: inline-block;
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+.search-flight-button-container {
+    width: 230px;
+    height: 64px;
+    background-color: #336749;
+    border-radius: 12px;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 10px;
+    transition: background-color 0.3s ease;
+}
+
+.continue-button-container {
+    width: 160px;
+    height: 40px;
+    background-color: #336749;
+    border-radius: 12px;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 10px;
+    transition: background-color 0.3s ease;
+}
+
+.back-button-container {    
+    width: 160px;
+    height: 40px;
+    border-radius: 12px;
+    border: 2px solid #336749;
+    background-color: #ffffff;
+    color: #336749;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 10px;
+    transition: background-color 0.3s ease;
+}
+
+.submit-button-container {
+    width: 160px;
+    height: 40px;
+    background-color: #336749; /* Same as Continue button */
+    border-radius: 12px; /* Same rounded corners */
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+}
+
+.submit-button-container:hover,
+.search-flight-button-container:hover,
+.continue-button-container:hover {
+    background-color: #274e37; /* Darker color on hover */
+}
+
+.back-button-container:hover {
+    background-color: #e8edea;
+}
+
+.search-flight-button-text,
+.continue-button-text,
+.back-button-text,
+.submit-button-text {
+    font-weight: 600;
+    font-size: 16px;
+    font-family: 'Manrope', sans-serif;
+}
+
+.search-flight-button-icon,
+.continue-button-icon,
+.back-button-icon {
+    width: 48px;
+    height: 48px;
+    margin-left: 10px;
+}
+
+.select-button-link {
+    text-decoration: none;
+    display: inline-block;
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+.select-button-container {
+    width: 160px;
+    height: 40px;
+    background-color: #CACACA; /* Default color */
+    border-radius: 12px;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 10px;
+    transition: background-color 0.3s ease;
+}
+
+.select-button-container.selected {
+    background-color: #336749; /* Color when selected */
+}
+
+.select-button-text {
+    font-weight: bold;
+    font-size: 16px;
+    font-family: 'Manrope', sans-serif;
+}
+
+.select-button-icon {
+    width: 48px;
+    height: 48px;
+    margin-left: 10px;
+}
