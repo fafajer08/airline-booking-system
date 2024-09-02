@@ -114,9 +114,9 @@ function SearchFlightButton() {
 
 function SwapIcon({ onSwap }) {
   return (
-    <span>
+    <div className="swap-icon-outer-container">
     <img className="swap-icon" src={swapIcon} alt="swap icon" onClick={onSwap} style={{ cursor: 'pointer' }} />
-    </span>
+    </div>
   );
 }
 
@@ -344,64 +344,68 @@ function FlightSearchSelector() {
       </select>
 
       {tripType === 'oneWay' && (
-        <div className=''>
-          <div className='d-inline-flex'>      
-            <PortSelector  label="DEPARTURE AIRPORT"  selectedPort={departureAirport} setSelectedPort={setDepartureAirport} />
-            <SwapIcon onSwap={swapAirports} />
-            <PortSelector label="DESTINATION AIRPORT" selectedPort={destinationAirport} setSelectedPort={setDestinationAirport}  />
-            <DateSelector className="" label="DEPARTURE DATE" />
+        <div className='container-fluid'>
+          <div className='first-row d-flex flex-column m-5 d-flex align-items-center flex-lg-row' >      
+            <PortSelector className='' label="DEPARTURE AIRPORT"  selectedPort={departureAirport} setSelectedPort={setDepartureAirport} />
+            <SwapIcon className='' onSwap={swapAirports} />
+            <PortSelector className='' label="DESTINATION AIRPORT" selectedPort={destinationAirport} setSelectedPort={setDestinationAirport}  />
+            <DateSelector className='d-flex' label="DEPARTURE DATE" />
           </div> 
-          <div className=' d-inline-flex'>      
-              <PaxSelector type="ADULTS" />
-              <PaxSelector type="CHILDREN" />
-              <PaxSelector type="INFANTS" />
+          <div className='second-row d-flex flex-column m-5 d-flex align-items-center flex-lg-row'>      
+              <PaxSelector className='' type="ADULTS" />
+              <PaxSelector className='' type="CHILDREN" />
+              <PaxSelector className='' type="INFANTS" />
               <PromoCodeInput /> 
           </div> 
-          <div className='d-flex'>
-            <SearchFlightButton className='ms-auto'/>
+          <div className='submit-btn d-flex justify-content-center justify-content-lg-end'>
+            <SearchFlightButton />
           </div>
         </div>
       )}
       {tripType === 'roundTrip' && (
         <div>
-          <div className=""> 
+          <div className="first-row d-flex flex-column m-5 d-flex align-items-center flex-lg-row"> 
               <PortSelector  label="DEPARTURE AIRPORT"  selectedPort={departureAirport} setSelectedPort={setDepartureAirport}  />
               <SwapIcon onSwap={swapAirports} />
               <PortSelector label="DESTINATION AIRPORT"  selectedPort={destinationAirport}  setSelectedPort={setDestinationAirport} />
               <DateSelector label="DEPARTURE DATE" />
               <DateSelector label="RETURN DATE" />
           </div>
-          <div className="" > 
-              <PaxSelector type="ADULT" />
+          <div className="second-row d-flex flex-column m-5 d-flex align-items-center flex-lg-row" > 
+              <PaxSelector type="ADULTS" />
               <PaxSelector type="CHILDREN" />
               <PaxSelector type="INFANTS" />
               <PromoCodeInput /> 
           </div>
-          <SearchFlightButton className="row" />
+          <div className='submit-btn d-flex justify-content-center justify-content-lg-end'>
+            <SearchFlightButton />
+          </div>
         </div>
       )}
 
       {tripType === 'multiCity' && (
         <div className='selector-container'>
-          <div className="row"> 
+          <div className="first-row d-flex flex-column m-5 d-flex align-items-center flex-lg-row"> 
               <PortSelector  label="DEPARTURE AIRPORT" selectedPort={departureAirport}  setSelectedPort={setDepartureAirport} />
               <SwapIcon onSwap={swapAirports} />
               <PortSelector  label="DESTINATION AIRPORT" selectedPort={destinationAirport} setSelectedPort={setDestinationAirport}  />
               <DateSelector label="DEPARTURE DATE" />
           </div>
-          <div className="row"> 
+          <div className="second-row d-flex flex-column m-5 d-flex align-items-center flex-lg-row"> 
               <PortSelector  label="DEPARTURE AIRPORT" selectedPort={departureAirport}  setSelectedPort={setDepartureAirport}  />
               <SwapIcon onSwap={swapAirports} />
               <PortSelector label="DESTINATION AIRPORT" selectedPort={destinationAirport} setSelectedPort={setDestinationAirport}  />
               <DateSelector label="DEPARTURE DATE" />
           </div>
-          <div className="row" > 
-              <PaxSelector type="ADULT" />
+          <div className="third-row d-flex flex-column m-5 d-flex align-items-center flex-lg-row" > 
+              <PaxSelector type="ADULTS" />
               <PaxSelector type="CHILDREN" />
               <PaxSelector type="INFANTS" />
               <PromoCodeInput /> 
           </div>
-          <SearchFlightButton  className="row"/>
+          <div className='ubmit-btn d-flex justify-content-center justify-content-lg-end'>
+            <SearchFlightButton />
+          </div>
         </div>
       )}
     </div>

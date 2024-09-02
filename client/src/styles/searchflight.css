@@ -6,6 +6,7 @@
 }
 
 .swap-icon {
+  display: inline-flex;
   position: relative;
   height: 32px;
   width: 32px;
@@ -13,19 +14,15 @@
   z-index: 99;
 }
 
-.oneway {
-  border: 2px solid #d4d4d4;
-} 
 
-
+.swap-icon-outer-container {
+  /* display: inline-block; */
+}
 
 .swap-icon {
-  display: inline-block;
   height: 50px !important;
   width: 50px !important;
 }
-
-
 
 
 #destination-shift-left {
@@ -34,11 +31,11 @@
 }
 
 .flight-search-button-link {
-  text-decoration: none; /* Ensures the text has no decoration */
+  text-decoration: none; 
   display: inline-block;
-  border: none; /* Removes any default button borders */
-  background: none; /* Removes any default button background */
-  cursor: pointer; /* Changes the cursor to a pointer on hover */
+  border: none; 
+  background: none; 
+  cursor: pointer; 
 }
 
 .flight-search-button-container {
@@ -65,7 +62,7 @@
 
 
 .flight-search-selector {
-  padding: 10px 40px 10px 10px; /* Padding to make room for the custom logo */
+  padding: 10px 40px 10px 10px;
   border: none;
   border-radius: 10px; 
   background-color: #fff;
@@ -102,12 +99,14 @@
 }
 
 .date-selector-outer-container {
-  display: inline-block;
+  /* display: inline-block; */
   position: relative;
   border: 2px solid #d4d4d4;
   border-radius: 12px;
   height: 65px;
-  width: 190px;
+  width: 190px; 
+  flex: 0 0 auto;
+  margin: 10px;
 }
  
 .date-selector-label {
@@ -185,12 +184,13 @@
 /* PORT SELECTOR */
 
 .port-selector-outer-container {
-  display: inline-block;
+  /* display: inline-block; */
   position: relative;
   border: 2px solid #d4d4d4;
   border-radius: 12px;
   height: 65px;
   width: 300px;
+  flex: 0 0 auto;
 }
 
 .port-selector-label {
@@ -301,12 +301,14 @@
 
 
 .pax-selector-outer-container {
-  display: inline-block;
+  /* display: inline-block; */
   position: relative;
   border: 2px solid #d4d4d4;
   border-radius: 12px;
   height: 65px;
-  width: 190px; /* Adjust width as needed */
+  width: 190px; 
+  flex: 0 0 auto;
+  margin: 5px;
 }
 
 .pax-selector-label {
@@ -375,30 +377,29 @@
   background-color: #f0f0f0;
 }
 
-.selector-container {
-  border: 2px solid black;
-}
-
 /* PROMO CODE INPUT */
 
 
 .promo-code-outer-container {
-  display: inline-flex;
-  justify-content: center; /* Centers child elements horizontally */
-  align-items: center;     /* Centers child elements vertically */
+  /* display: inline-block; */
+  justify-content: center; 
+  align-items: center;     
   position: relative;
   border: 2px solid #d4d4d4;
   border-radius: 12px;
   height: 65px;
-  width: 190px; /* Adjust width as needed */
-
+  width: 190px; 
+  flex: 0 0 auto;
+  margin: 5px;
 }
 
 .promo-code-inner-container {
   position: relative;
-  display: inline-flex;
-  width: 100%;
-  height: 100%;
+  display: block; 
+  height: 100%; 
+  align-items: center; 
+  justify-content: center; 
+  padding: 15px;
 }
 
 .promo-code-label {
@@ -415,15 +416,13 @@
 }
 
 .promo-code-input {
-  border: none;
+  border: 2px solid white;
   outline: none;
   font-size: 16px;
   font-weight: 400;
   color: #1F2937;
-  width: 100%; /* Fill the container */
-  max-width: 100%; /* Set a max-width to control the input size */
-  background-color: transparent; /* Transparent background to match the container */
-  margin-left: 30px;
+  background-color: transparent;
+  width: 100%;
 }
 
 .promo-code-input::placeholder {
