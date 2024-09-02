@@ -1,0 +1,66 @@
+.flight-table-container {
+    display: flex;
+    justify-content: center; /* Center the table horizontally */
+    margin-top: 20px; /* Optional: Add some top margin */
+}
+
+.flight-table {
+    width: auto; /* Adjust the width as needed */
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.flight-table th,
+.flight-table td {
+    padding: 8px;
+    text-align: center;
+    border: none; 
+}
+
+.flight-table th {
+    background-color: #f2f2f2;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.flight-table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.flight-table tr:hover {
+    background-color: #ddd;
+}
+
+.flight-table th:first-child {
+    border-top-left-radius: 12px;
+}
+
+.flight-table th:last-child {
+    border-top-right-radius: 12px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 600px) {
+    .flight-table th:nth-child(3),  /* Target the Duration column header */
+    .flight-table td:nth-child(3),
+    .flight-table th:nth-child(4),  /* Target the Duration column header */
+    .flight-table td:nth-child(4) { /* Target the Duration column data */
+        display: none; /* Hide the Duration column */
+    }
+
+    .select-button {
+        width: 100%; /* Set button width to 50% */
+    }
+    
+}
+
+@media (min-width: 601px) and (max-width: 770px) {
+    .flight-table th:nth-child(3),  /* Target the Duration column header */
+    .flight-table td:nth-child(3) { /* Target the Duration column data */
+        display: none; /* Hide the Duration column */
+    }
+
+    .select-button {
+        width: 100%; /* Set button width to 50% */
+    }
+}

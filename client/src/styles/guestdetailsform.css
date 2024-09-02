@@ -1,0 +1,151 @@
+.guest-details-form {
+    display: flex;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #f9f9f9;
+    padding: 20px;
+}
+
+.guest-tabs {
+    background-color: #f2f2f2;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    margin-right: 20px;
+}
+
+.guest-tab {
+    padding: 10px;
+    border: none;
+    background-color: #f2f2f2;
+    cursor: pointer;
+    text-align: left;
+    font-weight: bold;
+    margin-bottom: 5px;
+    border-radius: 8px;
+}
+
+.guest-tab.active {
+    background-color: #336749;
+    color: white;
+}
+
+.guest-form {
+    flex-grow: 1;
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    background-color: #f9f9f9;
+}
+
+.dob-inputs {
+    display: flex;
+    gap: 10px; /* Space between inputs */
+    
+}
+
+.dob-inputs div {
+    width: 30%;
+}
+
+.age-group {
+    margin-top: 10px;
+}
+
+.hidden-datepicker {
+    position: absolute;
+    z-index: -1;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.name-group {
+    display: flex;
+    gap: 10px; /* Space between inputs */
+}
+
+.contact-group, .contact-info {
+    display: flex;
+    gap: 10px; /* Space between inputs */
+}
+
+.contact-info > div {
+    flex: 1; /* Distribute space evenly */
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    .guest-details-form {
+        flex-direction: column;
+        padding: 10px;
+    }
+
+    .guest-tabs {
+        flex-direction: row;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+        margin-right: 0;
+        justify-content: space-around;
+        align-items: center; /* Center tabs horizontally */
+    }
+
+    .guest-tab {
+        flex: 1 1 48%; /* Two tabs per row on small screens */
+        margin-bottom: 0px;
+        text-align: center;
+    }
+
+    .guest-form {
+        padding: 10px;
+    }
+
+    .name-group, .dob-inputs, .contact-info {
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .dob-inputs div, .name-group div, .contact-info > div {
+        width: 100%;
+    }
+
+    .age-group {
+        margin-top: 5px;
+    }
+
+    .form-group input,
+    .form-group select {
+        padding: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .guest-tab {
+        flex: 1 1 100%; /* Full width tabs on extra small screens */
+    }
+
+    .form-group input,
+    .form-group select {
+        font-size: 14px; /* Slightly smaller text on small screens */
+    }
+}
