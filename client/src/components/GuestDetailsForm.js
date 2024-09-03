@@ -1,11 +1,22 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import '../styles/guestdetailsform.css';
+import nationalities from '../data/nationalities';  // Import the nationalities list
 
-function GuestDetailsForm({ initialGuests }) {
+function GuestDetailsForm({ setFinalGuests }) {
+  const initialGuests = [
+    { title: '', firstName: '', lastName: '', day: '', month: '', year: '', nationality: '', mobileNumber: '', email: '' },
+    { title: '', firstName: '', lastName: '', day: '', month: '', year: '', nationality: '', mobileNumber: '', email: '' },
+    // Add more guests as needed
+  ];
+
   const [guests, setGuests] = useState(initialGuests);
   const [activeGuest, setActiveGuest] = useState(0);
+
+  useEffect(() => {
+    setFinalGuests(guests);
+  }, [guests, setFinalGuests]);
 
   const handleTabClick = (index) => {
     setActiveGuest(index);
@@ -194,9 +205,11 @@ function GuestForm({ guestIndex, guest, onInputChange, onDateChange }) {
         <label>Nationality</label>
         <select name="nationality" value={guest.nationality || ''} onChange={onInputChange}>
           <option value="">Select Nationality</option>
-          <option value="PH">Philippines</option>
-          <option value="US">United States</option>
-          <option value="CA">Canada</option>
+          {nationalities.map((nationality) => (
+            <option key={nationality.code} value={nationality.code}>
+              {nationality.name}
+            </option>
+          ))}
         </select>
       </div>
 
@@ -227,7 +240,7 @@ function GuestForm({ guestIndex, guest, onInputChange, onDateChange }) {
             </div>
         </div>
       </div>
-    </div>
+    </div> 
   );
 }
 
