@@ -50,44 +50,48 @@ function PortSelector({ portOptions, setDeparturePort, setDestinationPort }) {
             ? portOptions.filter(option => option.portCode !== selectedDeparturePort.portCode)
             : portOptions;
 
-        return (
-            <div className="port-selector-inner-container" onClick={() => handlePortClick(portType)}>
-                <img className="port-selector-plane-icon port-selector-icons" src={planeIcon} alt='plane icon' />
-                <span className="port-selector-port-code">{portCode}</span>
-                <img className="port-selector-division-icon" src={division} alt='division icon' />
-                <div className="port-selector-city-airport-display">
-                    <div className="port-selector-city-display">{cityName}</div>
-                    <div className="port-selector-airport-display">{airportName}</div>
-                </div>
-                <img
-                    className="port-selector-dropdown-icon port-selector-icons"
-                    src={dropDownIcon}
-                    alt="dropdown icon"
-                />
-                {isDropdownOpen === portType && (
-                    <div className="port-selector-dropdown">
-                        {filteredPortOptions.map((port, index) => (
-                            <div
-                                key={index}
-                                className="port-selector-dropdown-item"
-                                onClick={() => handlePortSelect(port, portType)}
-                            >
-                                <div className='port-select-dropdown-options'>
-                                    <div className="port-selector-dropdown-city">
-                                        {port.cityName} - {port.airportName}
+            return (
+                <div className="port-selector-outer-container">
+                    <p className="port-selector-label">{label}</p>
+                    <div className="port-selector-inner-container" onClick={() => handlePortClick(portType)}>
+                        <img className="port-selector-plane-icon port-selector-icons" src={planeIcon} alt="plane icon" />
+                        <span className="port-selector-port-code">{portCode}</span>
+                        <img className="port-selector-division-icon" src={division} alt="division icon" />
+                        <div className="port-selector-city-airport-display">
+                            <div className="port-selector-city-display">{cityName}</div>
+                            <div className="port-selector-airport-display">{airportName}</div>
+                        </div>
+                        <img
+                            className="port-selector-dropdown-icon port-selector-icons"
+                            src={dropDownIcon}
+                            alt="dropdown icon"
+                        />
+                        {isDropdownOpen === portType && (
+                            <div className="port-selector-dropdown">
+                                {filteredPortOptions.map((port, index) => (
+                                    <div
+                                        key={index}
+                                        className="port-selector-dropdown-item"
+                                        onClick={() => handlePortSelect(port, portType)}
+                                    >
+                                        <div className="port-select-dropdown-options">
+                                            <div className="port-selector-dropdown-city">
+                                                {port.cityName} - {port.airportName}
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
+                                ))}
                             </div>
-                        ))}
+                        )}
                     </div>
-                )}
-            </div>
-        );
+                </div>
+            );
+            
     };
 
     return (
-        <div className="port-selector-outer-container">
-            <div className="d-flex port-selection-container">
+        <div className="">
+            <div className="d-flex flex-column flex-md-row align-items-center port-selection-container">
                 {renderPortSelector("DEPARTURE AIRPORT", selectedDeparturePort, 'departure')}
                 <img 
                     className="port-selector-swap-icon" 
