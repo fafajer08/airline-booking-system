@@ -1,0 +1,91 @@
+.date-selector-hidden-datepicker {
+    display: none; 
+  }
+  
+  .date-selector-icons {
+    width: 25px;
+    height: 25px;
+    position: 50%;
+  }
+  
+  .date-selector-outer-container {
+    /* display: inline-block; */
+    position: relative;
+    border: 2px solid #d4d4d4;
+    border-radius: 12px;
+    height: 65px;
+    width: 190px; 
+    flex: 0 0 auto;
+    margin: 10px;
+  }
+   
+  .date-selector-label {
+    display: inline-flex ; 
+    position: absolute !important; 
+    top: -10px !important; 
+    left: 8px !important; 
+    font-size: 12px !important; 
+    font-weight: 400; 
+    color: #336749; 
+    background-color: white; /* set back ground to white so it cuts the border */
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+  
+  .date-selector-inner-container {
+    position: relative;
+    display: inline-flex;
+    align-items: center; 
+    justify-content: center; 
+    width: 100%;
+    height: 100%;
+  }
+  
+  .date-selector-calendar-icon {
+    position: absolute;
+    left: 6px;
+  }
+  
+  .date-selector-date-display {
+    position: absolute;
+    left: 38px;
+    font-size: 20px;
+    font-weight: 600;
+    color: #1F2937;
+  
+  }
+  
+  .date-selector-division-icon {
+    position: absolute;
+    left: 64px;
+    width: 6px;
+    height: 25px;
+  }
+  
+  .date-selector-day-month-display {
+    display: inline-block;
+    position: absolute;
+    left: 86px;
+  }
+  
+  
+  .date-selector-day-display {
+    color: #1F2937;
+    font-size: 16px;
+    font-weight: 600;
+  }
+  
+  .date-selector-mmmyy-display {
+    font-size: 12px;
+    color: #737373;
+    font-weight: 400;
+  }
+  
+  
+  .date-selector-dropdown-icon {
+    position: absolute;
+    right: 10px;
+    width: 25px;
+    height: 25px;
+  }
+  
