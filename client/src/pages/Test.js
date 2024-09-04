@@ -7,9 +7,12 @@ import flightsData from '../data/flightsData';
 import parseData from '../components/FlightsDataParser';
 import PaxSelector from '../components/PaxSelector';
 import InputBox from '../components/InputBox';
+import FlightTypeSelector from "../components/FlightTypeSelector.js";
 
 export default function Test() {
   const portOptions = parseData(flightsData);
+
+  const [flightType, setFlightType] = useState('oneWay'); // Default flight type
 
   const [departurePort, setDeparturePort] = useState({});
   const [destinationPort, setDestinationPort] = useState({});
@@ -27,6 +30,8 @@ export default function Test() {
       <Navbar />
       <div className="d-flex justify-content-center flex-column align-items-center">
         <h1>Test Page</h1>
+        <FlightTypeSelector onFlightTypeChange={setFlightType} />
+        <p>Flight type: {flightType}</p>
         <SearchFlightButton />
         <ContinueButton />
         <BackButton />
