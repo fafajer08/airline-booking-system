@@ -102,7 +102,7 @@
   font-weight: bold;
 }
 
-@media (max-width: 576px) {
+@media (min-width: 768px) {
   .hero-image {
     height: 100vh;
     background-size: cover;
@@ -114,6 +114,17 @@
     left: 50%;
     transform: translate(-50%, -50%);
     width: 90%;
+    margin-top: 100px;
+  }
+  .d-flex {
+    flex-direction: grid; /* Ensure items stay in a row */
+    flex-wrap: nowrap; /* Prevent items from wrapping to the next line */
+  }
+
+  .btn-custom {
+    width: 100%; /* Ensure buttons take full width of container */
+    max-width: 48%; /* Ensure buttons don't stretch too much */
+    margin: 0.5rem 0;
   }
 }
 

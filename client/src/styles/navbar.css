@@ -1,3 +1,4 @@
+/* Navbar styles */
 .nav {
   background-color: #007A8C;
 }
@@ -27,4 +28,30 @@
   padding: 10px;
 }
 
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
+/* Mobile view adjustments */
+@media (max-width: 991px) {
+  .navbar-toggler {
+    margin-left: auto;
+  }
+
+  .navbar-collapse {
+    text-align: center;
+  }
+}
+
+@media (max-width: 576px) {
+  .navbar-brand {
+    margin: 0 auto;
+  }
+
+  .navbar-toggler {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}

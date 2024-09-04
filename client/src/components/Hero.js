@@ -12,9 +12,6 @@ const HeroSection = () => {
   });
 
 
-
-
-
   const [formType, setFormType] = useState('round-trip');
 
   return (
