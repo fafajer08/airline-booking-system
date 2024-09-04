@@ -45,6 +45,7 @@ function DateSelector({ label, onDateChange }) {
                     ref={datePickerRef}
                     selected={startDate}
                     onChange={handleDateChange}
+                    minDate={new Date()}  // Restrict to dates from today onwards
                     className="date-selector-hidden-datepicker date-picker"
                     onClickOutside={() => datePickerRef.current.setOpen(false)}
                 />
