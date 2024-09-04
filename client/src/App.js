@@ -7,6 +7,7 @@ import GuestDetails from './pages/GuestDetails';
 import BookingSummary from './pages/BookingSummary';
 import Payment from './pages/Payment';
 import Test from './pages/Test';
+import LoginPage from './pages/LoginPage';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path='bookingsummary' element={<BookingSummary />} />
         <Route path='payment' element={<Payment />} />
         <Route path="/test" element={<Test />} />
+        <Route path="/login" element={<LoginPage />} />
       </Routes>
     </Router>
   );
