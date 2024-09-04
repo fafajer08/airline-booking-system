@@ -28,6 +28,7 @@
   padding: 10px;
 }
 
+/* Navbar positioning */
 .navbar {
   display: flex;
   justify-content: space-between;
@@ -35,23 +36,22 @@
 }
 
 /* Mobile view adjustments */
-@media (max-width: 991px) {
+@media (min-width: 991px) {
   .navbar-toggler {
-    margin-left: auto;
+    margin-left: auto; /* Centering the burger icon on smaller screens */
   }
 
   .navbar-collapse {
-    text-align: center;
+    text-align: end;
+  }
+
+  .navbar-nav {
+    flex-direction: column; /* Stack nav items vertically on small screens */
   }
 }
 
 @media (max-width: 576px) {
-  .navbar-brand {
-    margin: 0 auto;
-  }
-
   .navbar-toggler {
-    margin-left: auto;
-    margin-right: auto;
+    margin-left: auto; /* Centering the burger icon on smaller screens */
   }
 }
