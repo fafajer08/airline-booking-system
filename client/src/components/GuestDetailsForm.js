@@ -195,6 +195,7 @@ function GuestForm({ guestIndex, guest, onInputChange, onDateChange }) {
           dropdownMode="select"
           onClickOutside={() => setIsDatePickerOpen(false)}
           open={isDatePickerOpen}
+          maxDate={new Date()}  
           onSelect={() => setIsDatePickerOpen(false)} // Close date picker after selection
           className="hidden-datepicker"
         />
