@@ -14,7 +14,7 @@ export default function NavBar() {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto">
             <Nav.Link href="searchflight" className='me-3'>Flights</Nav.Link>
-            <Nav.Link href="#link" className='me-3'>Destinations</Nav.Link>
+            <Nav.Link href="destinations" className='me-3'>Destinations</Nav.Link>
             <Nav.Link href="#link" className='me-3'>Deals</Nav.Link>
             <Nav.Link href="#link" className='me-3'>My Bookings</Nav.Link>
             <Nav.Link href="#link" className='me-3'>Account</Nav.Link>
