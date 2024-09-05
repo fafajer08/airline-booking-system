@@ -10,7 +10,6 @@ import BookingSummaryTable from "../components/BookingSummaryTable";
 export default function BookingSummary() {
   return (
     <div>
-    <NavBar />
       <div className="container">
         <h5 className="" > Please review your booking before processing to payment</h5>
         <h2 className="">Booking Summary</h2>

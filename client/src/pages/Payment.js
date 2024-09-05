@@ -10,7 +10,6 @@ import { BackButton, ContinueButton, SubmitButton } from '../components/Buttons'
 export default function Payment() {
   return (
     <div>
-    <NavBar />
       <div className="container">
         <h5 className="" > How would you like to pay?</h5>
         <h2 className="">Payment Method</h2>

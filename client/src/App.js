@@ -1,5 +1,8 @@
 import React from 'react';
+import { useEffect, useState} from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { UserProvider } from './context/UserContext';
+import NavBar from '../src/components/NavBar';
 import Home from './pages/Home';
 import SearchFlight from './pages/SearchFlight';
 import FlightOptions from './pages/FlightOptions';
@@ -9,22 +12,32 @@ import Payment from './pages/Payment';
 import Test from './pages/Test';
 import LoginPage from './pages/LoginPage';
 import Admin from './pages/AdminDash';
+import Users from './pages/UserDash';
+import NotFound from './pages/NotFound';
+
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/searchflight" element={<SearchFlight />} />
-        <Route path="/flightoptions" element={<FlightOptions />} />
-        <Route path="/guestdetails" element={<GuestDetails />} />
-        <Route path='/bookingsummary' element={<BookingSummary />} />
-        <Route path='/payment' element={<Payment />} />
-        <Route path="/test" element={<Test />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path='/admin' element={<Admin />} />
-      </Routes>
-    </Router>
+    <>
+      <UserProvider >
+        <Router>
+          <NavBar />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/searchflight" element={<SearchFlight />} />
+            <Route path="/flightoptions" element={<FlightOptions />} />
+            <Route path="/guestdetails" element={<GuestDetails />} />
+            <Route path='/bookingsummary' element={<BookingSummary />} />
+            <Route path='/payment' element={<Payment />} />
+            <Route path="/test" element={<Test />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path='/admin' element={<Admin />} />
+            <Route path='/users' element={<Users />} />
+            <Route path='/*' element={<NotFound />} />
+          </Routes>
+        </Router>
+      </UserProvider>
+    </>
   );
 }
 

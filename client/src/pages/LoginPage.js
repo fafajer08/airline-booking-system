@@ -25,7 +25,6 @@ export default function Login() {
 
   return (
     <>
-      <NavBar />
       <Container fluid className="p-0">
         <Row className="g-0">
           {/* Hero Section */}
