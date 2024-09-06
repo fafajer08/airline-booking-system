@@ -14,7 +14,7 @@ export default function Admin() {
       <div className="d-flex align-content-center justify-content-center">
         <div className="container ">
 
-          <h5 className="mt-5 ms-5 px-5">Flights Dashboard</h5>
+          <h5 className="mt-5 ms-5 px-5">Admin Dashboard</h5>
           {user ? ( // Check if user exists to avoid errors
             <h2 className="ms-5 px-5">Welcome {user.firstName}</h2>
           ) : (

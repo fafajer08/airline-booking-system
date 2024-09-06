@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { SelectButton } from './Buttons';
 import '../styles/flighttable.css';
+import flightsData from '../data/flightsData';
 
 function FlightTable() {
   // Sample flight data for multiple flights

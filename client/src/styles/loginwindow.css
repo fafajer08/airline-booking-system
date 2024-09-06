@@ -15,6 +15,7 @@
     -webkit-backdrop-filter: blur(10px); 
     display: block; 
 }
+
 /* Show the login-window when the visible class is applied */
 .login-window.visible {
     transform: translateX(0); 
@@ -26,16 +27,12 @@
     right: 0; 
 }
 
-
-
-
 /* Media query for small screens */
 @media (max-width: 768px) {
   .login-window {
     width: 100vw; 
   }
 }
-
 
 .login-window-content {
     width: 100%;
@@ -46,8 +43,6 @@
     border-radius: 10px;
     position: relative;
 }
-
-
 
 /* Close button container */
 .close-btn-container {
@@ -65,7 +60,6 @@
   line-height: 1;               
   margin: 10px;
 }
-
 
 .close-btn-container:hover {
   color: #ff0000 !important; 
@@ -95,10 +89,10 @@
     margin-right: 10px;
 }
 
-/* Button styling */
+/* Button styling with theme color */
 .login-btn {
     width: 100%;
-    background-color: #4CAF50;
+    background-color: #336749; /* Theme color */
     color: white;
     padding: 10px;
     border: none;
@@ -107,7 +101,7 @@
 }
 
 .login-btn:hover {
-    background-color: #45a049;
+    background-color: #294d3b; /* Darker green on hover */
 }
 
 /* Separator styling */
@@ -162,7 +156,7 @@
 }
 
 .signup-link a {
-    color: #007bff;
+    color: #336749; /* Theme color */
     text-decoration: none;
 }
 
@@ -189,11 +183,10 @@
     border: none;
     font-size: 14px;
     cursor: pointer;
-    color: #007bff;
+    color: #336749; /* Theme color */
   }
   
   /* Hover effect for toggle button */
   .toggle-password-btn:hover {
-    color: #0056b3;
+    color: #294d3b; /* Darker green on hover */
   }
-  

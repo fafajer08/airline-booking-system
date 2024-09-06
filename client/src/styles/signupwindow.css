@@ -1,0 +1,113 @@
+/* SignupWindow styles */
+.signup-window {
+  position: fixed;
+  top: 0;
+  right: -100%; 
+  width: 50vw; /* Make it 50% width like LoginWindow */
+  height: 100vh;
+  background-color: rgba(255, 255, 255, 0.9); 
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
+  transition: right 0.3s ease, opacity 0.5s ease; 
+  opacity: 0;
+  z-index: 1050;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px); 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Show the SignupWindow when the visible class is applied */
+.signup-window.visible {
+  transform: translateX(0);
+  opacity: 1;
+  visibility: visible;
+  right: 0;
+}
+
+/* Full-width on smaller screens */
+@media (max-width: 768px) {
+.signup-window {
+  width: 100vw; /* Make it full-width on smaller screens */
+}
+}
+
+.signup-window-content {
+  width: 100%;
+  max-width: 400px;
+  background-color: #fff;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  position: relative;
+}
+
+/* Close button styling */
+.signup-window .close-btn-container {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 0;
+  background-color: transparent;  
+  border: none;                    
+  font-size: 26px;                 
+  font-weight: bold;               
+  color: #000;                    
+  cursor: pointer;                
+  padding: 0;                     
+  line-height: 1;               
+  margin: 10px;
+}
+
+.signup-window .close-btn-container:hover {
+  color: #ff0000 !important;
+}
+
+/* Button styling with theme color */
+.signup-window-content .signup-btn {
+  width: 100%;
+  background-color: #336749; /* Theme color */
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.signup-window-content .signup-btn:hover {
+  background-color: #294d3b; /* Darker green on hover */
+}
+
+/* Form group styling */
+.signup-window-content .form-group {
+  margin-bottom: 20px;
+}
+
+.signup-link {
+  font-size: 14px;
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.signup-link button {
+  background-color: #336749; /* Theme color */
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  text-transform: uppercase;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.signup-link button:hover {
+  background-color: #294d3b; /* Darker green on hover */
+  transform: scale(1.05); /* Slight zoom on hover */
+}
+
+.signup-link button:focus {
+  outline: none; /* Remove default outline */
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2); /* Optional focus shadow */
+}

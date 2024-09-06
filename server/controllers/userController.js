@@ -6,6 +6,7 @@ const auth = require("../auth");
 const { errorHandler } = auth;
 
 
+
 module.exports.registerUser = async (req, res) => {
     try {
         // Check if the email already exists

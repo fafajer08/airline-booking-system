@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from "react";
-import NavBar from "./NavBar";
+import ModalPrompt from "../components/ModalPrompt";
 import '../styles/admin.css';  // Import the CSS file
 
 export default function AdminFlightsDash() {
   const [flights, setFlights] = useState([]);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
   const [searchQuery, setSearchQuery] = useState("");
+  const [isModalVisible, setModalVisible] = useState(false); 
+  const [fieldsConfig, setFieldsConfig] = useState([]);
+  const [apiDetails, setApiDetails] = useState({ apiUrl: "", method: "POST", needsAuth: true });
+
+  const apiBaseUrl = "/api/flights";
 
   // Mock flight data with initial status
   const mockFlights = [
@@ -124,6 +129,64 @@ export default function AdminFlightsDash() {
     }
   };
 
+  const handleAddFlight = () => {
+    setApiDetails({ apiUrl: apiBaseUrl, method: "POST", needsAuth: true });
+  
+    // Set the fieldsConfig for adding a new flight dynamically
+    setFieldsConfig([
+      { label: "Departure Date", name: "departureDate", type: "date" },
+      { label: "Departure Airport", name: "departureAirport", type: "text" },
+      { label: "Destination Airport", name: "destinationAirport", type: "text" },
+      { label: "Departure Time", name: "departureTime", type: "time" },
+      { label: "Flight Number", name: "flightNumber", type: "text" },
+      { label: "Seats", name: "seats", type: "number" },
+      { label: "Booked Seats", name: "booked", type: "number" },
+      {
+        label: "Status",
+        name: "status",
+        type: "select",
+        options: [
+          { label: "On Time", value: "On Time" },
+          { label: "Delayed", value: "Delayed" },
+          { label: "Full", value: "Full" },
+        ],
+      },
+    ]);
+  
+    setModalVisible(true);  // Open the modal
+  };
+  const handleEditFlight = (flight) => {
+    setApiDetails({
+      apiUrl: `${apiBaseUrl}/${flight.flightNumber}`,
+      method: "PUT",
+      needsAuth: true,
+    });
+
+    // Set the fieldsConfig dynamically for editing the flight
+    setFieldsConfig([
+      { label: "Departure Date", name: "departureDate", type: "date", value: flight.departureDate },
+      { label: "Departure Airport", name: "departureAirport", type: "text", value: flight.departureAirport },
+      { label: "Destination Airport", name: "destinationAirport", type: "text", value: flight.destinationAirport },
+      { label: "Departure Time", name: "departureTime", type: "time", value: flight.departureTime },
+      { label: "Flight Number", name: "flightNumber", type: "text", value: flight.flightNumber },
+      { label: "Seats", name: "seats", type: "number", value: flight.seats },
+      { label: "Booked Seats", name: "booked", type: "number", value: flight.booked },
+      {
+        label: "Status",
+        name: "status",
+        type: "select",
+        options: [
+          { label: "On Time", value: "On Time" },
+          { label: "Delayed", value: "Delayed" },
+          { label: "Full", value: "Full" },
+        ],
+        value: flight.status,
+      },
+    ]);
+
+    setModalVisible(true);
+  };
+
   // Function to get the CSS class based on status
   const getRowClass = (actionStatus) => {
     switch (actionStatus) {
@@ -140,56 +203,68 @@ export default function AdminFlightsDash() {
 
   return (
     <div>
-        {/* Search Input */}
+      {/* Search Input */}
+      <div>
         <input
           type="text"
           placeholder="Search by flight number, airport, or status"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
-
-        <table>
-          <thead>
-            <tr>
-              <th onClick={() => handleSort("departureDate")}>DEPARTURE DATE</th>
-              <th onClick={() => handleSort("departureAirport")}>DEPARTURE AIRPORT</th>
-              <th onClick={() => handleSort("destinationAirport")}>DESTINATION AIRPORT</th>
-              <th onClick={() => handleSort("departureTime")}>DEPARTURE TIME</th>
-              <th onClick={() => handleSort("flightNumber")}>FLIGHT NUMBER</th>
-              <th onClick={() => handleSort("seats")}>SEATS</th>
-              <th onClick={() => handleSort("booked")}>BOOKED</th>
-              <th onClick={() => handleSort("status")}>STATUS</th>
-              <th>ACTIONS</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredFlights.length > 0 ? (
-              filteredFlights.map((flight, index) => (
-                <tr key={index} className={getRowClass(flight.actionStatus)}>
-                  <td>{flight.departureDate}</td>
-                  <td>{flight.departureAirport}</td>
-                  <td>{flight.destinationAirport}</td>
-                  <td>{flight.departureTime}</td>
-                  <td>{flight.flightNumber}</td>
-                  <td>{flight.seats}</td>
-                  <td>{flight.booked}</td>
-                  <td>{flight.status}</td>
-                  <td>
-                    <button onClick={() => handleCancel(flight.flightNumber)}>Cancel</button>
-                    <button onClick={() => handleHold(flight.flightNumber)}>Hold</button>
-                    <button onClick={() => handleOk(flight.flightNumber)}>OK</button>
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="9">No flights available</td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+        <button type="button" onClick={handleAddFlight}>
+          Add Flight
+        </button>
       </div>
 
+      <table>
+        <thead>
+          <tr>
+            <th onClick={() => handleSort("departureDate")}>DEPARTURE DATE</th>
+            <th onClick={() => handleSort("departureAirport")}>DEPARTURE AIRPORT</th>
+            <th onClick={() => handleSort("destinationAirport")}>DESTINATION AIRPORT</th>
+            <th onClick={() => handleSort("departureTime")}>DEPARTURE TIME</th>
+            <th onClick={() => handleSort("flightNumber")}>FLIGHT NUMBER</th>
+            <th onClick={() => handleSort("seats")}>SEATS</th>
+            <th onClick={() => handleSort("booked")}>BOOKED</th>
+            <th onClick={() => handleSort("status")}>STATUS</th>
+            <th>ACTIONS</th>
+          </tr>
+        </thead>
+        <tbody>
+          {filteredFlights.length > 0 ? (
+            filteredFlights.map((flight, index) => (
+              <tr key={index} className={getRowClass(flight.actionStatus)}>
+                <td>{flight.departureDate}</td>
+                <td>{flight.departureAirport}</td>
+                <td>{flight.destinationAirport}</td>
+                <td>{flight.departureTime}</td>
+                <td>{flight.flightNumber}</td>
+                <td>{flight.seats}</td>
+                <td>{flight.booked}</td>
+                <td>{flight.status}</td>
+                <td>
+                  <button onClick={() => handleCancel(flight.flightNumber)}>Cancel</button>
+                  <button onClick={() => handleHold(flight.flightNumber)}>Hold</button>
+                  <button onClick={() => handleOk(flight.flightNumber)}>OK</button>
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="9">No flights available</td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+
+      <ModalPrompt
+        isVisible={isModalVisible}
+        onClose={() => setModalVisible(false)}
+        apiUrl={apiDetails.apiUrl}
+        method={apiDetails.method}
+        needsAuth={apiDetails.needsAuth}
+        fieldsConfig={fieldsConfig}
+      />
+    </div>
   );
 }
-

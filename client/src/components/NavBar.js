@@ -2,32 +2,47 @@ import React, { useState, useContext } from 'react';
 import { Container, Nav, Navbar } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import LoginWindow from './LoginWindow';
+import SignupWindow from './SignupWindow';
 import logo from '../images/logo.png';
 import '../styles/navbar.css';
 import UserContext from '../context/UserContext';
 
 export default function NavBar() {
-  const { user, logout } = useContext(UserContext); // Get user and logout from UserContext
-
-  const navigate = useNavigate(); // Use the navigate hook to navigate to different routes
+  const { user, logout } = useContext(UserContext);
+  const navigate = useNavigate();
 
   const [isLoginVisible, setLoginVisible] = useState(false);
+  const [isSignupVisible, setSignupVisible] = useState(false);
+  const [signupEmail, setSignupEmail] = useState(''); // Store the email from signup
 
+  const openLoginWithEmail = (email) => {
+    setSignupEmail(email);  // Store the email from signup
+    setSignupVisible(false); // Ensure signup window is closed
+    setLoginVisible(true);   // Open login window
+  };
+
+  // Show login window
   const handleLoginClick = () => {
-    setLoginVisible(true); // Show the LoginWindow
+    setLoginVisible(true);
+    setSignupVisible(false); // Ensure the signup window is closed
   };
 
-  const closeLoginWindow = () => {
-    setLoginVisible(false); // Hide the LoginWindow
+  // Show signup window
+  const handleSignUpClick = () => {
+    setSignupVisible(true);
+    setLoginVisible(false); // Ensure the login window is closed
   };
+
+  // Close login window
+  const closeLoginWindow = () => setLoginVisible(false);
+
+  // Close signup window
+  const closeSignupWindow = () => setSignupVisible(false);
 
   const handleLogout = () => {
-    logout(); // Call the logout function from UserContext to clear the user
+    logout();
     navigate('/');
-
   };
-
-  console.log(user ? user.id : 'No user logged in'); // Safely log user ID or a message
 
   return (
     <>
@@ -40,10 +55,21 @@ export default function NavBar() {
           <Navbar.Toggle aria-controls="basic-navbar-nav" className="nav-bar-toggler" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ms-auto">
-              <Nav.Link as={Link} to="/searchflight" className="nav-bar-link me-3">Flights</Nav.Link>
-              <Nav.Link as={Link} to="#link" className="nav-bar-link me-3">Destinations</Nav.Link>
-              <Nav.Link as={Link} to="#link" className="nav-bar-link me-3">Deals</Nav.Link>
-              <Nav.Link as={Link} to="#link" className="nav-bar-link me-3">My Bookings</Nav.Link>
+              {user && user.isAdmin ? (
+                <>
+                  <Nav.Link as={Link} to="/admin" className="nav-bar-link me-3">Flights</Nav.Link>
+                  <Nav.Link as={Link} to="/admin" className="nav-bar-link me-3">Bookings</Nav.Link>
+                  <Nav.Link as={Link} to="/admin" className="nav-bar-link me-3">Users</Nav.Link>
+                  <Nav.Link as={Link} to="/admin" className="nav-bar-link me-3">Passengers</Nav.Link>
+                </>
+              ) : (
+                <>
+                  <Nav.Link as={Link} to="/searchflight" className="nav-bar-link me-3">Flights</Nav.Link>
+                  <Nav.Link as={Link} to="#link" className="nav-bar-link me-3">Destinations</Nav.Link>
+                  <Nav.Link as={Link} to="#link" className="nav-bar-link me-3">Deals</Nav.Link>
+                  <Nav.Link as={Link} to="#link" className="nav-bar-link me-3">My Bookings</Nav.Link>
+                </>
+              )}
               {user ? (
                 <>
                   <Nav.Link as={Link} to="#link" className="nav-bar-link me-3">Profile</Nav.Link>
@@ -57,7 +83,24 @@ export default function NavBar() {
         </Container>
       </Navbar>
 
-      <LoginWindow isVisible={isLoginVisible} onClose={closeLoginWindow} />
+      {/* Conditionally show the overlay if either window is visible */}
+      {(isLoginVisible || isSignupVisible) && (
+        <div className={`modal-overlay ${isLoginVisible || isSignupVisible ? 'visible' : ''}`}></div>
+      )}
+
+      {/* Single LoginWindow with both props */}
+      <LoginWindow
+        isVisible={isLoginVisible}
+        onClose={closeLoginWindow}
+        handleSignUpClick={handleSignUpClick}
+        initialEmail={signupEmail}
+      />
+
+      <SignupWindow
+        isVisible={isSignupVisible}
+        onClose={closeSignupWindow}
+        openLoginWithEmail={openLoginWithEmail}
+      />
     </>
   );
 }

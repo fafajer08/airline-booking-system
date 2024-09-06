@@ -1,3 +1,22 @@
+/* Overlay styling */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent dark overlay */
+  z-index: 1040; /* Just below the modal window */
+  display: none; /* Hidden by default */
+}
+
+.modal-overlay.visible {
+  display: block; /* Show the overlay when modals are visible */
+}
+
+
+
+
 /* Navbar styles */
 .nav-bar {
   background-color: #007A8C;
