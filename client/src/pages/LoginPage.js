@@ -79,7 +79,7 @@ export default function Login() {
                     required
                   />
                 </Form.Group>
-                <Button variant="primary" type="submit" className="w-100 mb-3 btn-custom-signin">
+                <Button type="submit" className="w-100 mb-3 btn-custom-signin">
                   Sign In
                 </Button>
                 <div className="text-center my-3">

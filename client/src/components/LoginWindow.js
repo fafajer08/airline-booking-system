@@ -61,35 +61,46 @@ function LoginWindow({ isVisible, onClose, handleSignUpClick, initialEmail }) { 
   };
 
   const retrieveUserDetails = (token) => {
+    console.log('Retrieving user details with token:', token);
+  
     fetch('http://localhost:4000/users/details', {
       method: 'GET',
       headers: {
-        Authorization: `Bearer ${token}`, // Ensure proper format of Bearer token
+        Authorization: `Bearer ${token}`,
       },
     })
-      .then((res) => res.json())
+      .then((res) => {
+        console.log('Response status:', res.status);
+        return res.json();
+      })
       .then((data) => {
-        if (data._id) {
+        console.log('User details response data:', data);
+  
+        // Access the user object
+        const user = data.user;
+  
+        if (user && user._id) { // Check the nested user object
           // Call the login function from UserContext to update the user state
           login({
-            id: data._id,
-            firstName: data.firstName,
-            lastName: data.lastName,
-            isAdmin: data.isAdmin,
-            email: data.email,
-            mobileNo: data.mobileNo,
+            id: user._id,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            isAdmin: user.isAdmin,
+            email: user.email,
+            mobileNo: user.mobileNo,
           });
-
+  
           // Navigate to the appropriate dashboard
-          if (data.isAdmin) {
+          if (user.isAdmin) {
             navigate('/admin');
           } else {
             navigate('/users');
           }
-
+  
           setLoading(false); // Stop loading after navigation
           onClose(); // Optionally close the login window after navigating
         } else {
+          console.error('User details not found or data format is incorrect:', data);
           setError('User details not found.');
           setLoading(false);
         }
@@ -100,6 +111,9 @@ function LoginWindow({ isVisible, onClose, handleSignUpClick, initialEmail }) { 
         setLoading(false);
       });
   };
+  
+  
+  
 
   return (
     <div className={`login-window ${isVisible ? 'visible' : ''}`}>

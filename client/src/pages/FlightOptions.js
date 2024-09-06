@@ -13,8 +13,8 @@ export default function FlightOptions() {
         <Carousel />
         <FlightTable />
         <div className="button-container m-4">
-          <BackButton link="http://localhost:3000/searchflight" />
-          <ContinueButton  link="http://localhost:3000/guestdetails" />
+          <BackButton link="/searchflight" /> 
+          <ContinueButton link="/guestdetails" /> 
         </div>
       </div>
     </div>

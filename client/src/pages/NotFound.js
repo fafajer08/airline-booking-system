@@ -1,11 +1,17 @@
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import '../styles/notfound.css'; // Import the CSS file
+
 function NotFound() {
+    const navigate = useNavigate();
     return (
-      <div className='d-flex flex-column justify-content-center align-items-center' style={{ height: '60vh' }}>
-        <h1>404 - Page Not Found</h1>
-        <p>The page you are looking for does not exist.</p>
-      </div>
+        <div className="not-found-container">
+            <h1 className="not-found-title">404 - Page Not Found</h1>
+            <button className="not-found-button" onClick={() => navigate('/')}>
+                Go Back Home
+            </button>
+        </div>
     );
-  }
-  
-  export default NotFound;
-  
+}
+
+export default NotFound;
