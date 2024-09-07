@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import ModalPrompt from "../components/ModalPrompt";
+import ModalPrompt from "./ModalPrompt";
 import '../styles/adminflightsdash.css';  // Import the CSS file
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSortUp, faSortDown } from '@fortawesome/free-solid-svg-icons';
 import mockFlights from '../data/flightsData';
 
-export default function AdminFlightsDash() {
+export default function AdminUsersDash() {
   const [flights, setFlights] = useState([]);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
   const [searchQuery, setSearchQuery] = useState("");
