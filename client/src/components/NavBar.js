@@ -55,26 +55,24 @@ export default function NavBar() {
           <Navbar.Toggle aria-controls="basic-navbar-nav" className="nav-bar-toggler" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ms-auto">
-
-             
               {user && user.isAdmin ? (
                 <>
-                {/* Navbar for admin users */}
-                  <Nav.Link as={Link} to="/admin" className="nav-bar-link me-3">Admin Control</Nav.Link>
+                  <Nav.Link as={Link} to="/admin" className="nav-bar-link me-3">Flights</Nav.Link>
+                  <Nav.Link as={Link} to="/admin" className="nav-bar-link me-3">Bookings</Nav.Link>
+                  <Nav.Link as={Link} to="/admin" className="nav-bar-link me-3">Users</Nav.Link>
+                  <Nav.Link as={Link} to="/admin" className="nav-bar-link me-3">Passengers</Nav.Link>
                 </>
               ) : (
                 <>
-                {/* Navbar for non-admin users */}
                   <Nav.Link as={Link} to="/searchflight" className="nav-bar-link me-3">Flights</Nav.Link>
                   <Nav.Link as={Link} to="#link" className="nav-bar-link me-3">Destinations</Nav.Link>
                   <Nav.Link as={Link} to="#link" className="nav-bar-link me-3">Deals</Nav.Link>
-                  <Nav.Link as={Link} to="#link" className="nav-bar-link me-3">Bookings</Nav.Link>
+                  <Nav.Link as={Link} to="#link" className="nav-bar-link me-3">My Bookings</Nav.Link>
                 </>
               )}
               {user ? (
                 <>
-                  {/* Navbar for logged in users */}
-                  <Nav.Link as={Link} to="/users" className="nav-bar-link me-3">My Profile</Nav.Link>
+                  <Nav.Link as={Link} to="#link" className="nav-bar-link me-3">Profile</Nav.Link>
                   <Nav.Link onClick={handleLogout} className="nav-bar-link me-3">Logout</Nav.Link>
                 </>
               ) : (

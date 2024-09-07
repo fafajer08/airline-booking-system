@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ModalPrompt from "../components/ModalPrompt";
-import '../styles/adminflightsdash.css';  // Import the CSS file
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSortUp, faSortDown } from '@fortawesome/free-solid-svg-icons';
-import mockFlights from '../data/flightsData';
+import '../styles/admin.css';  // Import the CSS file
 
 export default function AdminFlightsDash() {
   const [flights, setFlights] = useState([]);
@@ -12,15 +9,48 @@ export default function AdminFlightsDash() {
   const [isModalVisible, setModalVisible] = useState(false); 
   const [fieldsConfig, setFieldsConfig] = useState([]);
   const [apiDetails, setApiDetails] = useState({ apiUrl: "", method: "POST", needsAuth: true });
-  const [filteringColumn, setFilteringColumn] = useState(null);
-  const [filters, setFilters] = useState({});
-
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
 
   const apiBaseUrl = "/api/flights";
 
+  // Mock flight data with initial status
+  const mockFlights = [
+    {
+      departureDate: "2024-09-15",
+      departureAirport: "JFK",
+      destinationAirport: "LAX",
+      departureTime: "14:00",
+      flightNumber: "AA123",
+      seats: 200,
+      booked: 150,
+      status: "On Time",
+      actionStatus: "", // Empty status initially
+    },
+    {
+      departureDate: "2024-09-16",
+      departureAirport: "ORD",
+      destinationAirport: "ATL",
+      departureTime: "18:30",
+      flightNumber: "DL456",
+      seats: 180,
+      booked: 180,
+      status: "Full",
+      actionStatus: "", // Empty status initially
+    },
+    {
+      departureDate: "2024-09-17",
+      departureAirport: "SFO",
+      destinationAirport: "SEA",
+      departureTime: "08:00",
+      flightNumber: "UA789",
+      seats: 150,
+      booked: 120,
+      status: "Delayed",
+      actionStatus: "", // Empty status initially
+    },
+  ];
+
   useEffect(() => {
+    // Fetching from API or using mock data
     async function fetchFlights() {
       try {
         const response = await fetch("/api/flights");
@@ -62,29 +92,15 @@ export default function AdminFlightsDash() {
     return sortableFlights;
   }, [flights, sortConfig]);
 
-  // Filter the flights based on search query and column-specific filters
-  const filteredFlights = sortedFlights.filter((flight) => {
-    return Object.keys(filters).every((key) =>
-      flight[key]?.toString().toLowerCase().includes(filters[key].toLowerCase())
-    );
-  });
+  // Filter the flights based on search query
+  const filteredFlights = sortedFlights.filter((flight) =>
+    flight.flightNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    flight.departureAirport.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    flight.destinationAirport.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    flight.status.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
-  // Pagination logic
-  const indexOfLastFlight = currentPage * itemsPerPage;
-  const indexOfFirstFlight = indexOfLastFlight - itemsPerPage;
-  const currentFlights = filteredFlights.slice(indexOfFirstFlight, indexOfLastFlight);
-
-  const totalPages = Math.ceil(filteredFlights.length / itemsPerPage);
-
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
-  };
-
-  const handleItemsPerPageChange = (e) => {
-    setItemsPerPage(parseInt(e.target.value, 10));
-    setCurrentPage(1);  // Reset to the first page
-  };
-
+  // Action button handlers with confirmation and row color change
   const updateFlightStatus = (flightNumber, status) => {
     setFlights((prevFlights) =>
       prevFlights.map((flight) =>
@@ -116,13 +132,29 @@ export default function AdminFlightsDash() {
   const handleAddFlight = () => {
     setApiDetails({ apiUrl: apiBaseUrl, method: "POST", needsAuth: true });
   
+    // Set the fieldsConfig for adding a new flight dynamically
     setFieldsConfig([
-      // Your fieldsConfig for adding a flight
+      { label: "Departure Date", name: "departureDate", type: "date" },
+      { label: "Departure Airport", name: "departureAirport", type: "text" },
+      { label: "Destination Airport", name: "destinationAirport", type: "text" },
+      { label: "Departure Time", name: "departureTime", type: "time" },
+      { label: "Flight Number", name: "flightNumber", type: "text" },
+      { label: "Seats", name: "seats", type: "number" },
+      { label: "Booked Seats", name: "booked", type: "number" },
+      {
+        label: "Status",
+        name: "status",
+        type: "select",
+        options: [
+          { label: "On Time", value: "On Time" },
+          { label: "Delayed", value: "Delayed" },
+          { label: "Full", value: "Full" },
+        ],
+      },
     ]);
   
     setModalVisible(true);  // Open the modal
   };
-  
   const handleEditFlight = (flight) => {
     setApiDetails({
       apiUrl: `${apiBaseUrl}/${flight.flightNumber}`,
@@ -130,13 +162,32 @@ export default function AdminFlightsDash() {
       needsAuth: true,
     });
 
+    // Set the fieldsConfig dynamically for editing the flight
     setFieldsConfig([
-      // Your fieldsConfig for editing a flight
+      { label: "Departure Date", name: "departureDate", type: "date", value: flight.departureDate },
+      { label: "Departure Airport", name: "departureAirport", type: "text", value: flight.departureAirport },
+      { label: "Destination Airport", name: "destinationAirport", type: "text", value: flight.destinationAirport },
+      { label: "Departure Time", name: "departureTime", type: "time", value: flight.departureTime },
+      { label: "Flight Number", name: "flightNumber", type: "text", value: flight.flightNumber },
+      { label: "Seats", name: "seats", type: "number", value: flight.seats },
+      { label: "Booked Seats", name: "booked", type: "number", value: flight.booked },
+      {
+        label: "Status",
+        name: "status",
+        type: "select",
+        options: [
+          { label: "On Time", value: "On Time" },
+          { label: "Delayed", value: "Delayed" },
+          { label: "Full", value: "Full" },
+        ],
+        value: flight.status,
+      },
     ]);
 
     setModalVisible(true);
   };
 
+  // Function to get the CSS class based on status
   const getRowClass = (actionStatus) => {
     switch (actionStatus) {
       case "cancel":
@@ -148,15 +199,6 @@ export default function AdminFlightsDash() {
       default:
         return "row-default"; // Default row color
     }
-  };
-
-  const handleHeaderClick = (key) => {
-    handleSort(key);
-    setFilteringColumn(key);
-  };
-
-  const handleFilterChange = (e, column) => {
-    setFilters({ ...filters, [column]: e.target.value });
   };
 
   return (
@@ -174,48 +216,27 @@ export default function AdminFlightsDash() {
         </button>
       </div>
 
-      {/* Items per page selection */}
-      <div>
-        <label htmlFor="itemsPerPage">Flights per page: </label>
-        <select id="itemsPerPage" value={itemsPerPage} onChange={handleItemsPerPageChange}>
-          <option value="10">10</option>
-          <option value="20">20</option>
-          <option value="50">50</option>
-          <option value="100">100</option>
-        </select>
-      </div>
-
-      {/* Table of flights */}
       <table>
         <thead>
           <tr>
-            {["departureDate", "departureAirport", "destinationAirport", "departureTime", "flightNumber", "seats", "booked"].map((key) => (
-              <th key={key} onClick={() => handleHeaderClick(key)}>
-                {key.toUpperCase()}
-                <span>
-                  {sortConfig.key === key && sortConfig.direction === "ascending" && <FontAwesomeIcon icon={faSortUp} />}
-                  {sortConfig.key === key && sortConfig.direction === "descending" && <FontAwesomeIcon icon={faSortDown} />}
-                </span>
-                {filteringColumn === key && (
-                  <input
-                    type="text"
-                    placeholder={`Filter ${key}`}
-                    onChange={(e) => handleFilterChange(e, key)}
-                    style={{ display: 'block', width: '100%' }}
-                  />
-                )}
-              </th>
-            ))}
+            <th onClick={() => handleSort("departureDate")}>DEPARTURE DATE</th>
+            <th onClick={() => handleSort("departureAirport")}>DEPARTURE AIRPORT</th>
+            <th onClick={() => handleSort("destinationAirport")}>DESTINATION AIRPORT</th>
+            <th onClick={() => handleSort("departureTime")}>DEPARTURE TIME</th>
+            <th onClick={() => handleSort("flightNumber")}>FLIGHT NUMBER</th>
+            <th onClick={() => handleSort("seats")}>SEATS</th>
+            <th onClick={() => handleSort("booked")}>BOOKED</th>
+            <th onClick={() => handleSort("status")}>STATUS</th>
             <th>ACTIONS</th>
           </tr>
         </thead>
         <tbody>
-          {currentFlights.length > 0 ? (
-            currentFlights.map((flight, index) => (
+          {filteredFlights.length > 0 ? (
+            filteredFlights.map((flight, index) => (
               <tr key={index} className={getRowClass(flight.actionStatus)}>
                 <td>{flight.departureDate}</td>
-                <td>{flight.departureAirport.code}</td>
-                <td>{flight.destinationAirport.code}</td>
+                <td>{flight.departureAirport}</td>
+                <td>{flight.destinationAirport}</td>
                 <td>{flight.departureTime}</td>
                 <td>{flight.flightNumber}</td>
                 <td>{flight.seats}</td>
@@ -235,15 +256,6 @@ export default function AdminFlightsDash() {
           )}
         </tbody>
       </table>
-
-      {/* Pagination Controls */}
-      <div>
-        {Array.from({ length: totalPages }, (_, index) => (
-          <button key={index} onClick={() => handlePageChange(index + 1)} disabled={index + 1 === currentPage}>
-            {index + 1}
-          </button>
-        ))}
-      </div>
 
       <ModalPrompt
         isVisible={isModalVisible}

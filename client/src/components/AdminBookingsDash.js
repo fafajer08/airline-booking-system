@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-//import '../styles/admin.css';  // Import the CSS file
+import '../styles/admin.css';  // Import the CSS file
 
 export default function AdminBookingsDash() {
   const [bookings, setBookings] = useState([]);
