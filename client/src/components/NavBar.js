@@ -14,6 +14,7 @@ export default function NavBar() {
         <Navbar.Toggle aria-controls="basic-navbar-nav" className="navbar-toggler" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto">
+            <Nav.Link as={Link} to="/destinations" className='me-3'>Destinations</Nav.Link>
             <Nav.Link as={Link} to="/searchflight" className='me-3'>Flights</Nav.Link>
             <Nav.Link as={Link} to="#link" className='me-3'>Destinations</Nav.Link>
             <Nav.Link as={Link} to="#link" className='me-3'>Deals</Nav.Link>
