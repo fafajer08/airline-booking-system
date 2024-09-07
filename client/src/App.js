@@ -10,6 +10,7 @@ import GuestDetails from './pages/GuestDetails';
 import BookingSummary from './pages/BookingSummary';
 import Payment from './pages/Payment';
 import Test from './pages/Test';
+import Destinations from './pages/Destinations';
 import LoginPage from './pages/LoginPage';
 import Admin from './pages/AdminDash';
 import Users from './pages/UserDash';
