@@ -57,10 +57,8 @@ export default function NavBar() {
             <Nav className="ms-auto">
               {user && user.isAdmin ? (
                 <>
-                  <Nav.Link as={Link} to="/admin" className="nav-bar-link me-3">Flights</Nav.Link>
-                  <Nav.Link as={Link} to="/admin" className="nav-bar-link me-3">Bookings</Nav.Link>
-                  <Nav.Link as={Link} to="/admin" className="nav-bar-link me-3">Users</Nav.Link>
-                  <Nav.Link as={Link} to="/admin" className="nav-bar-link me-3">Passengers</Nav.Link>
+                  {/* Admin user nav */}
+                  <Nav.Link as={Link} to="/admin" className="nav-bar-link me-3">Admin Control</Nav.Link>
                 </>
               ) : (
                 <>
@@ -72,7 +70,7 @@ export default function NavBar() {
               )}
               {user ? (
                 <>
-                  <Nav.Link as={Link} to="#link" className="nav-bar-link me-3">Profile</Nav.Link>
+                  <Nav.Link as={Link} to="/profile" className="nav-bar-link me-3">My Profile</Nav.Link>
                   <Nav.Link onClick={handleLogout} className="nav-bar-link me-3">Logout</Nav.Link>
                 </>
               ) : (

@@ -15,6 +15,7 @@ import LoginPage from './pages/LoginPage';
 import Admin from './pages/AdminDash';
 import Users from './pages/UserDash';
 import NotFound from './pages/NotFound';
+import Profile from './pages/Profile';
 
 
 function App() {
@@ -34,6 +35,7 @@ function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path='/admin' element={<Admin />} />
             <Route path='/users' element={<Users />} />
+            <Route path='/profile' element={<Profile />} />
             <Route path='/*' element={<NotFound />} />
           </Routes>
         </Router>

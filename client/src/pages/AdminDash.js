@@ -1,33 +1,81 @@
-import React, { useState, useEffect, useContext } from "react";
-import NavBar from "../components/NavBar";
-import '../styles/admin.css';  // Import the CSS file
+import React, { useState, useContext } from "react";
 import Flights from "../components/AdminFlightsDash";
 import Bookings from "../components/AdminBookingsDash";
-import { Container, Col, Row, Button, Form } from 'react-bootstrap';
+import Users from "../components/AdminUsersDash";  
+import Passengers from "../components/AdminPassengersDash";  
+import { Button, Row, Col } from 'react-bootstrap';
 import UserContext from '../context/UserContext';
+import '../styles/admindash.css'; // Ensure the CSS file is correctly linked
 
 export default function Admin() {
-  const { user } = useContext(UserContext); // Correct useContext to access user
+  const { user } = useContext(UserContext);
+
+  const [activeComponent, setActiveComponent] = useState("Flights");
+
+  const renderActiveComponent = () => {
+    switch (activeComponent) {
+      case "Flights":
+        return <Flights />;
+      case "Bookings":
+        return <Bookings />;
+      case "Users":
+        return <Users />;
+      case "Passengers":
+        return <Passengers />;
+      default:
+        return null;
+    }
+  };
 
   return (
-    <div>
-      <div className="d-flex align-content-center justify-content-center">
-        <div className="container ">
+    <div className="admin-dashboard">
+      <div className="container">
+        <Row className="mt-5 align-items-center">
+          <Col md={9}>
+            <h5>Admin Dashboard</h5>
+            {user ? (
+              <h2>Welcome {user.firstName}</h2>
+            ) : (
+              <h2>Welcome Guest</h2>
+            )}
+          </Col>
 
-          <h5 className="mt-5 ms-5 px-5">Admin Dashboard</h5>
-          {user ? ( // Check if user exists to avoid errors
-            <h2 className="ms-5 px-5">Welcome {user.firstName}</h2>
-          ) : (
-            <h2 className="ms-5 px-5">Welcome Guest</h2>
-          )}
+          {/* Button Row */}
+          <Col md={3} className="d-flex justify-content-end button-row">
+            <Button 
+              variant={activeComponent === "Flights" ? "primary" : "outline-primary"} 
+              onClick={() => setActiveComponent("Flights")}
+              className="ms-2"
+            >
+              Flights
+            </Button>
+            <Button 
+              variant={activeComponent === "Bookings" ? "primary" : "outline-primary"} 
+              onClick={() => setActiveComponent("Bookings")}
+              className="ms-2"
+            >
+              Bookings
+            </Button>
+            <Button 
+              variant={activeComponent === "Users" ? "primary" : "outline-primary"} 
+              onClick={() => setActiveComponent("Users")}
+              className="ms-2"
+            >
+              Users
+            </Button>
+            <Button 
+              variant={activeComponent === "Passengers" ? "primary" : "outline-primary"} 
+              onClick={() => setActiveComponent("Passengers")}
+              className="ms-2"
+            >
+              Passengers
+            </Button>
+          </Col>
+        </Row>
 
-          <div className="d-flex align-content-center justify-content-center">
-            <Flights />
-          </div>
-
-          <div className="d-flex align-content-center justify-content-center">
-            <Bookings />
-          </div>
+        {/* Render the active component */}
+        <div className="d-flex align-content-center justify-content-center mt-4">
+          {renderActiveComponent()}
         </div>
       </div>
     </div>
