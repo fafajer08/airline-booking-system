@@ -48,7 +48,7 @@ export default function NavBar() {
     <>
       <Navbar expand="lg" className="nav-bar bg-body-primary">
         <Container fluid>
-          <Navbar.Brand className="nav-bar-brand d-flex align-items-center" as={Link} to="/">
+          <Navbar.Brand className="d-flex align-items-center" as={Link} to="/">
             <img className="nav-bar-logo" src={logo} alt="Logo" />
             <span className="nav-bar-logo-name">Fly Airlines</span>
           </Navbar.Brand>
@@ -56,10 +56,7 @@ export default function NavBar() {
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ms-auto">
               {user && user.isAdmin ? (
-                <>
-                  {/* Admin user nav */}
-                  <Nav.Link as={Link} to="/admin" className="nav-bar-link me-3">Admin Control</Nav.Link>
-                </>
+                <Nav.Link as={Link} to="/admin" className="nav-bar-link me-3">Admin Control</Nav.Link>
               ) : (
                 <>
                   <Nav.Link as={Link} to="/searchflight" className="nav-bar-link me-3">Flights</Nav.Link>
