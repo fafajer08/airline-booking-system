@@ -9,7 +9,7 @@
     display: flex;
     align-items: center;
     position: relative;
-    width: calc(7 * 150px); /* Exactly 7 cards, each 150px wide */
+    width: calc(7 * 130px); /* Exactly 7 cards, each 130px wide */
     margin: 0 auto; /* Center the carousel container */
     padding: 0; /* Remove padding to eliminate gaps */
 }
@@ -30,8 +30,9 @@
 }
 
 .card {
-    width: 150px; /* Fixed width for each card */
-    flex: 0 0 150px; /* Prevent flexing: don't grow or shrink, stay 150px */
+    width: 130px; /* Fixed width for each card */
+    height: 110px;
+    flex: 0 0 130px; /* Prevent flexing: don't grow or shrink, stay 130px */
     padding: 16px;
     background-color: #f5f5f5;
     border-radius: 0px;
@@ -45,14 +46,13 @@
 
 .card:hover {
     background-color: #336749; /* Slightly darker on hover */
-    color: white
+    color: white;
 }
 
 /* Style for selected card */
 .card.selected {
     background-color: #336749 !important; /* Blue background for selected card */
     color: white !important; /* White text for contrast */
-    /*transform: scale(1.1); /* Slightly enlarge the selected card */
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Enhance shadow for emphasis */
 }
 
@@ -77,7 +77,6 @@
     height: 100%;
 }
 
-
 /* Position buttons directly adjacent to the carousel */
 .scroll-button.left {
     left: -50px; /* Adjust as needed to place the button right next to the carousel */
@@ -96,7 +95,7 @@
 /* Responsive Adjustments */
 @media (max-width: 1200px) {
     .carousel-container {
-        width: calc(7 * 150px); /* Adjust if necessary */
+        width: calc(7 * 130px); /* Adjusted for 130px wide cards */
     }
     .scroll-button.left {
         left: -40px;
@@ -105,3 +104,40 @@
         right: -40px;
     }
 }
+
+@media (max-width: 600px) {
+    .carousel-container {
+        width: calc(3 * 130px); /* Adjusted for 130px wide cards */
+    }
+    .scroll-button.left {
+        left: -40px;
+    }
+    .scroll-button.right {
+        right: -40px;
+    }
+}
+
+@media (min-width: 601px) and (max-width: 770px) {
+    .carousel-container {
+        width: calc(4 * 130px); /* Display 4 cards on screens between 601px and 770px */
+    }
+    .scroll-button.left {
+        left: -40px;
+    }
+    .scroll-button.right {
+        right: -40px;
+    }
+}
+
+@media (min-width: 771px) and (max-width: 990px) {
+    .carousel-container {
+        width: calc(5 * 130px); /* Display 4 cards on screens between 601px and 770px */
+    }
+    .scroll-button.left {
+        left: -40px;
+    }
+    .scroll-button.right {
+        right: -40px;
+    }
+}
+

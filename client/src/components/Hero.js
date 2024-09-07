@@ -1,19 +1,6 @@
 import React, { useState } from "react";
 import "../styles/hero.css"; 
 // import  'bootstrap-icons/font/bootstrap-icons.css';
-import {
-  DateSelector,
-  PortSelector,
-  FlightDepartureSelector,
-  FlightDestinationSelector,
-  PaxSelector,
-  PromoCodeInput,
-  SearchFlightButton,
-  SwapIcon,
-  flights
-} from "../components/SearchFlight.js";
-
-
 
 
 const HeroSection = () => {
@@ -23,9 +10,6 @@ const HeroSection = () => {
     airportCode: '',
     airportName: ''
   });
-
-
-
 
 
   const [formType, setFormType] = useState('round-trip');

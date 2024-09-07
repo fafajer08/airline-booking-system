@@ -3,8 +3,8 @@
 // import Course from "../components/Course"
 import React from 'react';
 import NavBar from "../components/NavBar";
-import Carousel from "../components/Carousel";
-import { BackButton, ContinueButton } from '../components/Buttons';
+import { BackButton, ContinueButton, SubmitButton } from '../components/Buttons';
+import BookingSummaryTable from "../components/BookingSummaryTable";
 
 
 export default function BookingSummary() {
@@ -12,12 +12,17 @@ export default function BookingSummary() {
     <div>
     <NavBar />
       <div className="container">
-        <h5 className="mt-5 ms-5 px-5" > Please review your booking before processing to payment</h5>
-        <h2 className="ms-5 px-5">Booking Summary</h2>
-
+        <h5 className="" > Please review your booking before processing to payment</h5>
+        <h2 className="">Booking Summary</h2>
+        <BookingSummaryTable />
         <div>
-          <BackButton link="http://localhost:3000/guestdetails" />
-          <ContinueButton link="http://localhost:3000/payment" />
+        <p>By click ‘Continue’ button below, I confirm that I have read, understood, and accept all the Conditions set by the airline.</p>
+        </div>
+        <div className='d-flex '>
+            <div className='ms-auto'>
+              <BackButton link="http://localhost:3000/guestdetails" />
+              <ContinueButton link="http://localhost:3000/payment" />
+            </div>
         </div>
       </div>
     </div>

@@ -1,0 +1,137 @@
+/* Custom styles for login form */
+.login-form-container {
+  position: relative;
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.slide-in {
+  transform: translateX(0);
+  transition: transform 0.8s ease-in-out;
+}
+
+.slide-out {
+  transform: translateX(100%);
+  transition: transform 0.5s ease-in-out;
+}
+
+.hero-image {
+  background-image: url("../images/hero.png");
+  background-size: cover; /* Ensures the entire image is visible */
+  background-repeat: no-repeat;
+  background-position: inherit;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+}
+
+.form-label {
+  font-weight: bold;
+}
+
+.form-control-custom,
+.btn-custom {
+  border-radius: 8px;
+  padding: 0.5rem 1rem; /* Adjust padding to fit text properly */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px; /* Adjust font size if needed */
+}
+
+.btn-custom img {
+  margin-right: 0.5rem; /* Ensure there's space between the icon and text */
+}
+
+.d-flex {
+  display: flex;
+}
+
+.gap-3 {
+  gap: 1rem; /* Adjust gap as needed */
+}
+
+.btn-custom:active {
+  background-color: white;
+  color: #007A8C;
+}
+
+.btn-custom:hover {
+  background-color: #007A8C;
+  color: white;
+}
+
+.btn-custom-signin {
+  background-color: #336749;
+}
+
+.btn-custom-signin:active {
+  background-color: white;
+  color: #007A8C;
+}
+
+.btn-custom-signin:hover {
+  background-color: #007A8C;
+  color: white;
+}
+
+.divider-container {
+  display: flex;
+  align-items: center;
+  text-align: center;
+}
+
+.divider-line {
+  flex: 1;
+  border: 0;
+  border-top: 1px solid #ddd;
+}
+
+.divider-container hr {
+  border: 0;
+  border-top: 1px solid #030303;
+}
+
+.divider-text {
+  margin: 0 1rem;
+  white-space: nowrap;
+  font-weight: bold;
+}
+
+@media (min-width: 768px) {
+  .hero-image {
+    height: 100vh;
+    background-size: cover;
+  }
+
+  .login-form-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    margin-top: 100px;
+  }
+  .d-flex {
+    flex-direction: grid; /* Ensure items stay in a row */
+    flex-wrap: nowrap; /* Prevent items from wrapping to the next line */
+  }
+
+  .btn-custom {
+    width: 100%; /* Ensure buttons take full width of container */
+    max-width: 48%; /* Ensure buttons don't stretch too much */
+    margin: 0.5rem 0;
+  }
+}
+
+/* Additional media query to ensure login form doesn't overflow the navbar */
+@media (min-width: 577px) {
+  .login-form-container {
+    max-width: 480px;
+    margin-top: 20px; /* Ensure margin from the top so it doesn't overlap with the navbar */
+  }
+}

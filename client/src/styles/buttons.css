@@ -108,7 +108,7 @@ button {
     cursor: pointer;
 }
 
-.select-button-container {
+.select-button {
     width: 160px;
     height: 40px;
     background-color: #CACACA; /* Default color */
@@ -118,10 +118,11 @@ button {
     align-items: center;
     justify-content: center;
     padding: 0 10px;
+    border: none; 
     transition: background-color 0.3s ease;
 }
 
-.select-button-container.selected {
+.select-button.selected {
     background-color: #336749; /* Color when selected */
 }
 

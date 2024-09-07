@@ -58,23 +58,35 @@ function BackButton({ link }) {
 
 
   
-  function SelectButton() {
-    const [isSelected, setIsSelected] = useState(false);
+  // function SelectButton() {
+  //   const [isSelected, setIsSelected] = useState(false);
   
-    const handleToggleSelect = () => {
-      setIsSelected(!isSelected); // Toggle the selected state
-    };
+  //   const handleToggleSelect = () => {
+  //     setIsSelected(!isSelected); // Toggle the selected state
+  //   };
   
-    const buttonClass = isSelected ? 'select-button-container selected' : 'select-button-container';
+  //   const buttonClass = isSelected ? 'select-button-container selected' : 'select-button-container';
   
+  //   return (
+  //     <button type="button" className="select-button-link" onClick={handleToggleSelect}>
+  //       <div className={buttonClass}>
+  //         <span className="select-button-text">SELECT</span>
+  //       </div>
+  //     </button>
+  //   );
+  // }
+
+  function SelectButton({ isSelected, onClick }) {
     return (
-      <button type="button" className="select-button-link" onClick={handleToggleSelect}>
-        <div className={buttonClass}>
-          <span className="select-button-text">SELECT</span>
-        </div>
+      <button 
+        className={`select-button ${isSelected ? 'selected' : ''}`} 
+        onClick={onClick}
+      >
+        {isSelected ? 'SELECT' : 'SELECT'}
       </button>
     );
   }
+  
 
 
 function SubmitButton() {

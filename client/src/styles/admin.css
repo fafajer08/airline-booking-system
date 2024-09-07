@@ -1,0 +1,54 @@
+/* Admin.css */
+
+/* Table and container styles */
+.container {
+    margin: 20px;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  thead th {
+    cursor: pointer;
+    padding: 10px;
+    background-color: #f4f4f4;
+    border-bottom: 2px solid #ddd;
+  }
+  
+  tbody td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    text-align: center;
+  }
+  
+  /* Button styles */
+  button {
+    margin: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #f0f0f0;
+  }
+  
+  /* Row tint styles */
+  .row-ok {
+    background-color: rgba(0, 255, 0, 0.1); /* Light green */
+  }
+  
+  .row-hold {
+    background-color: rgba(255, 255, 0, 0.1); /* Light yellow */
+  }
+  
+  .row-cancel {
+    background-color: rgba(255, 0, 0, 0.1); /* Light red */
+  }
+  
+  .row-default {
+    background-color: white;
+  }
+  
