@@ -13,7 +13,6 @@ function GuestDetailsPage() {
 
   return (
     <div>
-      <NavBar />
       <div className="container">
         <h5 className="mt-5 ms-5 px-5">Please enter your details</h5>
         <h2 className="ms-5 px-5">Guest Details</h2>

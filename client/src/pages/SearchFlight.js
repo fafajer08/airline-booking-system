@@ -39,7 +39,6 @@ export default function SearchFlight() {
 
   return (
     <div>
-      <NavBar />
       <div className='container'>
         <h1 className="my-5">Where would you like to go?</h1>
         <form>

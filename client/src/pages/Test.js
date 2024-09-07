@@ -27,7 +27,6 @@ export default function Test() {
 
   return (
     <div>
-      <Navbar />
       <div className="d-flex justify-content-center flex-column align-items-center">
         <h1>Test Page</h1>
         <FlightTypeSelector onFlightTypeChange={setFlightType} />

@@ -1,0 +1,153 @@
+/* MyProfile Container */
+.user-profile {
+    padding: 20px;
+    background-color: #f9f9f9; /* Light background for form area */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for card effect */
+    max-width: 600px;
+    margin: 0 auto; /* Center the form */
+}
+
+/* Profile Heading */
+.user-profile h2 {
+    font-size: 24px;
+    color: #336749; /* Primary green color */
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Form Group Styles */
+.user-profile .form-group {
+    margin-bottom: 20px;
+}
+
+.user-profile .form-group label {
+    font-size: 16px;
+    font-weight: 500;
+    color: #333; /* Darker text for labels */
+}
+
+.user-profile .form-control {
+    padding: 10px;
+    border: 1px solid #ccc; /* Light border */
+    border-radius: 5px;
+    width: 100%;
+}
+
+/* Error and Success Messages */
+.error-message {
+    color: #ff0000;
+    font-size: 14px;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.success-message {
+    color: #336749;
+    font-size: 14px;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+/* Button Styles */
+.user-profile .btn-primary, 
+.user-profile .btn-secondary {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    width: 100%;
+    font-size: 16px;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.user-profile .btn-primary {
+    background-color: #336749;
+    color: white;
+}
+
+.user-profile .btn-primary:hover {
+    background-color: #294d3b; /* Darker green on hover */
+}
+
+.user-profile .btn-secondary {
+    background-color: #f0f0f0; /* Light gray background for secondary button */
+    color: #336749; /* Primary green text for secondary button */
+}
+
+.user-profile .btn-secondary:hover {
+    background-color: #d4d4d4; /* Darker gray on hover */
+}
+
+/* Modal Styles */
+.modal-header, .modal-footer {
+    border: none; /* Remove default border in modal */
+}
+
+.modal-header {
+    background-color: #336749; /* Primary green background */
+    color: white;
+}
+
+.modal-title {
+    font-size: 20px;
+}
+
+.modal-body .form-control {
+    padding: 10px;
+    border: 1px solid #ccc; /* Light border */
+    border-radius: 5px;
+    width: 100%;
+}
+
+.modal-body .form-group {
+    margin-bottom: 15px;
+}
+
+/* Modal Button Styling */
+.modal-footer .btn-primary {
+    background-color: #336749;
+    color: white;
+}
+
+.modal-footer .btn-primary:hover {
+    background-color: #294d3b;
+}
+
+/* Adjustments for Mobile */
+@media (max-width: 576px) {
+    .user-profile {
+        padding: 15px;
+    }
+
+    .user-profile h2 {
+        font-size: 20px;
+    }
+
+    .modal-body {
+        padding: 10px;
+    }
+}
+
+
+/* Green Button Styles (Custom Class) */
+.btn-green {
+    background-color: #336749 !important; /* Primary green */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    width: 100%;
+    font-size: 16px;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-green:hover {
+    background-color: #294d3b; /* Darker green on hover */
+}
+
+.btn-green:focus {
+    outline: none;
+    box-shadow: 0 0 5px #336749;
+}

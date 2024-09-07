@@ -1,35 +1,60 @@
-/* Navbar styles */
-.nav {
-  background-color: #007A8C;
+/* Overlay styling */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent dark overlay */
+  z-index: 1040; /* Just below the modal window */
+  display: none; /* Hidden by default */
 }
 
-.logo-name {
+.modal-overlay.visible {
+  display: block; /* Show the overlay when modals are visible */
+}
+
+
+
+
+/* Navbar styles */
+.nav-bar {
+  background-color: #007A8C;
+  position: -webkit-sticky; /* For Safari support */
+  position: sticky; /* Sticky position */
+  top: 0; /* Sticks to the top */
+  z-index: 999; /* Ensures the Navbar is above other elements */
+  width: 100%; /* Full width */
+}
+
+.nav-bar-logo-name {
   font-size: 28px;
 }
 
-.nav .navbar-brand,
-.nav .nav-link {
+.nav-bar .nav-bar-brand,
+.nav-bar .nav-bar-link {
   color: white;
 }
 
-.nav-link {
+.nav-bar-link {
   font-size: 20px;
 }
 
-.nav .nav-link:hover {
+.nav-bar .nav-bar-link:hover {
   color: #336749; 
   transform: scale(1.1);
 }
 
-.logo {
+.nav-bar-logo {
   width: 165px;
-  height: 60px;
+  height: 70px;
   margin-right: 15px;
+  margin-left: 30px;
   padding: 10px;
 }
 
 /* Navbar positioning */
-.navbar {
+.nav-bar-navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -37,21 +62,21 @@
 
 /* Mobile view adjustments */
 @media (min-width: 991px) {
-  .navbar-toggler {
+  .nav-bar-toggler {
     margin-left: auto; /* Centering the burger icon on smaller screens */
   }
 
-  .navbar-collapse {
+  .nav-bar-collapse {
     text-align: end;
   }
 
-  .navbar-nav {
+  .nav-bar-nav {
     flex-direction: column; /* Stack nav items vertically on small screens */
   }
 }
 
 @media (max-width: 576px) {
-  .navbar-toggler {
+  .nav-bar-toggler {
     margin-left: auto; /* Centering the burger icon on smaller screens */
   }
 }

@@ -1,0 +1,192 @@
+/* Outer login-window styling */
+.login-window {
+    position: fixed;
+    top: 0;
+    right: -100%; 
+    width: 50vw;
+    height: 100vh;
+    background-color: rgba(255, 255, 255, 0.9); 
+    box-shadow: -3px 0 5px rgba(0, 0, 0, 0.3);
+    padding: 20px;
+    transition: right 0.5s ease, opacity 0.5s ease; 
+    opacity: 0;
+    z-index: 1050;
+    backdrop-filter: blur(10px); 
+    -webkit-backdrop-filter: blur(10px); 
+    display: block; 
+}
+
+/* Show the login-window when the visible class is applied */
+.login-window.visible {
+    transform: translateX(0); 
+    opacity: 1;
+    visibility: visible;
+    display: flex; 
+    justify-content: center;
+    align-items: center;
+    right: 0; 
+}
+
+/* Media query for small screens */
+@media (max-width: 768px) {
+  .login-window {
+    width: 100vw; 
+  }
+}
+
+.login-window-content {
+    width: 100%;
+    max-width: 400px;
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    position: relative;
+}
+
+/* Close button container */
+.close-btn-container {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 0;
+  background-color: transparent;  
+  border: none;                    
+  font-size: 26px;                 
+  font-weight: bold;               
+  color: #000;                    
+  cursor: pointer;                
+  padding: 0;                     
+  line-height: 1;               
+  margin: 10px;
+}
+
+.close-btn-container:hover {
+  color: #ff0000 !important; 
+}
+
+/* Form group and input styling */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Checkbox styling */
+.form-check {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.form-check-input {
+    margin-right: 10px;
+}
+
+/* Button styling with theme color */
+.login-btn {
+    width: 100%;
+    background-color: #336749; /* Theme color */
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.login-btn:hover {
+    background-color: #294d3b; /* Darker green on hover */
+}
+
+/* Separator styling */
+.separator {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+}
+
+.separator span {
+    font-size: 14px;
+    color: #666;
+}
+
+/* Social login buttons */
+.social-login {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
+
+.social-login .btn {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    padding: 10px;
+    width: 48%;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: white;
+}
+
+.social-login img {
+    width: 20px;
+    margin-right: 10px;
+}
+
+.social-login .btn-google {
+    border-color: #db4437;
+    color: #db4437;
+}
+
+.social-login .btn-apple {
+    border-color: #000;
+    color: #000;
+}
+
+/* Sign-up link styling */
+.signup-link {
+    font-size: 14px;
+}
+
+.signup-link a {
+    color: #336749; /* Theme color */
+    text-decoration: none;
+}
+
+.signup-link a:hover {
+    text-decoration: underline;
+}
+
+/* Password input container to position the button */
+.password-input-container {
+    position: relative;
+  }
+  
+  .password-input-container input {
+    padding-right: 50px; /* Space for the toggle button */
+  }
+  
+  /* Style for the toggle button */
+  .toggle-password-btn {
+    position: absolute;
+    top: 40%;
+    right: 10px;
+    transform: translateY(-50%);
+    background-color: transparent;
+    border: none;
+    font-size: 14px;
+    cursor: pointer;
+    color: #336749; /* Theme color */
+  }
+  
+  /* Hover effect for toggle button */
+  .toggle-password-btn:hover {
+    color: #294d3b; /* Darker green on hover */
+  }
