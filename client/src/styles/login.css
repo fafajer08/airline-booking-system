@@ -102,6 +102,56 @@
   font-weight: bold;
 }
 
+.social-login {
+  display: flex;
+  justify-content: center; /* Center buttons horizontally */
+  gap: 1rem; /* Space between buttons */
+}
+
+.social-login .btn {
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  background-color: #fff; /* Default background color */
+  border: 1px solid #ccc; /* Border for default state */
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+  white-space: nowrap; /* Prevent text from wrapping */
+}
+
+.social-login .btn:hover {
+  background-color: #f1f1f1; /* Light background on hover */
+}
+
+.social-login .btn-google {
+  background-color: white;
+  color: black;
+  border: none;
+}
+
+.social-login .btn-google:hover {
+  background-color: #336749;
+  color: white;
+}
+
+.social-login .btn-apple {
+  background-color: white;
+  color: black;
+}
+
+.social-login .btn-apple:hover {
+  background-color: #336749;
+  color: white;
+}
+
+.social-icon {
+  margin-right: 0.5rem;
+  max-height: 20px;
+}
+
+
 @media (min-width: 768px) {
   .hero-image {
     height: 100vh;
@@ -135,3 +185,5 @@
     margin-top: 20px; /* Ensure margin from the top so it doesn't overlap with the navbar */
   }
 }
+
+

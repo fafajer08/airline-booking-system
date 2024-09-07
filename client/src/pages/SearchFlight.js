@@ -117,7 +117,7 @@ export default function SearchFlight() {
                 <InputBox label="ENTER PROMO CODES" placeholder="Enter Code" onChange={setInput}/>
               </div>
               <div className='submit-btn d-flex justify-content-center justify-content-lg-end'>
-                <SearchFlightButton link="http://localhost:3000/flightoptions" />
+                <SearchFlightButton className="src-btn" link="http://localhost:3000/flightoptions" />
               </div>
             </div>
           )}

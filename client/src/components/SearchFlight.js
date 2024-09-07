@@ -393,7 +393,7 @@ function FlightSearchSelector() {
               <PaxSelector type="INFANTS" />
               <PromoCodeInput /> 
           </div>
-          <div className='ubmit-btn d-flex justify-content-center justify-content-lg-end'>
+          <div className='submit-btn d-flex justify-content-center justify-content-lg-end'>
           <SearchFlightButton link="http://localhost:3000/flightoptions" />
           </div>
         </div>
