@@ -122,11 +122,6 @@
 
 /* Tablet and larger devices adjustments */
 @media (min-width: 992px) and (max-width: 1199px) {
-  .nav-bar {
-    /* Ensure that the navbar looks normal on tablets */
-    position: static; /* Remove sticky positioning */
-  }
-
   .nav-bar-logo {
     width: 150px; /* Adjust logo size for tablets */
   }
@@ -146,10 +141,6 @@
 
 /* Desktop view adjustments */
 @media (min-width: 1200px) {
-  .nav-bar {
-    position: static; /* Remove sticky positioning */
-  }
-
   .nav-bar-logo {
     width: 165px; /* Default logo size */
   }
