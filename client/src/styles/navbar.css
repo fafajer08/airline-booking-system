@@ -14,9 +14,6 @@
   display: block; /* Show the overlay when modals are visible */
 }
 
-
-
-
 /* Navbar styles */
 .nav-bar {
   background-color: #007A8C;
@@ -29,6 +26,7 @@
 
 .nav-bar-logo-name {
   font-size: 28px;
+  color: white;
 }
 
 .nav-bar .nav-bar-brand,
@@ -61,22 +59,110 @@
 }
 
 /* Mobile view adjustments */
-@media (min-width: 991px) {
+@media (max-width: 991px) {
+  .nav-bar-brand {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center items vertically */
+    margin-bottom: 1rem; /* Space below logo */
+  }
+
+  .nav-bar-logo {
+    width: 120px; /* Adjust logo size for mobile */
+    height: auto; /* Maintain aspect ratio */
+  }
+
+  .nav-bar-logo-name {
+    font-size: 22px; /* Adjust font size for mobile */
+  }
+
   .nav-bar-toggler {
-    margin-left: auto; /* Centering the burger icon on smaller screens */
+    margin: auto; /* Center the toggle button */
   }
 
-  .nav-bar-collapse {
-    text-align: end;
+  .navbar-collapse {
+    text-align: center; /* Center the navbar items in the collapse */
   }
 
-  .nav-bar-nav {
-    flex-direction: column; /* Stack nav items vertically on small screens */
+  .nav-bar-link {
+    font-size: 18px; /* Adjust font size for mobile */
+    display: block; /* Stack links vertically */
+    margin-bottom: 0.5rem; /* Space between links */
   }
 }
 
-@media (max-width: 576px) {
+/* Ensure logo and toggle button are in one row for 375x667 screens */
+@media (max-width: 375px) {
+  .nav-bar-navbar {
+    flex-direction: row; /* Keep logo and toggle in one row */
+    align-items: center; /* Align items horizontally */
+    justify-content: space-between; /* Space between logo and toggle */
+  }
+
+  .nav-bar-brand {
+    display: flex;
+    flex-direction: row; /* Align logo and name in one row */
+    align-items: center; /* Center items vertically */
+    margin-bottom: 0; /* No space below logo */
+  }
+
+  .nav-bar-logo {
+    width: 100px; /* Adjust logo size for small screens */
+    height: auto; /* Maintain aspect ratio */
+  }
+
+  .nav-bar-logo-name {
+    font-size: 18px; /* Adjust font size for small screens */
+  }
+
   .nav-bar-toggler {
-    margin-left: auto; /* Centering the burger icon on smaller screens */
+    margin: 0; /* Remove extra margins for toggle button */
+  }
+}
+
+/* Tablet and larger devices adjustments */
+@media (min-width: 992px) and (max-width: 1199px) {
+  .nav-bar {
+    /* Ensure that the navbar looks normal on tablets */
+    position: static; /* Remove sticky positioning */
+  }
+
+  .nav-bar-logo {
+    width: 150px; /* Adjust logo size for tablets */
+  }
+
+  .nav-bar-logo-name {
+    font-size: 26px; /* Adjust font size for tablets */
+  }
+
+  .nav-bar-link {
+    font-size: 18px; /* Adjust font size for tablets */
+  }
+
+  .navbar-collapse {
+    text-align: left; /* Align navbar items to the left */
+  }
+}
+
+/* Desktop view adjustments */
+@media (min-width: 1200px) {
+  .nav-bar {
+    position: static; /* Remove sticky positioning */
+  }
+
+  .nav-bar-logo {
+    width: 165px; /* Default logo size */
+  }
+
+  .nav-bar-logo-name {
+    font-size: 28px; /* Default font size */
+  }
+
+  .nav-bar-link {
+    font-size: 20px; /* Default font size */
+  }
+
+  .navbar-collapse {
+    text-align: left; /* Align navbar items to the left */
   }
 }

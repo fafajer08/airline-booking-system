@@ -174,21 +174,24 @@ function LoginWindow({ isVisible, onClose, handleSignUpClick, initialEmail }) { 
         </div>
 
         <div className="social-login">
-          <button className="btn btn-google" disabled={loading}>
-            <img
-              src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/1024px-Google_%22G%22_logo.svg.png"
-              alt="Google"
-            />
-            Login with Google
-          </button>
-          <button className="btn btn-apple" disabled={loading}>
-            <img
-              src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg"
-              alt="Apple"
-            />
-            Login with Apple
-          </button>
-        </div>
+  <button className="btn btn-google" disabled={loading}>
+    <img
+      src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/1024px-Google_%22G%22_logo.svg.png"
+      alt="Google"
+      className="social-icon"
+    />
+    <span>Login with Google</span>
+  </button>
+  <button className="btn btn-apple" disabled={loading}>
+    <img
+      src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg"
+      alt="Apple"
+      className="social-icon"
+    />
+    <span>Login with Apple</span>
+  </button>
+</div>
+
 
         <div className="signup-link">
           <span>

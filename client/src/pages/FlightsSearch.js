@@ -20,7 +20,6 @@ export default function SearchFlight() {
   const [secondDeparturePort, setSecondDeparturePort] = useState({});
   const [secondDestinationPort, setSecondDestinationPort] = useState({});
 
-
   const [departureDate, setDepartureDate] = useState(null);
   const [secondDepartureDate, setSecondDepartureDate] = useState(null);
   const [returnDate, setReturnDate] = useState(null);
@@ -36,19 +35,20 @@ export default function SearchFlight() {
     console.log("Selected Flight Type:", selectedType);
   };
 
-
   return (
-    <div>
+    <div className='my-5'>
       <div className='container'>
-        <h1 className="my-5">Where would you like to go?</h1>
+        <h1 className="my-5 mx-5">Where would you like to go?</h1>
+        
+        {/* Adjust the spacing here */}
+        <div className="d-flex align-items-center justify-content-center mb-2">  
+          <FlightTypeSelector onFlightTypeChange={handleFlightTypeChange} />
+        </div>
+        
         <form>
-          <div className="d-flex align-items-center justify-content-center ">
-            <FlightTypeSelector onFlightTypeChange={handleFlightTypeChange} />
-          </div>
-
           {flightType === 'oneway' && (
             <div className='container-fluid'>
-              <div className='first-row d-flex flex-column m-5 d-flex align-items-center flex-lg-row'>
+              <div className='first-row d-flex flex-column my-3 d-flex align-items-center flex-lg-row'>
               <PortSelector 
                     portOptions={portOptions} 
                     setDeparturePort={setDeparturePort} 
@@ -56,7 +56,7 @@ export default function SearchFlight() {
                   />
                 <DateSelector label="DEPARTURE DATE" onDateChange={setDepartureDate} />
               </div>
-              <div className='second-row d-flex flex-column m-5 d-flex align-items-center flex-lg-row'>
+              <div className='second-row d-flex flex-column my-3 d-flex align-items-center flex-lg-row'>
                 <PaxSelector label={'ADULTS (12+ YEARS)'} setPaxCount={setAdultsCount} />
                 <PaxSelector label={'CHILDREN (2-11 YEARS)'} setPaxCount={setChildrentCount} />
                 <PaxSelector label={'INFANTS (UNDER 2 YEARS)'} setPaxCount={setInfantsCount} />
@@ -70,7 +70,7 @@ export default function SearchFlight() {
 
           {flightType === 'roundtrip' && (
             <div>
-              <div className="first-row d-flex flex-column m-5 d-flex align-items-center flex-lg-row">
+              <div className="first-row  flex-column my-3 d-flex align-items-center flex-lg-row">
               <PortSelector 
                     portOptions={portOptions} 
                     setDeparturePort={setDeparturePort} 
@@ -79,7 +79,8 @@ export default function SearchFlight() {
                  <DateSelector label="DEPARTURE DATE" onDateChange={setDepartureDate} />
                  <DateSelector label="RETURN DATE" onDateChange={setReturnDate} />
               </div>
-              <div className="second-row d-flex flex-column m-5 d-flex align-items-center flex-lg-row">
+              
+              <div className="second-row d-flex flex-column my-3 d-flex align-items-center flex-lg-row">
               <PaxSelector label={'ADULTS (12+ YEARS)'} setPaxCount={setAdultsCount} />
                 <PaxSelector label={'CHILDREN (2-11 YEARS)'} setPaxCount={setChildrentCount} />
                 <PaxSelector label={'INFANTS (UNDER 2 YEARS)'} setPaxCount={setInfantsCount} />
@@ -93,7 +94,7 @@ export default function SearchFlight() {
 
           {flightType === 'multicity' && (
             <div className='selector-container'>
-              <div className="first-row d-flex flex-column m-5 d-flex align-items-center flex-lg-row">
+              <div className="first-row d-flex flex-column my-3 d-flex align-items-center flex-lg-row">
               <PortSelector 
                     portOptions={portOptions} 
                     setDeparturePort={setDeparturePort} 
@@ -101,7 +102,7 @@ export default function SearchFlight() {
                   />
                 <DateSelector label="DEPARTURE DATE" onDateChange={setDepartureDate} />
               </div>
-              <div className="second-row d-flex flex-column m-5 d-flex align-items-center flex-lg-row">
+              <div className="second-row d-flex flex-column my-3 d-flex align-items-center flex-lg-row">
               <PortSelector 
                     portOptions={portOptions} 
                     setDeparturePort={setSecondDeparturePort} 
@@ -109,7 +110,7 @@ export default function SearchFlight() {
                   />
                 <DateSelector label="DEPARTURE DATE" onDateChange={setSecondDepartureDate} />
               </div>
-              <div className="third-row d-flex flex-column m-5 d-flex align-items-center flex-lg-row">
+              <div className="third-row d-flex flex-column my-3 d-flex align-items-center flex-lg-row">
               <PaxSelector label={'ADULTS (12+ YEARS)'} setPaxCount={setAdultsCount} />
                 <PaxSelector label={'CHILDREN (2-11 YEARS)'} setPaxCount={setChildrentCount} />
                 <PaxSelector label={'INFANTS (UNDER 2 YEARS)'} setPaxCount={setInfantsCount} />

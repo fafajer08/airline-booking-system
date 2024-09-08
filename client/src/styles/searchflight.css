@@ -1,0 +1,137 @@
+/* General styles for form rows */
+.first-row, .second-row, .third-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  gap: 1rem; /* Space between elements */
+}
+
+@media (min-width: 992px) {
+  .first-row, .second-row, .third-row {
+    flex-direction: row;
+    justify-content: center;
+  }
+}
+
+/* Adjust container for multi-city */
+.selector-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 1200px; /* Adjust as needed */
+  margin: 0 auto;
+  width: 100%; /* Ensure it takes full width */
+}
+
+/* Styles for container-fluid */
+.container-fluid {
+  padding: 0 1rem; /* Ensure padding is applied */
+}
+
+/* Button styles */
+
+
+/* Form and InputBox styles */
+input, select, textarea {
+  width: 100%; /* Full width for inputs */
+}
+
+input[type="text"], input[type="number"], select, textarea {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 0.25rem;
+}
+
+/* Ensure that the form is centered */
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Hero Section and Container Styling */
+.container {
+  max-width: 1200px; /* Adjust based on your layout */
+  margin: 0 auto; /* Center the container */
+  padding: 0 1rem;
+}
+
+/* Flexbox adjustments for buttons in button groups */
+.d-flex {
+  display: flex;
+}
+
+.align-items-center {
+  align-items: center;
+}
+
+.justify-content-center {
+  justify-content: center;
+}
+
+.mb-2 {
+  margin-bottom: 1rem;
+}
+
+.my-5 {
+  margin: 3rem 0;
+}
+
+.mx-5 {
+  margin: 0 3rem;
+}
+
+/* Additional responsive adjustments */
+@media (max-width: 576px) {
+  .selector-container {
+    padding: 0 1rem;
+  }
+
+  .first-row, .second-row, .third-row {
+    flex-direction: column;
+    align-items: stretch; /* Make sure children take full width */
+  }
+  
+  .first-row > * {
+    margin-bottom: 1rem; /* Space between elements */
+  }
+  
+  .second-row > * {
+    margin-bottom: 1rem; /* Space between elements */
+  }
+  
+  .third-row > * {
+    margin-bottom: 1rem; /* Space between elements */
+  }
+
+  /* Ensuring the form labels and inputs are clear and readable */
+  input, select, textarea {
+    font-size: 0.875rem; /* Smaller font size for mobile */
+    padding: 0.75rem; /* Increase padding for better touch experience */
+  }
+
+  h1 {
+    font-size: 26px;
+  }
+}
+
+@media (min-width: 768px) {
+  .container {
+    padding: 0 2rem;
+  }
+
+  .first-row, .second-row, .third-row {
+    gap: 1.5rem;
+  }
+}
+
+@media (min-width: 992px) {
+  .container {
+    padding: 0 3rem;
+  }
+
+  .first-row, .second-row, .third-row {
+    gap: 2rem;
+  }
+}
