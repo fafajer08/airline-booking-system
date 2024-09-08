@@ -4,7 +4,7 @@ import planeDown from '../assets/planedown.png';
 import division from '../assets/division.png';
 import dropDownIcon from '../assets/dropdown.png';
 import swapIcon from '../assets/swapicon.png'; 
-import '../styles/portselector.css';
+import '../styles/selectorport.css';
 
 function PortSelector({ portOptions, setDeparturePort, setDestinationPort }) {
     const [selectedDeparturePort, setSelectedDeparturePort] = useState({});

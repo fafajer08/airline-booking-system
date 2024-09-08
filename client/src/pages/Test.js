@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import Navbar from "../components/NavBar";
 import SearchFlightButton,{ ContinueButton, BackButton, SelectButton, SubmitButton } from "../components/Buttons";
-import DateSelector from "../components/DateSelector";
-import PortSelector from "../components/PortSelector";
+import DateSelector from "../components/SelectorDate.js";
+import PortSelector from "../components/SelectorPort.js";
 import flightsData from '../data/flightsData';
 import parseData from '../components/FlightsDataParser';
-import PaxSelector from '../components/PaxSelector';
+import PaxSelector from '../components/SelectorPax.js';
 import InputBox from '../components/InputBox';
-import FlightTypeSelector from "../components/FlightTypeSelector.js";
+import FlightTypeSelector from "../components/SelectorFlightType.js";
 
 export default function Test() {
   const portOptions = parseData(flightsData);

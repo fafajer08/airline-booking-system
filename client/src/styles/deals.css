@@ -1,0 +1,22 @@
+/* Styles for the Deals Page */
+.deals-page-container {
+    padding: 2rem 1rem;
+    background-color: #f8f9fa;  /* Light gray background for the page */
+}
+
+.deals-page-heading {
+    color: #336749;  /* Primary green color for headings */
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.deals-page-subheading {
+    font-size: 1.25rem;
+    color: #666;  /* Gray color for the smaller heading */
+    margin-bottom: 1rem;
+}
+
+.deals-page-text {
+    color: #555;  /* Slightly darker text for general paragraphs */
+    font-size: 1rem;
+}

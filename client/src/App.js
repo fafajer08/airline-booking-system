@@ -4,18 +4,28 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { UserProvider } from './context/UserContext';
 import NavBar from '../src/components/NavBar';
 import Home from './pages/Home';
-import SearchFlight from './pages/SearchFlight';
-import FlightOptions from './pages/FlightOptions';
-import GuestDetails from './pages/GuestDetails';
+
+//seach flights pages
+import FlightsSearch from './pages/FlightsSearch';
+import FlightsOptions from './pages/FlightsOptions';
+import FlightsGuests from './pages/FlightsGuests';
 import BookingSummary from './pages/BookingSummary';
 import Payment from './pages/Payment';
 import Test from './pages/Test';
 import Destinations from './pages/Destinations';
 import LoginPage from './pages/LoginPage';
-import Admin from './pages/AdminDash';
+
+// admin pages exclusive
+import AdminFlights from './pages/AdminFlights';
+import AdminPage from './pages/AdminPage';
+
+//logged users exclusive
+
+
 import Users from './pages/UserDash';
 import NotFound from './pages/NotFound';
 import Profile from './pages/Profile';
+import Deals from './pages/Deals';
 
 
 function App() {
@@ -26,15 +36,20 @@ function App() {
           <NavBar />
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/searchflight" element={<SearchFlight />} />
-            <Route path="/flightoptions" element={<FlightOptions />} />
-            <Route path="/guestdetails" element={<GuestDetails />} />
-            <Route path='/bookingsummary' element={<BookingSummary />} />
+            <Route path="/flights" element={<FlightsSearch />} />
+            <Route path="/flights/options" element={<FlightsOptions />} />
+            <Route path="/flights/guests" element={<FlightsGuests />} />
+            <Route path='/bookings' element={<BookingSummary />} />
             <Route path='/payment' element={<Payment />} />
             <Route path="/test" element={<Test />} />
             <Route path="/destinations" element={<Destinations />} />
+            <Route path="/deals" element={<Deals />} />
             <Route path="/login" element={<LoginPage />} />
-            <Route path='/admin' element={<Admin />} />
+
+
+            {/* admin pages */}
+            <Route path='/admin/flights' element={<AdminFlights />} />
+            <Route path='/admin/page' element={<AdminPage />} />
             <Route path='/users' element={<Users />} />
             <Route path='/profile' element={<Profile />} />
             <Route path='/*' element={<NotFound />} />

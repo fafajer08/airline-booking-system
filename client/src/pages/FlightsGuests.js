@@ -19,8 +19,8 @@ function GuestDetailsPage() {
         <GuestDetailsForm setFinalGuests={setFinalGuests} />
 
         <div>
-          <BackButton link="http://localhost:3000/flightoptions" />
-          <ContinueButton link="http://localhost:3000/bookingsummary" onClick={handleSubmit} />
+          <BackButton link="/flights/options" />
+          <ContinueButton link="/bookings" onClick={handleSubmit} />
         </div>
 
         <div>

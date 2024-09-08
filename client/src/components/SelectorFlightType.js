@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import dropDown from '../assets/dropdown.png'; // Adjust the path as necessary
-import '../styles/flighttypeselector.css'; // Assuming you save the styles in this file
+import '../styles/selectorflighttype.css'; // Assuming you save the styles in this file
 
 function FlightTypeSelector({ onFlightTypeChange }) {
     const [flightType, setFlightType] = useState('oneWay'); // Default to 'oneWay'

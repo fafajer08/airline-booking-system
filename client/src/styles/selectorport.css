@@ -1,11 +1,13 @@
 .port-selector-outer-container {
-    position: relative;
-    border: 2px solid #d4d4d4; 
-    border-radius: 12px;
-    height: 65px;
-    width: 300px;
-    flex: 0 0 auto;
-  }
+  position: relative;
+  border: 2px solid #d4d4d4; 
+  border-radius: 12px;
+  height: 65px;
+  width: 300px;
+  flex: 0 0 auto;
+  background-color: white; /* Match label background */
+  margin: 5px; /* To keep consistent spacing with pax selector */
+}
   
   .port-selector-label {
     display: inline-flex;

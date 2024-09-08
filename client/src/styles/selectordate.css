@@ -17,6 +17,7 @@
     width: 190px; 
     flex: 0 0 auto;
     margin: 10px;
+    background-color: white; /* Match label background */
   }
    
   .date-selector-label {

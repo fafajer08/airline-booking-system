@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom'; // Use Link for internal navigation
+import { Link, useNavigate } from 'react-router-dom'; // Use Link and useNavigate for internal navigation
 import searchIcon from '../assets/searchicon.png';
 import '../styles/buttons.css';
 
@@ -13,50 +13,54 @@ function BaseButton({ className, onClick, children }) {
 }
 
 function SearchFlightButton({ link }) {
+  const navigate = useNavigate(); // Use useNavigate for navigation
+  const handleNavigation = () => {
+    if (link) {
+      navigate(link);
+    }
+  };
+
   return (
-    link ? (
-      <a href={link} className="search-flight-button-link">
-        <div className="search-flight-button-container">
-          <span className="search-flight-button-text">Search Flights</span>
-          <img className="search-flight-button-icon" src={searchIcon} alt="flight search" />
-        </div>
-      </a>
-    ) : (
-      <BaseButton className="search-flight-button-link">
-        <div className="search-flight-button-container">
-          <span className="search-flight-button-text">Search Flights</span>
-          <img className="search-flight-button-icon" src={searchIcon} alt="flight search" />
-        </div>
-      </BaseButton>
-    )
+    <BaseButton className="search-flight-button-link" onClick={handleNavigation}>
+      <div className="search-flight-button-container">
+        <span className="search-flight-button-text">Search Flights</span>
+        <img className="search-flight-button-icon" src={searchIcon} alt="flight search" />
+      </div>
+    </BaseButton>
   );
 }
 
 function ContinueButton({ link }) {
+  const navigate = useNavigate(); // Use useNavigate for navigation
+  const handleNavigation = () => {
+    if (link) {
+      navigate(link);
+    }
+  };
+
   return (
-    link ? (
-      <Link to={link} className="continue-button-link">
-        <div className="continue-button-container">
-          <span className="continue-button-text">CONTINUE</span>
-        </div>
-      </Link>
-    ) : (
-      <BaseButton className="continue-button-link">
-        <div className="continue-button-container">
-          <span className="continue-button-text">CONTINUE</span>
-        </div>
-      </BaseButton>
-    )
+    <BaseButton className="continue-button-link" onClick={handleNavigation}>
+      <div className="continue-button-container">
+        <span className="continue-button-text">CONTINUE</span>
+      </div>
+    </BaseButton>
   );
 }
 
 function BackButton({ link }) {
+  const navigate = useNavigate(); // Use useNavigate for navigation
+  const handleNavigation = () => {
+    if (link) {
+      navigate(link);
+    }
+  };
+
   return (
-    <Link to={link} className="back-button-link">
+    <BaseButton className="back-button-link" onClick={handleNavigation}>
       <div className="back-button-container">
         <span className="back-button-text">BACK</span>
       </div>
-    </Link>
+    </BaseButton>
   );
 }
 

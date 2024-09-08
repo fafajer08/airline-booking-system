@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
-import ModalPrompt from "../components/ModalPrompt";
+import ModalPrompt from "./ModalPrompt";
 import '../styles/admin.css';  // Import the CSS file
 
 export default function AdminFlightsDash() {
-
-  
   const [flights, setFlights] = useState([]);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
   const [searchQuery, setSearchQuery] = useState("");

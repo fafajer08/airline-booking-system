@@ -53,7 +53,7 @@ export default function Payment() {
 
         <div className='d-flex '>
             <div className='ms-auto'>
-              <BackButton link="http://localhost:3000/guestdetails" />
+              <BackButton link="/bookings" />
               <SubmitButton />
             </div>
         </div>

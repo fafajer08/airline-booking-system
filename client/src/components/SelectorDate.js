@@ -3,7 +3,7 @@ import DatePicker from "react-datepicker";
 import divisionIcon from '../assets/division.png';
 import dropDownIcon from '../assets/dropdown.png';
 import calendarIcon from '../assets/calendar.png';
-import '../styles/dateselector.css';
+import '../styles/selectordate.css';
 
 function DateSelector({ label, onDateChange }) {
     const [startDate, setStartDate] = useState(new Date());

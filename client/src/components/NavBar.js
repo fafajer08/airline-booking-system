@@ -21,27 +21,66 @@ export default function NavBar() {
     setLoginVisible(true);   // Open login window
   };
 
-  // Show login window
+  // Toggle windows
   const handleLoginClick = () => {
     setLoginVisible(true);
-    setSignupVisible(false); // Ensure the signup window is closed
+    setSignupVisible(false);
   };
 
-  // Show signup window
   const handleSignUpClick = () => {
     setSignupVisible(true);
-    setLoginVisible(false); // Ensure the login window is closed
+    setLoginVisible(false);
   };
 
-  // Close login window
   const closeLoginWindow = () => setLoginVisible(false);
-
-  // Close signup window
   const closeSignupWindow = () => setSignupVisible(false);
 
   const handleLogout = () => {
     logout();
     navigate('/');
+  };
+
+  // Function to get links based on the user's state
+  const renderNavLinks = () => {
+    if (user && user.isAdmin) {
+      return (
+        <>
+          <Nav.Link as={Link} to="/admin/flights" className="nav-bar-link me-3">Flights Control</Nav.Link>
+          <Nav.Link as={Link} to="/admin/page" className="nav-bar-link me-3">Page Control</Nav.Link>
+        </>
+      );
+    } else if (user) {
+      return (
+        <>
+          <Nav.Link as={Link} to="/flights" className="nav-bar-link me-3">Flights</Nav.Link>
+          <Nav.Link as={Link} to="/destinations" className="nav-bar-link me-3">Destinations</Nav.Link>
+          <Nav.Link as={Link} to="/deals" className="nav-bar-link me-3">Deals</Nav.Link>
+          <Nav.Link as={Link} to="/mybookings" className="nav-bar-link me-3">My Bookings</Nav.Link>
+        </>
+      );
+    } else {
+      return (
+        <>
+          <Nav.Link as={Link} to="/flights" className="nav-bar-link me-3">Flights</Nav.Link>
+          <Nav.Link as={Link} to="/destinations" className="nav-bar-link me-3">Destinations</Nav.Link>
+          <Nav.Link as={Link} to="/deals" className="nav-bar-link me-3">Deals</Nav.Link>
+        </>
+      );
+    }
+  };
+
+  // Render buttons based on user state
+  const renderUserActions = () => {
+    if (user) {
+      return (
+        <>
+          <Nav.Link as={Link} to="/profile" className="nav-bar-link me-3">My Profile</Nav.Link>
+          <Nav.Link onClick={handleLogout} className="nav-bar-link me-3">Logout</Nav.Link>
+        </>
+      );
+    } else {
+      return <Nav.Link onClick={handleLoginClick} className="nav-bar-link me-3">Account</Nav.Link>;
+    }
   };
 
   return (
@@ -55,27 +94,8 @@ export default function NavBar() {
           <Navbar.Toggle aria-controls="basic-navbar-nav" className="nav-bar-toggler" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ms-auto">
-              {user && user.isAdmin ? (
-                <>
-                  {/* Admin user nav */}
-                  <Nav.Link as={Link} to="/admin" className="nav-bar-link me-3">Admin Control</Nav.Link>
-                </>
-              ) : (
-                <>
-                  <Nav.Link as={Link} to="/searchflight" className="nav-bar-link me-3">Flights</Nav.Link>
-                  <Nav.Link as={Link} to="#link" className="nav-bar-link me-3">Destinations</Nav.Link>
-                  <Nav.Link as={Link} to="#link" className="nav-bar-link me-3">Deals</Nav.Link>
-                  <Nav.Link as={Link} to="#link" className="nav-bar-link me-3">My Bookings</Nav.Link>
-                </>
-              )}
-              {user ? (
-                <>
-                  <Nav.Link as={Link} to="/profile" className="nav-bar-link me-3">My Profile</Nav.Link>
-                  <Nav.Link onClick={handleLogout} className="nav-bar-link me-3">Logout</Nav.Link>
-                </>
-              ) : (
-                <Nav.Link onClick={handleLoginClick} className="nav-bar-link me-3">Account</Nav.Link>
-              )}
+              {renderNavLinks()}
+              {renderUserActions()}
             </Nav>
           </Navbar.Collapse>
         </Container>

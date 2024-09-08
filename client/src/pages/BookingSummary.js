@@ -19,8 +19,8 @@ export default function BookingSummary() {
         </div>
         <div className='d-flex '>
             <div className='ms-auto'>
-              <BackButton link="http://localhost:3000/guestdetails" />
-              <ContinueButton link="http://localhost:3000/payment" />
+              <BackButton link="/flights/guests" />
+              <ContinueButton link="/payment" />
             </div>
         </div>
       </div>

@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import NavBar from "../components/NavBar";
-import SearchFlightButton,{ ContinueButton, BackButton, SelectButton, SubmitButton } from "../components/Buttons";
-import DateSelector from "../components/DateSelector";
-import PortSelector from "../components/PortSelector";
-import flightsData from '../data/flightsData';
-import parseData from '../components/FlightsDataParser';
-import PaxSelector from '../components/PaxSelector';
-import InputBox from '../components/InputBox';
-import FlightTypeSelector from "../components/FlightTypeSelector.js";
+import NavBar from "../components/NavBar.js";
+import SearchFlightButton,{ ContinueButton, BackButton, SelectButton, SubmitButton } from "../components/Buttons.js";
+import DateSelector from "../components/SelectorDate.js";
+import PortSelector from "../components/SelectorPort.js";
+import flightsData from '../data/flightsData.js';
+import parseData from '../components/FlightsDataParser.js';
+import PaxSelector from '../components/SelectorPax.js';
+import InputBox from '../components/InputBox.js';
+import FlightTypeSelector from "../components/SelectorFlightType.js";
 
 
 export default function SearchFlight() {
@@ -63,7 +63,7 @@ export default function SearchFlight() {
                 <InputBox label="ENTER PROMO CODES" placeholder="Enter Code" onChange={setInput}/>
               </div>
               <div className='submit-btn d-flex justify-content-center justify-content-lg-end'>
-                <SearchFlightButton link="http://localhost:3000/flightoptions" />
+                <SearchFlightButton link="/flights/options" />
               </div>
             </div>
           )}
@@ -86,7 +86,7 @@ export default function SearchFlight() {
                 <InputBox label="ENTER PROMO CODES" placeholder="Enter Code" onChange={setInput}/>
               </div>
               <div className='submit-btn d-flex justify-content-center justify-content-lg-end'>
-                <SearchFlightButton link="http://localhost:3000/flightoptions" />
+              <SearchFlightButton link="/flights/options" />
               </div>
             </div>
           )}
@@ -116,7 +116,7 @@ export default function SearchFlight() {
                 <InputBox label="ENTER PROMO CODES" placeholder="Enter Code" onChange={setInput}/>
               </div>
               <div className='submit-btn d-flex justify-content-center justify-content-lg-end'>
-                <SearchFlightButton link="http://localhost:3000/flightoptions" />
+              <SearchFlightButton link="/flights/options" />
               </div>
             </div>
           )}

@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import dropDownIcon from '../assets/dropdown.png';
-import '../styles/paxselector.css';
+import '../styles/selectorpax.css';
 
 
 function PaxSelector({ label, setPaxCount }) { // Accepts setPaxCount as a prop
