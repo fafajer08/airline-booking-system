@@ -7,7 +7,7 @@ export default function WindowDestination() {
     const navigate = useNavigate();
 
     const handleCardClick = (destination) => {
-        navigate(`/details/${destination}`);
+        navigate(`/destination/${destination}`);
     };
 
     return (

@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';  // Import useNavigate for navigation
 import mockDeals from '../data/dealsData';  // Import mock data
 import '../styles/dealscards.css';  // Import the pure CSS for DealsCards
 
 const DealsCards = () => {
   const [deals, setDeals] = useState([]);
+  const navigate = useNavigate();  // Initialize the useNavigate hook
 
   // Simulate fetching data from the backend (for now, using mock data)
   useEffect(() => {
@@ -13,6 +15,12 @@ const DealsCards = () => {
     }, 1000);
   }, []);
 
+  // Function to handle card click
+  const handleCardClick = (title) => {
+    const formattedTitle = title.toLowerCase().replace(/\s+/g, '-');  // Format the title for the URL
+    navigate(`/deals/${formattedTitle}`);  // Navigate to the deals/{title} endpoint
+  };
+
   return (
     <div className="container">
       <div className="deals-cards">
@@ -21,7 +29,7 @@ const DealsCards = () => {
 
         <div className="deals-cards-container">
           {deals.map((deal) => (
-            <div key={deal.id} className="deals-card">
+            <div key={deal.id} className="deals-card" onClick={() => handleCardClick(deal.title)}>
               <img src={deal.image} alt={deal.title} className="deals-card-img" />
               <div className="deals-card-body">
                 <h4 className="deals-card-title">{deal.title}</h4>

@@ -42,6 +42,7 @@ export default function NavBar() {
 
   // Function to get links based on the user's state
   const renderNavLinks = () => {
+    // if user is logged in and addmin
     if (user && user.isAdmin) {
       return (
         <>
@@ -49,18 +50,22 @@ export default function NavBar() {
           <Nav.Link as={Link} to="/admin/page" className="nav-bar-link me-3">Page Control</Nav.Link>
         </>
       );
+    // if user is logged in
     } else if (user) {
       return (
         <>
+          {/* <Nav.Link as={Link} to="/" className="nav-bar-link me-3">Home</Nav.Link> */}
           <Nav.Link as={Link} to="/flights" className="nav-bar-link me-3">Flights</Nav.Link>
-          <Nav.Link as={Link} to="/destinations" className="nav-bar-link me-3">Destinations</Nav.Link>
+          {/* <Nav.Link as={Link} to="/destinations" className="nav-bar-link me-3">Destinations</Nav.Link> */}
           <Nav.Link as={Link} to="/deals" className="nav-bar-link me-3">Deals</Nav.Link>
           <Nav.Link as={Link} to="/mybookings" className="nav-bar-link me-3">My Bookings</Nav.Link>
         </>
       );
     } else {
+      // if use is not logged in
       return (
         <>
+          <Nav.Link as={Link} to="/" className="nav-bar-link me-3">Home</Nav.Link>
           <Nav.Link as={Link} to="/flights" className="nav-bar-link me-3">Flights</Nav.Link>
           <Nav.Link as={Link} to="/destinations" className="nav-bar-link me-3">Destinations</Nav.Link>
           <Nav.Link as={Link} to="/deals" className="nav-bar-link me-3">Deals</Nav.Link>

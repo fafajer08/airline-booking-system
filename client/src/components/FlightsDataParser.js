@@ -1,33 +1,35 @@
+// FlightsDataParser.js
 
 // Function to parse and return unique cities from flights data
-function parsedData(flightsData) {
-    const uniqueDepartureCities = [
-        ...new Set(flightsData.map(flight => ({
-            cityName: flight.departureCity,
-            airportName: flight.departureAirport,
-            portCode: flight.departurePortCode
-        })))
-    ];
+function parseData(flightsData) {
+    // Collect unique departure cities
+    console.log(`parser: ${flightsData[0][0]}`)
+    const uniqueDepartureCities = flightsData.map(flight => ({
+        cityName: flight.departureAirportCity,
+        airportName: flight.departureAirport,
+        portCode: flight.departureAirportCode
+    }));
 
-    const uniqueArrivalCities = [
-        ...new Set(flightsData.map(flight => ({
-            cityName: flight.arrivalCity,
-            airportName: flight.arrivalAirport,
-            portCode: flight.arrivalPortCode
-        })))
-    ];
+    // Collect unique destination cities
+    const uniqueArrivalCities = flightsData.map(flight => ({
+        cityName: flight.destinationAirportCity,
+        airportName: flight.destinationAirport,
+        portCode: flight.destinationAirportCode
+    }));
 
-    const combinedUniqueCities = [
-        ...uniqueDepartureCities,
-        ...uniqueArrivalCities
-    ];
-    
-    // Remove duplicates by cityName and sort alphabetically
-    const allUniqueCities = [
-        ...new Map(combinedUniqueCities.map(city => [city.cityName, city])).values()
-    ].sort((a, b) => a.cityName.localeCompare(b.cityName));
+    // Combine departure and destination cities
+    const combinedUniqueCities = [...uniqueDepartureCities, ...uniqueArrivalCities];
 
-    return allUniqueCities;
+    // Remove duplicates by `portCode` using `Map`
+    const uniqueCitiesMap = new Map(combinedUniqueCities.map(city => [city.portCode, city]));
+
+    // Convert MapIterator to Array
+    const allUniqueCities = Array.from(uniqueCitiesMap.values());
+
+    // Sort cities alphabetically by `cityName`
+    const sortedUniqueCities = allUniqueCities.sort((a, b) => a.cityName.localeCompare(b.cityName));
+
+    return sortedUniqueCities;
 }
 
-export default parsedData;
+export default parseData;

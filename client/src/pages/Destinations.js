@@ -7,9 +7,6 @@ export default function Destinations() {
   const navigate = useNavigate();
 
   // Function to handle card click and navigate to details page
-  const handleCardClick = (destination) => {
-    navigate(`/details/${destination}`);
-  };
 
   return (
     <WindowDestination />

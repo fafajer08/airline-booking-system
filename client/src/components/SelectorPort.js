@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import planeUp from '../assets/planeup.png';
 import planeDown from '../assets/planedown.png';
 import division from '../assets/division.png';
@@ -6,24 +6,34 @@ import dropDownIcon from '../assets/dropdown.png';
 import swapIcon from '../assets/swapicon.png'; 
 import '../styles/selectorport.css';
 
-function PortSelector({ portOptions, setDeparturePort, setDestinationPort }) {
-    const [selectedDeparturePort, setSelectedDeparturePort] = useState({});
-    const [selectedDestinationPort, setSelectedDestinationPort] = useState({});
-    const [isDropdownOpen, setIsDropdownOpen] = useState(null); 
+function PortSelector({ portOptions = [], setDeparturePort, setDestinationPort }) {
+    const [selectedDeparturePort, setSelectedDeparturePort] = useState(null);
+    const [selectedDestinationPort, setSelectedDestinationPort] = useState(null);
+    const [isDropdownOpen, setIsDropdownOpen] = useState(null);
+
+    useEffect(() => {
+        // Set default values if available
+        if (portOptions.length > 0) {
+            setSelectedDeparturePort(portOptions[0]);
+            setSelectedDestinationPort(portOptions[1]);
+            setDeparturePort(portOptions[0]);
+            setDestinationPort(portOptions[1]);
+        }
+    }, [portOptions]);
 
     const handlePortClick = (portType) => {
-        setIsDropdownOpen(isDropdownOpen === portType ? null : portType); 
+        setIsDropdownOpen(isDropdownOpen === portType ? null : portType);
     };
 
     const handlePortSelect = (port, portType) => {
         if (portType === 'departure') {
             setSelectedDeparturePort(port);
-            setDeparturePort(port);  // Update parent component state
+            setDeparturePort(port);
         } else {
             setSelectedDestinationPort(port);
-            setDestinationPort(port);  // Update parent component state
+            setDestinationPort(port);
         }
-        setIsDropdownOpen(null); 
+        setIsDropdownOpen(null);
     };
 
     const swapPorts = () => {
@@ -31,67 +41,65 @@ function PortSelector({ portOptions, setDeparturePort, setDestinationPort }) {
         setSelectedDeparturePort(selectedDestinationPort);
         setSelectedDestinationPort(temp);
 
-        setDeparturePort(selectedDestinationPort);  // Update parent component state
-        setDestinationPort(temp);  // Update parent component state
+        setDeparturePort(selectedDestinationPort);
+        setDestinationPort(temp);
     };
 
     const truncateText = (text, maxLength) => {
-        return text.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
+        return text && text.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
     };
 
     const renderPortSelector = (label, port, portType) => {
         const planeIcon = label === "DEPARTURE AIRPORT" ? planeUp : planeDown;
-        const portCode = port.portCode || '';
-        const cityName = port.cityName || '';
-        const airportName = truncateText(port.airportName || '', 25);
+        const portCode = port?.portCode || '';
+        const cityName = port?.cityName || '';
+        const airportName = truncateText(port?.airportName || '', 25);
 
-        // Filter the destination options to exclude the selected departure port
         const filteredPortOptions = portType === 'destination'
-            ? portOptions.filter(option => option.portCode !== selectedDeparturePort.portCode)
+            ? portOptions.filter(option => option.portCode !== selectedDeparturePort?.portCode)
             : portOptions;
 
-            return (
-                <div className="port-selector-outer-container">
-                    <p className="port-selector-label">{label}</p>
-                    <div className="port-selector-inner-container" onClick={() => handlePortClick(portType)}>
-                        <img className="port-selector-plane-icon port-selector-icons" src={planeIcon} alt="plane icon" />
-                        <span className="port-selector-port-code">{portCode}</span>
-                        <img className="port-selector-division-icon" src={division} alt="division icon" />
-                        <div className="port-selector-city-airport-display">
-                            <div className="port-selector-city-display">{cityName}</div>
-                            <div className="port-selector-airport-display">{airportName}</div>
-                        </div>
-                        <img
-                            className="port-selector-dropdown-icon port-selector-icons"
-                            src={dropDownIcon}
-                            alt="dropdown icon"
-                        />
-                        {isDropdownOpen === portType && (
-                            <div className="port-selector-dropdown">
-                                {filteredPortOptions.map((port, index) => (
-                                    <div
-                                        key={index}
-                                        className="port-selector-dropdown-item"
-                                        onClick={() => handlePortSelect(port, portType)}
-                                    >
-                                        <div className="port-select-dropdown-options">
-                                            <div className="port-selector-dropdown-city">
-                                                {port.cityName} - {port.airportName}
-                                            </div>
+        return (
+            <div className="port-selector-outer-container">
+                <p className="port-selector-label">{label}</p>
+                <div className="port-selector-inner-container" onClick={() => handlePortClick(portType)}>
+                    <img className="port-selector-plane-icon port-selector-icons" src={planeIcon} alt={`plane icon for ${label}`} />
+                    <span className="port-selector-port-code">{portCode}</span>
+                    <img className="port-selector-division-icon" src={division} alt="division icon" />
+                    <div className="port-selector-city-airport-display">
+                        <div className="port-selector-city-display">{cityName}</div>
+                        <div className="port-selector-airport-display">{airportName}</div>
+                    </div>
+                    <img
+                        className="port-selector-dropdown-icon port-selector-icons"
+                        src={dropDownIcon}
+                        alt="dropdown icon"
+                    />
+                    {isDropdownOpen === portType && (
+                        <div className="port-selector-dropdown">
+                            {filteredPortOptions.map((port) => (
+                                <div
+                                    key={port.portCode}
+                                    className="port-selector-dropdown-item"
+                                    onClick={() => handlePortSelect(port, portType)}
+                                >
+                                    <div className="port-select-dropdown-options">
+                                        <div className="port-selector-dropdown-city">
+                                            {port.cityName} - {port.airportName}
                                         </div>
                                     </div>
-                                ))}
-                            </div>
-                        )}
-                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
-            );
-            
+            </div>
+        );
     };
 
     return (
-        <div className="">
-            <div className="d-flex flex-column flex-md-row align-items-center port-selection-container">
+        <div className="port-selection-container">
+            <div className="d-flex flex-column flex-md-row align-items-center">
                 {renderPortSelector("DEPARTURE AIRPORT", selectedDeparturePort, 'departure')}
                 <img 
                     className="port-selector-swap-icon" 

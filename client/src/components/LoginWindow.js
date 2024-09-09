@@ -92,7 +92,7 @@ function LoginWindow({ isVisible, onClose, handleSignUpClick, initialEmail }) { 
   
           // Navigate to the appropriate dashboard
           if (user.isAdmin) {
-            navigate('/admin');
+            navigate('/admin/flights');
           } else {
             navigate('/users');
           }
