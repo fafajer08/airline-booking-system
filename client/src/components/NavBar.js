@@ -46,7 +46,8 @@ export default function NavBar() {
     if (user && user.isAdmin) {
       return (
         <>
-          <Nav.Link as={Link} to="/admin/flights" className="nav-bar-link me-3">Flights Control</Nav.Link>
+          <Nav.Link as={Link} to="/admin/create" className="nav-bar-link me-3">Create Flights</Nav.Link>
+          <Nav.Link as={Link} to="/admin/control" className="nav-bar-link me-3">Flights Control</Nav.Link>
           <Nav.Link as={Link} to="/admin/page" className="nav-bar-link me-3">Page Control</Nav.Link>
         </>
       );

@@ -18,6 +18,7 @@ import LoginPage from './pages/LoginPage';
 // admin pages exclusive
 import AdminFlights from './pages/AdminFlights';
 import AdminPage from './pages/AdminPage';
+import AdminCreate from './pages/AdminCreate';
 
 //logged users exclusive
 
@@ -47,8 +48,9 @@ function App() {
             <Route path="/login" element={<LoginPage />} />
 
 
-            {/* admin pages */}
-            <Route path='/admin/flights' element={<AdminFlights />} />
+
+            <Route path='/admin/create' element={<AdminCreate />} />
+            <Route path='/admin/control' element={<AdminFlights />} />
             <Route path='/admin/page' element={<AdminPage />} />
             <Route path='/users' element={<Users />} />
             <Route path='/profile' element={<Profile />} />
