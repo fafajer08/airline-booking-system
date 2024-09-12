@@ -28,6 +28,31 @@
   text-align: center;
   overflow: hidden;
 }
+/* Add transition for smooth effect */
+.form-control {
+  transition: all 0.3s ease;
+}
+
+/* Add box-shadow and border change when the input is focused */
+.form-control:focus {
+  border-color: #007bff; /* Change the border color when focused */
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Add a glow/shadow effect */
+  outline: none; /* Remove the default outline */
+}
+
+/* Optional: Style for the password visibility button */
+.toggle-password-btn {
+  background: none;
+  border: none;
+  color: #007bff;
+  cursor: pointer;
+  font-size: 0.9em;
+}
+
+.toggle-password-btn:hover {
+  color: #0056b3;
+}
+
 
 .form-label {
   font-weight: bold;

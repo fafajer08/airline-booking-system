@@ -5,11 +5,11 @@ import UserContext from '../context/UserContext.js';
 import { Notyf } from 'notyf';
 import 'notyf/notyf.min.css';
 
+
 function LoginWindow({ isVisible, onClose, handleSignUpClick, initialEmail }) { // Add initialEmail prop
-
   const notyf = new Notyf({ duration: 3000});
-
   const [email, setEmail] = useState(initialEmail || ''); // Pre-fill with initialEmail if provided
+
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -19,9 +19,9 @@ function LoginWindow({ isVisible, onClose, handleSignUpClick, initialEmail }) { 
 
   useEffect(() => {
     if (initialEmail) {
-      setEmail(initialEmail); // Set email when initialEmail changes
+      setEmail(initialEmail);
     }
-  }, [initialEmail]); // Run this when initialEmail changes
+  }, [initialEmail]);
 
   // Function to handle form submission
   const handleLogin = (event) => {
@@ -34,15 +34,12 @@ function LoginWindow({ isVisible, onClose, handleSignUpClick, initialEmail }) { 
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        email: email,
-        password: password,
-      }),
+      body: JSON.stringify({ email, password }),
     })
       .then(res => res.json())
       .then((data) => {
         if (data.access) {
-          localStorage.setItem('token', data.access); // Save token in local storage
+          localStorage.setItem('token', data.access); // Save token
           setEmail('');
           setPassword('');
           retrieveUserDetails(data.access); // Call retrieveUserDetails after successful login
@@ -61,25 +58,14 @@ function LoginWindow({ isVisible, onClose, handleSignUpClick, initialEmail }) { 
 
   const retrieveUserDetails = (token) => {
     console.log('Retrieving user details with token:', token);
-  
     fetch(`${process.env.REACT_APP_API_URL}/users/details`, {
       method: 'GET',
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      headers: { Authorization: `Bearer ${token}` },
     })
-      .then((res) => {
-        console.log('Response status:', res.status);
-        return res.json();
-      })
+      .then((res) => res.json())
       .then((data) => {
-        console.log('User details response data:', data);
-  
-        // Access the user object
         const user = data.user;
-  
-        if (user && user._id) { // Check the nested user object
-          // Call the login function from UserContext to update the user state
+        if (user && user._id) {
           login({
             id: user._id,
             firstName: user.firstName,
@@ -88,31 +74,21 @@ function LoginWindow({ isVisible, onClose, handleSignUpClick, initialEmail }) { 
             email: user.email,
             mobileNo: user.mobileNo,
           });
-  
-          // Navigate to the appropriate dashboard
-          if (user.isAdmin) {
-            navigate('/admin/flights');
-          } else {
-            navigate('/users');
-          }
-  
-          setLoading(false); // Stop loading after navigation
+
+          navigate(user.isAdmin ? '/admin/flights' : '/users');
+          setLoading(false);
           onClose(); // Optionally close the login window after navigating
         } else {
-          console.error('User details not found or data format is incorrect:', data);
           setError('User details not found.');
           setLoading(false);
         }
       })
       .catch((error) => {
         console.error('Error fetching user details:', error);
-        setError(error.message || 'Failed to retrieve user details.');
+        setError('Failed to retrieve user details.');
         setLoading(false);
       });
   };
-  
-  
-  
 
   return (
     <div className={`login-window ${isVisible ? 'visible' : ''}`}>
@@ -173,29 +149,28 @@ function LoginWindow({ isVisible, onClose, handleSignUpClick, initialEmail }) { 
         </div>
 
         <div className="social-login">
-  <button className="btn btn-google" disabled={loading}>
-    <img
-      src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/1024px-Google_%22G%22_logo.svg.png"
-      alt="Google"
-      className="social-icon"
-    />
-    <span>Login with Google</span>
-  </button>
-  <button className="btn btn-apple" disabled={loading}>
-    <img
-      src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg"
-      alt="Apple"
-      className="social-icon"
-    />
-    <span>Login with Apple</span>
-  </button>
-</div>
-
+          <button className="btn btn-google" disabled={loading}>
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/1024px-Google_%22G%22_logo.svg.png"
+              alt="Google"
+              className="social-icon"
+            />
+            <span>Login with Google</span>
+          </button>
+          <button className="btn btn-apple" disabled={loading}>
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg"
+              alt="Apple"
+              className="social-icon"
+            />
+            <span>Login with Apple</span>
+          </button>
+        </div>
 
         <div className="signup-link">
           <span>
             Don't have an account?{' '}
-            <button type="button" onClick={handleSignUpClick}>
+            <button type="button" onClick={handleSignUpClick} className="switch-btn mx-2">
               Sign Up
             </button>
           </span>

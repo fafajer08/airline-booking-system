@@ -18,6 +18,8 @@ Basic Reset
   text-align: center;
   padding: 20px;
   overflow: hidden;
+
+  animation: backgroundZoom 10s ease-in-out infinite;
 }
 
 .hero-content {
@@ -185,9 +187,23 @@ Basic Reset
   }
 }
 
+@keyframes backgroundZoom {
+  0% {
+    background-size: 100%;
+  }
+  50% {
+    background-size: 105%; /* Slight zoom-in */
+  }
+  100% {
+    background-size: 100%; /* Return to original size */
+  }
+}
+
 /* Media Queries for Responsiveness */
 @media (min-width: 768px) {
   .row-cols-md-4 {
     flex-direction: row;
   }
 }
+
+
