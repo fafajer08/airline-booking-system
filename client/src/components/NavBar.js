@@ -67,7 +67,7 @@ export default function NavBar() {
       return (
         <>
           <Nav.Link as={Link} to="/" className="nav-bar-link me-3">Home</Nav.Link>
-          <Nav.Link as={Link} to="/flights" className="nav-bar-link me-3">Flights</Nav.Link>
+          <Nav.Link as={Link} to="/#" className="nav-bar-link me-3">Flights</Nav.Link>
           <Nav.Link as={Link} to="/destinations" className="nav-bar-link me-3">Destinations</Nav.Link>
           <Nav.Link as={Link} to="/deals" className="nav-bar-link me-3">Deals</Nav.Link>
         </>
