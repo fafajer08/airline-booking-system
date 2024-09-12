@@ -1,0 +1,123 @@
+/* Container for the user dashboard */
+.admin-users-dash {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  .search-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  
+  .search-container input[type="text"] {
+    width: 60%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .search-container select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  /* Styling for the user table */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+  
+  table thead th {
+    background-color: #f5f5f5;
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    cursor: pointer;
+  }
+  
+  table tbody tr {
+    border-bottom: 1px solid #ddd;
+  }
+  
+  table tbody tr:hover {
+    background-color: #f9f9f9;
+    cursor: pointer;
+  }
+  
+  table tbody td {
+    padding: 12px;
+  }
+  
+  /* Sort arrow */
+  th .sort-arrow {
+    margin-left: 8px;
+    font-size: 12px;
+  }
+  
+  /* Input fields in table headers */
+  .table-search-input {
+    display: block;
+    width: 90%;
+    padding: 5px;
+    margin-top: 5px;
+    font-size: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  /* Pagination controls */
+  .pagination-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .pagination-controls button {
+    padding: 8px 12px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .pagination-controls button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  
+  .pagination-controls span {
+    font-weight: bold;
+  }
+  
+  /* Modal styling overrides */
+  .modal-header {
+    background-color: #f5f5f5;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .modal-title {
+    font-weight: bold;
+  }
+  
+  .modal-body p {
+    margin-bottom: 10px;
+  }
+  
+  .modal-footer button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .modal-footer button:hover {
+    background-color: #0056b3;
+  }
+  

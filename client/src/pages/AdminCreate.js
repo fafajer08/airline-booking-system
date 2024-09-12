@@ -1,27 +1,27 @@
 import React, { useState, useContext } from "react";
-import Flights from "../components/AdminFlightsDash";
-import Bookings from "../components/AdminBookingsDash";
-import Users from "../components/AdminUsersDash";  
-import Passengers from "../components/AdminPassengersDash";  
+// import CreateFlight from "../components/AdminCreateFlightDash";
+// import Airplane from "../components/AdminAirplaneDash";
+import Airport from "../components/AdminAirportDash";  
+// import Route from "../components/AdminRouteDash";  
 import { Button, Row, Col } from 'react-bootstrap';
 import UserContext from '../context/UserContext';
-import '../styles/adminflights.css'; // Ensure the CSS file is correctly linked
+import '../styles/admincreate.css'; // Ensure the CSS file is correctly linked
 
 export default function Admin() {
   const { user } = useContext(UserContext);
   
-  const [activeComponent, setActiveComponent] = useState("Flights");
+  const [activeComponent, setActiveComponent] = useState("Airport");
 
   const renderActiveComponent = () => {
     switch (activeComponent) {
-      case "Flights":
-        return <Flights />;
-      case "Bookings":
-        return <Bookings />;
-      case "Users":
-        return <Users />;
-      case "Passengers":
-        return <Passengers />;
+    //   case "CreateFlight":
+    //     return <CreateFlight />;
+    //   case "Airplane":
+        // return <Airplane />;
+      case "Airport":
+        return <Airport />;
+      // case "Route":
+      //   return <Route />;
       default:
         return null;
     }
@@ -42,34 +42,34 @@ export default function Admin() {
 
           {/* Button Row */}
           <Col md={3} className="admin-dashboard-button-row d-flex justify-content-end">
-            <Button 
-              variant={activeComponent === "Flights" ? "primary" : "outline-primary"} 
-              onClick={() => setActiveComponent("Flights")}
+            {/* <Button 
+              variant={activeComponent === "CreateFlight" ? "primary" : "outline-primary"} 
+              onClick={() => setActiveComponent("CreateFlight")}
               className="ms-2 admin-dashboard-btn"
             >
-              Flights
+              CreateFlight
             </Button>
             <Button 
-              variant={activeComponent === "Bookings" ? "primary" : "outline-primary"} 
-              onClick={() => setActiveComponent("Bookings")}
+              variant={activeComponent === "Airplane" ? "primary" : "outline-primary"} 
+              onClick={() => setActiveComponent("Airplane")}
               className="ms-2 admin-dashboard-btn"
             >
-              Bookings
-            </Button>
+              Airplane
+            </Button> */}
             <Button 
-              variant={activeComponent === "Users" ? "primary" : "outline-primary"} 
-              onClick={() => setActiveComponent("Users")}
+              variant={activeComponent === "Airport" ? "primary" : "outline-primary"} 
+              onClick={() => setActiveComponent("Airport")}
               className="ms-2 admin-dashboard-btn"
             >
-              Users
+              Airport
             </Button>
-            <Button 
-              variant={activeComponent === "Passengers" ? "primary" : "outline-primary"} 
-              onClick={() => setActiveComponent("Passengers")}
+            {/* <Button 
+              variant={activeComponent === "Route" ? "primary" : "outline-primary"} 
+              onClick={() => setActiveComponent("Route")}
               className="ms-2 admin-dashboard-btn"
             >
-              Passengers
-            </Button>
+              Route
+            </Button> */}
           </Col>
         </Row>
 

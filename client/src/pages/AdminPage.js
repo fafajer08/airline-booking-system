@@ -3,7 +3,7 @@ import Destinations from "../components/AdminDestinationsDash";
 import Deals from "../components/AdminDealsDash";
 import { Button, Row, Col } from 'react-bootstrap';
 import UserContext from '../context/UserContext';
-import '../styles/admindash.css'; // Ensure the CSS file is correctly linked
+import '../styles/adminflightsdash.css'; // Ensure the CSS file is correctly linked
 
 export default function Admin() {
   const { user } = useContext(UserContext);

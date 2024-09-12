@@ -1,10 +1,35 @@
+const mongoose = require('mongoose');
+
 const airportSchema = new mongoose.Schema({
-    name: { type: String, required: true },
-    code: { type: String, required: true, unique: true }, // E.g., JFK, LAX
-    city: { type: String, required: true },
-    country: { type: String, required: true }
-  });
-  
-  const Airport = mongoose.model('Airport', airportSchema);
-  module.exports = Airport;
-  
+    airportName: {
+        type: String,
+        required: true,
+        trim: true
+    },
+    airportCode: {
+        type: String,
+        required: true,
+        trim: true,
+        minlength: 3,
+        maxlength: 3
+    },
+    airportCity: {
+        type: String,
+        required: true,
+        trim: true
+    },
+    airportCountry: {
+        type: String,
+        required: true,
+        trim: true
+    },
+    isActive: {
+        type: Boolean,
+        required: true,
+        default: true
+    }
+}, { timestamps: true });
+
+const Airport = mongoose.model('Airport', airportSchema);
+
+module.exports = Airport;

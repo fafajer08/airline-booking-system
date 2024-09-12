@@ -22,7 +22,7 @@ function FlightTypeSelector({ onFlightTypeChange }) {
             >
                 <option value="oneway">ONE WAY</option>
                 <option value="roundtrip">ROUND TRIP</option>
-                <option value="multicity">MULTI CITY</option>
+                {/* <option value="multicity">MULTI CITY</option> */}
             </select>
             <img 
                 src={dropDown} 

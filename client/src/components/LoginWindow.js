@@ -2,9 +2,14 @@ import React, { useState, useContext, useEffect } from 'react';
 import '../styles/loginwindow.css';
 import { useNavigate } from 'react-router-dom';
 import UserContext from '../context/UserContext.js';
+import { Notyf } from 'notyf';
+import 'notyf/notyf.min.css';
 
-function LoginWindow({ isVisible, onClose, handleSignUpClick, initialEmail }) {
-  const [email, setEmail] = useState(initialEmail || '');
+
+function LoginWindow({ isVisible, onClose, handleSignUpClick, initialEmail }) { // Add initialEmail prop
+  const notyf = new Notyf({ duration: 3000});
+  const [email, setEmail] = useState(initialEmail || ''); // Pre-fill with initialEmail if provided
+
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -24,27 +29,21 @@ function LoginWindow({ isVisible, onClose, handleSignUpClick, initialEmail }) {
     setLoading(true);
     setError(''); // Clear any previous errors
 
-    fetch('http://localhost:4000/users/login', {
+    fetch(`${process.env.REACT_APP_API_URL}/users/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ email, password }),
     })
-      .then((res) => {
-        if (!res.ok) {
-          return res.json().then((err) => {
-            throw new Error(err.message || 'Login failed. Please try again.');
-          });
-        }
-        return res.json();
-      })
+      .then(res => res.json())
       .then((data) => {
         if (data.access) {
           localStorage.setItem('token', data.access); // Save token
           setEmail('');
           setPassword('');
           retrieveUserDetails(data.access); // Call retrieveUserDetails after successful login
+          notyf.success('Successfully logged in.');
         } else {
           setError(data.message || 'Login failed. Please try again.');
           setLoading(false);
@@ -58,7 +57,8 @@ function LoginWindow({ isVisible, onClose, handleSignUpClick, initialEmail }) {
   };
 
   const retrieveUserDetails = (token) => {
-    fetch('http://localhost:4000/users/details', {
+    console.log('Retrieving user details with token:', token);
+    fetch(`${process.env.REACT_APP_API_URL}/users/details`, {
       method: 'GET',
       headers: { Authorization: `Bearer ${token}` },
     })
@@ -74,7 +74,9 @@ function LoginWindow({ isVisible, onClose, handleSignUpClick, initialEmail }) {
             email: user.email,
             mobileNo: user.mobileNo,
           });
-          navigate(user.isAdmin ? '/admin' : '/users');
+
+          navigate(user.isAdmin ? '/admin/flights' : '/users');
+          setLoading(false);
           onClose(); // Optionally close the login window after navigating
         } else {
           setError('User details not found.');

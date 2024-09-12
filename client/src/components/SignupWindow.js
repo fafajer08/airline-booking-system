@@ -1,14 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/signupwindow.css';
+import { Notyf } from 'notyf';
+import 'notyf/notyf.min.css';
 
 function SignupWindow({ isVisible, onClose, openLoginWithEmail }) {
+
+  const notyf = new Notyf({
+    duration: 3000, // Duration in milliseconds (optional, default is 2000)
+    position: {
+      x: 'right',   // Position horizontally
+      y: 'top',     // Position vertically
+    },
+  });
+
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [mobileNo, setMobileNo] = useState('');
+  const [phoneNo, setPhoneNo] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -22,7 +33,7 @@ function SignupWindow({ isVisible, onClose, openLoginWithEmail }) {
       setEmail('');
       setPassword('');
       setConfirmPassword('');
-      setMobileNo('');
+      setPhoneNo('');
       setError('');
     }
   }, [isVisible]);
@@ -36,7 +47,7 @@ function SignupWindow({ isVisible, onClose, openLoginWithEmail }) {
       return;
     }
 
-    if (mobileNo.length !== 11 || isNaN(mobileNo)) {
+    if (phoneNo.length !== 11 || isNaN(phoneNo)) {
       setError('Phone number must be 11 digits long');
       return;
     }
@@ -45,7 +56,7 @@ function SignupWindow({ isVisible, onClose, openLoginWithEmail }) {
     setError('');
 
     // Sign up logic here
-    fetch('http://localhost:4000/users/register', {
+    fetch(`${process.env.REACT_APP_API_URL}/users/register`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -55,14 +66,14 @@ function SignupWindow({ isVisible, onClose, openLoginWithEmail }) {
         lastName,
         email,
         password,
-        mobileNo,
+        phoneNo,
       }),
     })
       .then((res) => res.json())
       .then((data) => {
         setLoading(false);
         if (data.message === "Registered Successfully") {
-          // Close the signup window and open login window with email pre-filled
+          notyf.success(data.message);
           onClose();
           openLoginWithEmail(email); // Open login with pre-filled email
         } else {
@@ -118,8 +129,8 @@ function SignupWindow({ isVisible, onClose, openLoginWithEmail }) {
             <label htmlFor="email">Email address</label>
             <input
               type="email"
-              name="email"
-              id="email"
+              name="signup-email"
+              id="signup-email"
               placeholder="Enter your email"
               className="form-control"
               value={email}
@@ -129,11 +140,25 @@ function SignupWindow({ isVisible, onClose, openLoginWithEmail }) {
           </div>
 
           <div className="form-group">
+            <label htmlFor="phoneNo">Phone Number</label>
+            <input
+              type="tel"
+              name="phoneNo"
+              id="phoneNo"
+              placeholder="Enter your 11-digit phone number"
+              className="form-control"
+              value={phoneNo}
+              onChange={(e) => setPhoneNo(e.target.value)}
+              required
+            />
+          </div>
+
+          <div className="form-group">
             <label htmlFor="password">Password</label>
             <input
               type="password"
-              name="password"
-              id="password"
+              name="signup-password"
+              id="signup-password"
               placeholder="Enter your password"
               className="form-control"
               value={password}
@@ -156,19 +181,7 @@ function SignupWindow({ isVisible, onClose, openLoginWithEmail }) {
             />
           </div>
 
-          <div className="form-group">
-            <label htmlFor="mobileNo">Phone Number</label>
-            <input
-              type="tel"
-              name="mobileNo"
-              id="mobileNo"
-              placeholder="Enter your 11-digit phone number"
-              className="form-control"
-              value={mobileNo}
-              onChange={(e) => setMobileNo(e.target.value)}
-              required
-            />
-          </div>
+
 
           <button type="submit" className="btn btn-primary signup-btn" disabled={loading}>
             {loading ? 'Signing up...' : 'Sign Up'}

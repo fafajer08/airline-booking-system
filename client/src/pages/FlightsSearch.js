@@ -1,33 +1,24 @@
-import React, { useState } from 'react';
-import NavBar from "../components/NavBar.js";
-import SearchFlightButton,{ ContinueButton, BackButton, SelectButton, SubmitButton } from "../components/Buttons.js";
+import React, { useState, useEffect } from 'react';
+import SearchFlightButton from "../components/Buttons.js";
 import DateSelector from "../components/SelectorDate.js";
 import PortSelector from "../components/SelectorPort.js";
-import flightsData from '../data/flightsData.js';
-import parseData from '../components/FlightsDataParser.js';
 import PaxSelector from '../components/SelectorPax.js';
 import InputBox from '../components/InputBox.js';
 import FlightTypeSelector from "../components/SelectorFlightType.js";
-
+import '../styles/flightsearch.css';
+import parseData from '../components/FlightsDataParser.js'; // Updated import
+import flightsData from '../data/flightsData.js';
 
 export default function SearchFlight() {
-  const portOptions = parseData(flightsData);
-
+  const [portOptions, setPortOptions] = useState([]);
   const [flightType, setFlightType] = useState('oneway'); // Default flight type
-
   const [departurePort, setDeparturePort] = useState({});
   const [destinationPort, setDestinationPort] = useState({});
-  const [secondDeparturePort, setSecondDeparturePort] = useState({});
-  const [secondDestinationPort, setSecondDestinationPort] = useState({});
-
   const [departureDate, setDepartureDate] = useState(null);
-  const [secondDepartureDate, setSecondDepartureDate] = useState(null);
   const [returnDate, setReturnDate] = useState(null);
-
   const [adultsCount, setAdultsCount] = useState(0);
-  const [chilrentCount, setChildrentCount] = useState(0);
+  const [childCount, setChildCount] = useState(0);
   const [infantsCount, setInfantsCount] = useState(0);
-
   const [input, setInput] = useState(null);
 
   const handleFlightTypeChange = (selectedType) => {
@@ -35,93 +26,82 @@ export default function SearchFlight() {
     console.log("Selected Flight Type:", selectedType);
   };
 
+  // Fetch data from API and fall back to mock data if necessary
+  const fetchData = async () => {
+    try {
+      const response = await fetch('https://api.example.com/flights'); // Replace with actual API
+      const data = await response.json();
+      setPortOptions(parseData(data));
+    } catch (error) {
+      console.error("Error fetching data, using mock data:", error);
+      // Use parsed mock data in case of error
+      setPortOptions(parseData(flightsData));
+    }
+  };
+
+  useEffect(() => {
+    fetchData(); // Call the fetch function to load data
+  }, []); // Empty dependency array to call this effect once
+
+  const portOptionsArray = [...portOptions]
+
+console.log("Port Options Array:", portOptionsArray);
+
   return (
-    <div className='my-5'>
-      <div className='container'>
-        <h1 className="my-5 mx-5">Where would you like to go?</h1>
+    <div className='search-flight-container my-5'>
+      <div className='search-flight-content container'>
+        <h1 className="search-flight-heading my-5 mx-5">Where would you like to go?</h1>
         
-        {/* Adjust the spacing here */}
-        <div className="d-flex align-items-center justify-content-center mb-2">  
+        <div className="search-flight-type-selector d-flex align-items-center justify-content-center mb-2">  
           <FlightTypeSelector onFlightTypeChange={handleFlightTypeChange} />
         </div>
         
         <form>
-          {flightType === 'oneway' && (
-            <div className='container-fluid'>
-              <div className='first-row d-flex flex-column my-3 d-flex align-items-center flex-lg-row'>
-              <PortSelector 
-                    portOptions={portOptions} 
-                    setDeparturePort={setDeparturePort} 
-                    setDestinationPort={setDestinationPort} 
+            {flightType === 'oneway' && (
+              <div className='search-flight-form-container'>
+                <div className='search-flight-row search-flight-row--oneway'>
+                  <PortSelector 
+                      portOptions={portOptions} 
+                      setDeparturePort={setDeparturePort} 
+                      setDestinationPort={setDestinationPort} 
                   />
-                <DateSelector label="DEPARTURE DATE" onDateChange={setDepartureDate} />
+                  <DateSelector label="DEPARTURE DATE" onDateChange={setDepartureDate} />
+                </div>
+                <div className='search-flight-row search-flight-row--oneway'>
+                  <PaxSelector label={'ADULTS (12+ YEARS)'} setPaxCount={setAdultsCount} />
+                  <PaxSelector label={'CHILDREN (2-11 YEARS)'} setPaxCount={setChildCount} />
+                  <PaxSelector label={'INFANTS (UNDER 2 YEARS)'} setPaxCount={setInfantsCount} />
+                  <InputBox label="ENTER PROMO CODES" placeholder="Enter Code" onChange={setInput}/>
+                </div>
+                <div className='search-flight-submit-btn'>
+                  <SearchFlightButton link="/flights/options" />
+                </div>
               </div>
-              <div className='second-row d-flex flex-column my-3 d-flex align-items-center flex-lg-row'>
-                <PaxSelector label={'ADULTS (12+ YEARS)'} setPaxCount={setAdultsCount} />
-                <PaxSelector label={'CHILDREN (2-11 YEARS)'} setPaxCount={setChildrentCount} />
-                <PaxSelector label={'INFANTS (UNDER 2 YEARS)'} setPaxCount={setInfantsCount} />
-                <InputBox label="ENTER PROMO CODES" placeholder="Enter Code" onChange={setInput}/>
-              </div>
-              <div className='submit-btn d-flex justify-content-center justify-content-lg-end'>
-                <SearchFlightButton link="/flights/options" />
-              </div>
-            </div>
-          )}
+            )}
 
-          {flightType === 'roundtrip' && (
-            <div>
-              <div className="first-row  flex-column my-3 d-flex align-items-center flex-lg-row">
-              <PortSelector 
-                    portOptions={portOptions} 
-                    setDeparturePort={setDeparturePort} 
-                    setDestinationPort={setDestinationPort} 
+            {flightType === 'roundtrip' && (
+              <div className='search-flight-form-container'>
+                <div className="search-flight-row search-flight-row--roundtrip">
+                  <PortSelector 
+                      portOptions={portOptions} 
+                      setDeparturePort={setDeparturePort} 
+                      setDestinationPort={setDestinationPort} 
                   />
-                 <DateSelector label="DEPARTURE DATE" onDateChange={setDepartureDate} />
-                 <DateSelector label="RETURN DATE" onDateChange={setReturnDate} />
+                  <DateSelector label="DEPARTURE DATE" onDateChange={setDepartureDate} />
+                  <DateSelector label="RETURN DATE" onDateChange={setReturnDate} />
+                </div>
+                <div className="search-flight-row search-flight-row--roundtrip">
+                  <PaxSelector label={'ADULTS (12+ YEARS)'} setPaxCount={setAdultsCount} />
+                  <PaxSelector label={'CHILDREN (2-11 YEARS)'} setPaxCount={setChildCount} />
+                  <PaxSelector label={'INFANTS (UNDER 2 YEARS)'} setPaxCount={setInfantsCount} />
+                  <InputBox label="ENTER PROMO CODES" placeholder="Enter Code" onChange={setInput}/>
+                </div>
+                <div className='search-flight-submit-btn'>
+                  <SearchFlightButton link="/flights/options" />
+                </div>
               </div>
-              
-              <div className="second-row d-flex flex-column my-3 d-flex align-items-center flex-lg-row">
-              <PaxSelector label={'ADULTS (12+ YEARS)'} setPaxCount={setAdultsCount} />
-                <PaxSelector label={'CHILDREN (2-11 YEARS)'} setPaxCount={setChildrentCount} />
-                <PaxSelector label={'INFANTS (UNDER 2 YEARS)'} setPaxCount={setInfantsCount} />
-                <InputBox label="ENTER PROMO CODES" placeholder="Enter Code" onChange={setInput}/>
-              </div>
-              <div className='submit-btn d-flex justify-content-center justify-content-lg-end'>
-              <SearchFlightButton link="/flights/options" />
-              </div>
-            </div>
-          )}
-
-          {flightType === 'multicity' && (
-            <div className='selector-container'>
-              <div className="first-row d-flex flex-column my-3 d-flex align-items-center flex-lg-row">
-              <PortSelector 
-                    portOptions={portOptions} 
-                    setDeparturePort={setDeparturePort} 
-                    setDestinationPort={setDestinationPort} 
-                  />
-                <DateSelector label="DEPARTURE DATE" onDateChange={setDepartureDate} />
-              </div>
-              <div className="second-row d-flex flex-column my-3 d-flex align-items-center flex-lg-row">
-              <PortSelector 
-                    portOptions={portOptions} 
-                    setDeparturePort={setSecondDeparturePort} 
-                    setDestinationPort={setSecondDestinationPort} 
-                  />
-                <DateSelector label="DEPARTURE DATE" onDateChange={setSecondDepartureDate} />
-              </div>
-              <div className="third-row d-flex flex-column my-3 d-flex align-items-center flex-lg-row">
-              <PaxSelector label={'ADULTS (12+ YEARS)'} setPaxCount={setAdultsCount} />
-                <PaxSelector label={'CHILDREN (2-11 YEARS)'} setPaxCount={setChildrentCount} />
-                <PaxSelector label={'INFANTS (UNDER 2 YEARS)'} setPaxCount={setInfantsCount} />
-                <InputBox label="ENTER PROMO CODES" placeholder="Enter Code" onChange={setInput}/>
-              </div>
-              <div className='submit-btn d-flex justify-content-center justify-content-lg-end'>
-              <SearchFlightButton link="/flights/options" />
-              </div>
-            </div>
-          )}
-        </form>
+            )}
+          </form>
       </div>
     </div>
   );

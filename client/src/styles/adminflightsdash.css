@@ -1,0 +1,70 @@
+/* Admin Dashboard Styles */
+.admin-dashboard {
+    margin-top: 20px;
+    padding-left: 20px;
+  }
+  
+  .admin-dashboard h5 {
+    font-size: 24px;
+    color: #336749; /* Primary green color */
+    font-weight: bold;
+  }
+  
+  .admin-dashboard h2 {
+    font-size: 20px;
+    color: #333; /* Darker text for better contrast */
+    margin-bottom: 20px;
+  }
+  
+  /* Button Row Styles */
+  .button-row {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+  }
+  
+  /* Default Button (Unselected) */
+  .button-row .btn {
+    background-color: white; /* White background */
+    color: #336749; /* Primary green text */
+    border: 2px solid #336749; /* Primary green border */
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  
+  .button-row .btn:hover {
+    background-color: #336749; /* Primary green background on hover */
+    color: white; /* White text on hover */
+  }
+  
+  .button-row .btn:focus {
+    outline: none;
+    box-shadow: none; /* Remove focus blue outline */
+  }
+  
+  /* Selected Button (Toggled) */
+  .button-row .btn-primary {
+    background-color: #336749; /* Primary green background for selected */
+    color: white; /* White text for selected */
+    border: 2px solid #336749; /* Primary green border for selected */
+  }
+  
+  .button-row .btn-primary:hover {
+    background-color: #294d3b; /* Darker shade on hover for selected button */
+  }
+  
+  /* Layout adjustments */
+  .container {
+    padding: 20px;
+    background-color: #f9f9f9; /* Light background to make buttons pop */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for card effect */
+  }
+  
+  .mt-5 {
+    margin-top: 40px;
+  }
+  
+  .ms-5 {
+    margin-left: 40px;
+  }
+  
