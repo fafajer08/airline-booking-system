@@ -6,7 +6,8 @@ const AirportController = {
   // Add a new Airport
   async addAirport(req, res) {
     try {
-      const { AirportId, brand, model, airlineName, totalSeats, economySeat, premiumSeat, businessSeat, firstClass } = req.body;
+      const { airportName, airportCode, airportCity, airportCountry } = req.body;
+      console.log(req.body);
 
       const newAirport = new Airport({
         airportName,

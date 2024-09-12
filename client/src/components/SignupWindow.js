@@ -129,8 +129,8 @@ function SignupWindow({ isVisible, onClose, openLoginWithEmail }) {
             <label htmlFor="email">Email address</label>
             <input
               type="email"
-              name="email"
-              id="email"
+              name="signup-email"
+              id="signup-email"
               placeholder="Enter your email"
               className="form-control"
               value={email}
@@ -157,8 +157,8 @@ function SignupWindow({ isVisible, onClose, openLoginWithEmail }) {
             <label htmlFor="password">Password</label>
             <input
               type="password"
-              name="password"
-              id="password"
+              name="signup-password"
+              id="signup-password"
               placeholder="Enter your password"
               className="form-control"
               value={password}

@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const airportController = require('../controllers/airportController');
-const {  isLoggedIn } = require("../auth");
+const { verify, verifyAdmin, isLoggedIn } = require("../auth");
 
 //add v
 

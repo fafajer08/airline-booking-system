@@ -5,7 +5,7 @@ import '../styles/deals.css';  // Import the CSS for DealsPage
 
 export default function DealsPage() {
   return (
-    <div>
+    <div className="night-mode">
       <div className="deals-page-container">
         <h5 className="deals-page-subheading">Welcome to our promo page</h5>
         <h2 className="deals-page-heading">Great Discounts</h2>

@@ -9,8 +9,9 @@ const airportSchema = new mongoose.Schema({
     airportCode: {
         type: String,
         required: true,
-        unique: true,
-        trim: true
+        trim: true,
+        minlength: 3,
+        maxlength: 3
     },
     airportCity: {
         type: String,
