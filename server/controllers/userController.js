@@ -25,10 +25,10 @@ module.exports.registerUser = async (req, res) => {
             });
         }
 
-        // Validate mobile number length
-        if (req.body.mobileNo.length !== 11) {
+        // Validate phone number length
+        if (req.body.phoneNo.length !== 11) {
             return res.status(400).send({ 
-                error: 'Mobile number is invalid' 
+                error: 'Phone number is invalid' 
             });
         }
 
@@ -44,7 +44,7 @@ module.exports.registerUser = async (req, res) => {
             firstName: req.body.firstName,
             lastName: req.body.lastName,
             email: req.body.email,
-            mobileNo: req.body.mobileNo,
+            phoneNo: req.body.phoneNo,
             password: bcrypt.hashSync(req.body.password, 10)
         });
 
@@ -238,12 +238,12 @@ module.exports.updateProfile = async (req, res) => {
     const userId = req.user.id;
 
     // Retrieve the updated profile information from the request body
-    const { firstName, lastName, mobileNo } = req.body;
+    const { firstName, lastName, phoneNo } = req.body;
 
     // Update the user's profile in the database
     const updatedUser = await User.findByIdAndUpdate(
       userId,
-      { firstName, lastName, mobileNo },
+      { firstName, lastName, phoneNo },
       { new: true }
     );
 

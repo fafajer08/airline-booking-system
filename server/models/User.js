@@ -26,7 +26,7 @@ const userSchema = new mongoose.Schema({
   phoneNo: {
     type: String,
     required: true,
-    match: [/^\d{10}$/, 'Please enter a valid 10-digit phone number']
+    match: [/^\d{11}$/, 'Please enter a valid 10-digit phone number']
   },
   isAdmin: {
     type: Boolean,

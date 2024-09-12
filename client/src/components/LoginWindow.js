@@ -2,8 +2,13 @@ import React, { useState, useContext, useEffect } from 'react';
 import '../styles/loginwindow.css';
 import { useNavigate } from 'react-router-dom';
 import UserContext from '../context/UserContext.js';
+import { Notyf } from 'notyf';
+import 'notyf/notyf.min.css';
 
 function LoginWindow({ isVisible, onClose, handleSignUpClick, initialEmail }) { // Add initialEmail prop
+
+  const notyf = new Notyf({ duration: 3000});
+
   const [email, setEmail] = useState(initialEmail || ''); // Pre-fill with initialEmail if provided
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -24,7 +29,7 @@ function LoginWindow({ isVisible, onClose, handleSignUpClick, initialEmail }) { 
     setLoading(true);
     setError(''); // Clear any previous errors
 
-    fetch('http://localhost:4000/users/login', {
+    fetch(`${process.env.REACT_APP_API_URL}/users/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -34,20 +39,14 @@ function LoginWindow({ isVisible, onClose, handleSignUpClick, initialEmail }) { 
         password: password,
       }),
     })
-      .then((res) => {
-        if (!res.ok) {
-          return res.json().then((err) => {
-            throw new Error(err.message || 'Login failed. Please try again.');
-          });
-        }
-        return res.json();
-      })
+      .then(res => res.json())
       .then((data) => {
         if (data.access) {
           localStorage.setItem('token', data.access); // Save token in local storage
           setEmail('');
           setPassword('');
           retrieveUserDetails(data.access); // Call retrieveUserDetails after successful login
+          notyf.success('Successfully logged in.');
         } else {
           setError(data.message || 'Login failed. Please try again.');
           setLoading(false);
@@ -63,7 +62,7 @@ function LoginWindow({ isVisible, onClose, handleSignUpClick, initialEmail }) { 
   const retrieveUserDetails = (token) => {
     console.log('Retrieving user details with token:', token);
   
-    fetch('http://localhost:4000/users/details', {
+    fetch(`${process.env.REACT_APP_API_URL}/users/details`, {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${token}`,
