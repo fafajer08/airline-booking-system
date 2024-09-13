@@ -1,11 +1,15 @@
-
-import Navbar from "../components/NavBar";
-import Hero from "../components/Hero";
-import Destinations from './Destinations';
+import React, { useEffect } from 'react';
+import AOS from 'aos';
+import 'aos/dist/aos.css'; // Import AOS styles
+import Hero from '../components/Hero';
+import WindowDestination from '../components/WindowDestination';
 import WindowDealsCards from '../components/WindowDealsCards';
-import WindowDestination from "../components/WindowDestination";
 
 export default function Home() {
+  useEffect(() => {
+    AOS.init({ duration: 1000 }); // Initialize AOS
+  }, []);
+
   return (
     <>
       <Hero />

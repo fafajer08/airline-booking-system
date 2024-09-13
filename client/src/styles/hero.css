@@ -1,4 +1,4 @@
-Basic Reset
+/* Basic Reset */
 * {
   margin: 0;
   padding: 0;
@@ -26,9 +26,30 @@ Basic Reset
   max-width: 800px;
   position: relative;
   z-index: 10;
-  /* Apply the slide-in effect here */
-  transform: translateY(-100%);
-  animation: slide-in 1s forwards;
+}
+
+/* Slide-in Effect for Old Approach */
+@keyframes slide-in {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes backgroundZoom {
+  0% {
+    background-size: 100%;
+  }
+  50% {
+    background-size: 105%; /* Slight zoom-in */
+  }
+  100% {
+    background-size: 100%; /* Return to original size */
+  }
 }
 
 .hero h1 {
@@ -73,7 +94,6 @@ Basic Reset
   background-color: #007A8C;
   color: white;
 }
-
 
 .search-form-wrapper {
   background-color: white;
@@ -170,33 +190,9 @@ Basic Reset
   transition: background-color 0.3s ease;
 }
 
-.btn-search:hover{
+.btn-search:hover {
   background-color: #007A8C;
   transform: scale(1.1);
-}
-
-/* Slide-in Effect */
-@keyframes slide-in {
-  from {
-    transform: translateY(-100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-@keyframes backgroundZoom {
-  0% {
-    background-size: 100%;
-  }
-  50% {
-    background-size: 105%; /* Slight zoom-in */
-  }
-  100% {
-    background-size: 100%; /* Return to original size */
-  }
 }
 
 /* Media Queries for Responsiveness */
@@ -205,5 +201,3 @@ Basic Reset
     flex-direction: row;
   }
 }
-
-
