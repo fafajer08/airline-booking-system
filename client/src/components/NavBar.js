@@ -224,28 +224,33 @@ export default function NavBar() {
 
   return (
     <>
-      <Navbar expand="lg" className={`nav-bar bg-body-primary ${isNightMode ? 'night-mode' : ''}`}>
-        <Container fluid>
-          <Navbar.Brand className="d-flex align-items-center" as={Link} to="/">
-            <img className="nav-bar-logo" src={logo} alt="Logo" />
-            <span className="nav-bar-logo-name">Fly Airlines</span>
-          </Navbar.Brand>
-          <Navbar.Toggle aria-controls="basic-navbar-nav" className="nav-bar-toggler" />
-          <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="ms-auto d-flex align-items-center">
-              {renderNavLinks()}
-              {renderUserActions()}
-              {/* Night Mode Toggle Button */}
-              <Button
-                onClick={toggleNightMode}
-                className="night-mode-btn ms-3"
-              >
-                {isNightMode ? 'Day Mode' : 'Night Mode'}
-              </Button>
-            </Nav>
-          </Navbar.Collapse>
-        </Container>
-      </Navbar>
+     <Navbar expand="lg" className={`nav-bar bg-body-primary ${isNightMode ? 'night-mode' : ''}`}>
+  <Container fluid>
+    <Navbar.Brand className="d-flex align-items-center" as={Link} to="/">
+      <img className="nav-bar-logo" src={logo} alt="Logo" />
+      <span className="nav-bar-logo-name">Fly Airlines</span>
+    </Navbar.Brand>
+    <Navbar.Toggle aria-controls="basic-navbar-nav" className="nav-bar-toggler" />
+    <Navbar.Collapse id="basic-navbar-nav">
+      <Nav className="ms-auto d-flex align-items-center">
+        {renderNavLinks()}
+        {renderUserActions()}
+        {/* Night Mode Toggle Icon */}
+        <Button
+          onClick={toggleNightMode}
+          className="night-mode-btn ms-3"
+          variant="link"
+          aria-label={isNightMode ? 'Switch to Day Mode' : 'Switch to Night Mode'}
+        >
+          <span className="material-icons">
+            {isNightMode ? 'brightness_7' : 'brightness_4'}
+          </span>
+        </Button>
+      </Nav>
+    </Navbar.Collapse>
+  </Container>
+</Navbar>
+
 
       {(isLoginVisible || isSignupVisible) && (
         <div className={`modal-overlay ${isLoginVisible || isSignupVisible ? 'visible' : ''}`}></div>
