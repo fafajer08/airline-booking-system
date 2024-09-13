@@ -112,7 +112,7 @@ const AirplaneController = {
         return res.status(404).json({ message: 'No airplanes found' });
       }
   
-      res.status(200).json(planes);
+      res.status(200).json(airplanes);
     } catch (error) {
       console.error('Error fetching Airplanes:', error);
       res.status(500).json({ message: 'Error fetching planes', error });

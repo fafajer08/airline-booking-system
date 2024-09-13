@@ -1,10 +1,10 @@
 
+import React, { useState, useEffect } from "react";
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
-import '../styles/adminairportdash.css';
-import React, { useState, useEffect } from "react";
 import { Notyf } from 'notyf';
 import 'notyf/notyf.min.css';
+import '../styles/adminairportdash.css';
 
 export default function AdminAirportDash() {
   const notyf = new Notyf({ duration: 3000 });
@@ -21,6 +21,7 @@ export default function AdminAirportDash() {
     airportCode: "",
     airportCity: "",
     airportCountry: "",
+    isActive: "",
   });
   const [newAirport, setNewAirport] = useState({
     airportName: "",
@@ -31,7 +32,6 @@ export default function AdminAirportDash() {
   });
 
   useEffect(() => {
-    // Fetch data from the API
     const fetchAirports = async () => {
       try {
         const response = await fetch(`${process.env.REACT_APP_API_URL}/airports/all`);
@@ -99,13 +99,26 @@ export default function AdminAirportDash() {
   const filteredAirports = getSortedAirports().filter((airport) =>
     Object.keys(columnSearch).every((key) => {
       const airportValue = airport[key];
-      if (airportValue && typeof airportValue === "string") {
-        return airportValue.toLowerCase().includes(columnSearch[key].toLowerCase());
+      const searchValue = columnSearch[key];
+  
+      if (searchValue === "") {
+        return true; // If search input is empty, return all results
       }
-      return true;
+  
+      // Handle string searches (text)
+      if (typeof airportValue === "string") {
+        return airportValue.toLowerCase().includes(searchValue.toLowerCase());
+      }
+  
+      // Handle boolean searches
+      if (typeof airportValue === "boolean") {
+        return airportValue === (searchValue === "true");
+      }
+  
+      return true; // Default return for unmatched cases
     })
   );
-
+  
   const paginatedAirports = filteredAirports.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage);
   const totalPages = Math.ceil(filteredAirports.length / rowsPerPage);
 
@@ -123,22 +136,41 @@ export default function AdminAirportDash() {
   const renderTableHeader = (label, key) => (
     <th onClick={() => handleHeaderClick(key)}>
       {label}
-      <input
-        type="text"
-        value={columnSearch[key] || ""}
-        onChange={(e) => setColumnSearch({ ...columnSearch, [key]: e.target.value })}
-        placeholder={`Search ${label}`}
-        className="table-search-input"
-      />
     </th>
   );
 
+  const renderTableSearch = (key, type) => (
+    <td>
+      {type === 'boolean' ? (
+        <select
+          value={columnSearch[key] || ""}
+          onChange={(e) => setColumnSearch({ ...columnSearch, [key]: e.target.value })}
+          className="table-search-input"
+        >
+          <option value="">All</option>
+          <option value="true">Activated</option>
+          <option value="false">Archived</option>
+        </select>
+      ) : (
+        <input
+          type="text"
+          value={columnSearch[key] || ""}
+          onChange={(e) => setColumnSearch({ ...columnSearch, [key]: e.target.value })}
+          placeholder={`Search ${key}`}
+          className="table-search-input"
+        />
+      )}
+    </td>
+  );
+
+  const handleCloseAddModal = () => {
+    setAddModalVisible(false);
+  };
+
   const handleAddAirport = async (event) => {
     event.preventDefault(); // Prevent default form submission behavior
-
+  
     try {
-      console.log('Sending new airport data:', newAirport); // Log the form data
-
       const response = await fetch(`${process.env.REACT_APP_API_URL}/airports/`, {
         method: 'POST',
         headers: {
@@ -147,15 +179,12 @@ export default function AdminAirportDash() {
         },
         body: JSON.stringify(newAirport), // Send the form data
       });
-
+  
       const responseData = await response.json();
-      console.log('Response status:', response.status);
-      console.log('Response data:', responseData);
-
       if (!response.ok) {
         throw new Error(`Failed to add new airport: ${response.status} ${responseData.message}`);
       }
-
+  
       setAirports((prevAirports) => [...prevAirports, responseData]);
       setAddModalVisible(false); // Close the modal after adding the airport
     } catch (error) {
@@ -171,12 +200,17 @@ export default function AdminAirportDash() {
     }));
   };
 
-  const handleCloseAddModal = () => setAddModalVisible(false);
-
   return (
     <div>
       <div className="d-flex justify-content-between mb-3">
         <Button variant="primary" onClick={() => setAddModalVisible(true)}>Add Airport</Button>
+        <Button variant="secondary" onClick={() => setColumnSearch({
+          airportName: "",
+          airportCode: "",
+          airportCity: "",
+          airportCountry: "",
+          isActive: "",
+        })} className="ms-2">Clear Search</Button>
         <select
           className='ms-auto'
           value={rowsPerPage}
@@ -191,12 +225,21 @@ export default function AdminAirportDash() {
 
       <table>
         <thead>
+          {/* Sorting Header Row */}
           <tr>
             {renderTableHeader("AIRPORT NAME", "airportName")}
             {renderTableHeader("AIRPORT CODE", "airportCode")}
             {renderTableHeader("CITY", "airportCity")}
             {renderTableHeader("COUNTRY", "airportCountry")}
             {renderTableHeader("STATUS", "isActive")}
+          </tr>
+          {/* Search Row */}
+          <tr>
+            {renderTableSearch("airportName", "text")}
+            {renderTableSearch("airportCode", "text")}
+            {renderTableSearch("airportCity", "text")}
+            {renderTableSearch("airportCountry", "text")}
+            {renderTableSearch("isActive", "boolean")}
           </tr>
         </thead>
         <tbody>
@@ -244,20 +287,19 @@ export default function AdminAirportDash() {
         </Button>
       </div>
 
+      {/* Modals */}
       {selectedAirport && (
         <Modal show={isModalVisible} onHide={handleCloseModal}>
           <Modal.Header closeButton>
             <Modal.Title>Airport Details - {selectedAirport.airportName}</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <p><strong>Name:</strong> {selectedAirport.airportName}</p>
             <p><strong>Code:</strong> {selectedAirport.airportCode}</p>
             <p><strong>City:</strong> {selectedAirport.airportCity}</p>
             <p><strong>Country:</strong> {selectedAirport.airportCountry}</p>
             <p><strong>Status:</strong> {selectedAirport.isActive ? "Active" : "Archived"}</p>
             <p><strong>Created:</strong> {selectedAirport.createdAt.date}</p>
             <p><strong>Last Update:</strong> {selectedAirport.updatedAt.date}</p>
-
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={handleCloseModal}>
@@ -267,12 +309,14 @@ export default function AdminAirportDash() {
         </Modal>
       )}
 
+      {/* Add Airport Modal */}
       <Modal show={isAddModalVisible} onHide={handleCloseAddModal}>
         <Modal.Header closeButton>
           <Modal.Title>Add New Airport</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <form onSubmit={handleAddAirport}> {/* Fix the form submission */}
+          <form onSubmit={handleAddAirport}>
+            {/* Airport Name */}
             <div className="mb-3">
               <label htmlFor="airportName" className="form-label">Airport Name</label>
               <input
@@ -283,12 +327,13 @@ export default function AdminAirportDash() {
                 value={newAirport.airportName}
                 onChange={handleInputChange}
                 required
-                placeholder="Enter the airport name"
+                placeholder="Enter airport name"
               />
             </div>
 
+            {/* Airport Code */}
             <div className="mb-3">
-              <label htmlFor="airportCode" className="form-label">Airport Code</label>
+              <label htmlFor="airportCode" className="form-label">Airport Code (3 letters)</label>
               <input
                 type="text"
                 className="form-control"
@@ -297,10 +342,13 @@ export default function AdminAirportDash() {
                 value={newAirport.airportCode}
                 onChange={handleInputChange}
                 required
-                placeholder="Enter the 3-digit airport code"
+                minLength={3}
+                maxLength={3}
+                placeholder="Enter airport code"
               />
             </div>
 
+            {/* City */}
             <div className="mb-3">
               <label htmlFor="airportCity" className="form-label">City</label>
               <input
@@ -311,10 +359,11 @@ export default function AdminAirportDash() {
                 value={newAirport.airportCity}
                 onChange={handleInputChange}
                 required
-                placeholder="Enter city name"
+                placeholder="Enter city"
               />
             </div>
 
+            {/* Country */}
             <div className="mb-3">
               <label htmlFor="airportCountry" className="form-label">Country</label>
               <input
@@ -325,12 +374,28 @@ export default function AdminAirportDash() {
                 value={newAirport.airportCountry}
                 onChange={handleInputChange}
                 required
-                placeholder="Enter country name"
+                placeholder="Enter country"
               />
             </div>
 
+            {/* Status */}
+            <div className="mb-3">
+              <label htmlFor="isActive" className="form-label">Status</label>
+              <select
+                className="form-select"
+                id="isActive"
+                name="isActive"
+                value={newAirport.isActive ? "true" : "false"}
+                onChange={handleInputChange}
+                required
+              >
+                <option value="true">Activated</option>
+                <option value="false">Archived</option>
+              </select>
+            </div>
+
             <Modal.Footer>
-              <Button variant="warning" onClick={handleCloseAddModal}>
+              <Button variant="secondary" onClick={handleCloseAddModal}>
                 Close
               </Button>
               <Button type="submit" variant="primary">
@@ -340,8 +405,6 @@ export default function AdminAirportDash() {
           </form>
         </Modal.Body>
       </Modal>
-
     </div>
   );
 }
-

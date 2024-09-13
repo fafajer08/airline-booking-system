@@ -20,7 +20,8 @@ const airplaneSchema = new mongoose.Schema({
   airlineName: {
     type: String,
     required: true,
-    trim: true
+    trim: true,
+    default: 'Fly Airline'
   },
   totalSeats: {
     type: Number,

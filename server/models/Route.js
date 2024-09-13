@@ -16,6 +16,6 @@ const routeSchema = new mongoose.Schema({
     durationMins: { 
       type: Number, 
       required: true } // Duration in minutes
-});
+}, { timestamps: true });
 
 module.exports = mongoose.model('Route', routeSchema);

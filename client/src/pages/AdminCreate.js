@@ -89,7 +89,7 @@ import '../styles/admincreate.css'; // Ensure the CSS file is correctly linked
 export default function Admin() {
   const { user } = useContext(UserContext);
 
-  const [activeComponent, setActiveComponent] = useState("Create Flights");
+  const [activeComponent, setActiveComponent] = useState("Airplanes");
 
   const renderActiveComponent = () => {
     switch (activeComponent) {
