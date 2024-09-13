@@ -20,7 +20,8 @@ export default function AdminRouteDash() {
     departure: "",
     destination: "",
     distanceKM: "",
-    durationMins: ""
+    durationMins: "",
+    isActive: ""
   });
 
   // For adding a new route
@@ -146,12 +147,44 @@ export default function AdminRouteDash() {
     </td>
   );
 
+  // Function to toggle route activation
+  const toggleIsActive = async (id, isActive) => {
+    const action = isActive ? 'archive' : 'activate';
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/routes/${action}/${id}`, {
+        method: 'PATCH',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+
+      if (response.ok) {
+        setRoutes((prevRoutes) => 
+          prevRoutes.map((route) => 
+            route._id === id ? { ...route, isActive: !route.isActive } : route
+          )
+        );
+        notyf.success(`Route ${isActive ? 'archived' : 'activated'} successfully.`);
+      } else {
+        notyf.error(`Failed to ${isActive ? 'archive' : 'activate'} the route.`);
+      }
+    } catch (error) {
+      console.error('Error updating route status:', error);
+      notyf.error('Error updating route status.');
+    }
+  };
+
   const handleCloseAddModal = () => {
     setAddModalVisible(false);
   };
 
   const handleAddRoute = async (event) => {
     event.preventDefault(); // Prevent default form submission behavior
+
+    if (newRoute.departure === newRoute.destination) {
+      notyf.error('Departure and destination airports cannot be the same.');
+      return;
+    }
 
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/routes/`, {
@@ -191,7 +224,8 @@ export default function AdminRouteDash() {
           departure: "",
           destination: "",
           distanceKM: "",
-          durationMins: ""
+          durationMins: "",
+          isActive: ""
         })} className="ms-2">Clear Search</Button>
         <select
           className='ms-auto'
@@ -208,16 +242,18 @@ export default function AdminRouteDash() {
       <table>
         <thead>
           <tr>
-            {renderTableHeader("DEPARTURE", "departure")}
-            {renderTableHeader("DESTINATION", "destination")}
+            {renderTableHeader("DEPARTURE", "departure.airportName")}
+            {renderTableHeader("DESTINATION", "destination.airportName")}
             {renderTableHeader("DISTANCE (KM)", "distanceKM")}
             {renderTableHeader("DURATION (MINS)", "durationMins")}
+            {renderTableHeader("STATUS", "isActive")}
           </tr>
           <tr>
             {renderTableSearch("departure", "text")}
             {renderTableSearch("destination", "text")}
             {renderTableSearch("distanceKM", "number")}
             {renderTableSearch("durationMins", "number")}
+            {renderTableSearch("isActive", "boolean")}
           </tr>
         </thead>
         <tbody>
@@ -228,11 +264,22 @@ export default function AdminRouteDash() {
                 <td>{route.destination.airportName}</td>
                 <td>{route.distanceKM}</td>
                 <td>{route.durationMins}</td>
+                <td>
+                  <Button
+                    variant={route.isActive ? "success" : "danger"}
+                    onClick={(e) => {
+                      e.stopPropagation(); // Prevent row click event
+                      toggleIsActive(route._id, route.isActive);
+                    }}
+                  >
+                    {route.isActive ? "Activated" : "Archived"}
+                  </Button>
+                </td>
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan="4">No routes available</td>
+              <td colSpan="5">No routes available</td>
             </tr>
           )}
         </tbody>
@@ -308,13 +355,16 @@ export default function AdminRouteDash() {
                 value={newRoute.destination}
                 onChange={handleInputChange}
                 required
+                disabled={!newRoute.departure} // Disable until departure is selected
               >
                 <option value="">Select Destination Airport</option>
-                {airports.map((airport) => (
-                  <option key={airport._id} value={airport._id}>
-                    {airport.airportName}
-                  </option>
-                ))}
+                {airports
+                  .filter(airport => airport._id !== newRoute.departure) // Filter out selected departure airport
+                  .map((airport) => (
+                    <option key={airport._id} value={airport._id}>
+                      {airport.airportName}
+                    </option>
+                  ))}
               </select>
             </div>
 

@@ -87,7 +87,10 @@ const routeController = {
   // View all routes
   async viewAllRoutes(req, res) {
     try {
+      console.log('Fetching all Routes...');
       const routes = await Route.find().populate('departure').populate('destination');
+      console.log('Raw Routes data:', routes);
+      
       if (!routes || routes.length === 0) {
         return res.status(404).json({ message: 'No routes found' });
       }
