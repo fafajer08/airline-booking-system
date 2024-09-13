@@ -1,10 +1,10 @@
-const Plane = require('../models/Plane'); // Adjust the path according to your project structure
+const Airplane = require('../models/Airplane'); // Adjust the path according to your project structure
 
 // Controller for Plane Operations
-const PlaneController = {
+const AirplaneController = {
 
   // Add a new plane
-  async addPlane(req, res) {
+  async addAirplane(req, res) {
     try {
       const { planeId, brand, model, airlineName, totalSeats, economySeat, premiumSeat, businessSeat, firstClass } = req.body;
 
@@ -28,7 +28,7 @@ const PlaneController = {
   },
 
   // Edit an existing plane by _id
-  async editPlane(req, res) {
+  async editAirplane(req, res) {
     try {
       const { id } = req.params; // Use _id
       const updates = req.body;
@@ -44,7 +44,7 @@ const PlaneController = {
   },
 
   // Archive a plane by _id (soft delete, using an `isActive` flag)
-  async archivePlane(req, res) {
+  async archiveAirplane(req, res) {
     try {
       const { id } = req.params; // Use _id
       const updatedPlane = await Plane.findByIdAndUpdate(
@@ -63,7 +63,7 @@ const PlaneController = {
   },
 
   // Activate a plane by _id (set `isActive` flag to true)
-  async activatePlane(req, res) {
+  async activateAirplane(req, res) {
     try {
       const { id } = req.params; // Use _id
       const updatedPlane = await Plane.findByIdAndUpdate(
@@ -82,7 +82,7 @@ const PlaneController = {
   },
 
   // Get plane details by _id
-  async getPlaneDetails(req, res) {
+  async getAirplaneDetails(req, res) {
     try {
       const { id } = req.params; // Use _id
 
@@ -98,22 +98,23 @@ const PlaneController = {
   },
 
   // View all planes
-  async viewAllPlanes(req, res) {
+  async viewAllAirplanes(req, res) {
     try {
 
-      
+      console.log('Fetching all Airplanes...');
       // Query the database and log the raw result
-      const planes = await Plane.find({});
+      const airplanes = await Airplane.find({});
+      console.log('Raw Airplanes data:', airplanes);
 
   
-      if (!planes || planes.length === 0) {
-
-        return res.status(404).json({ message: 'No planes found' });
+      if (!airplanes || airplanes.length === 0) {
+        console.log('No Airplanes found');
+        return res.status(404).json({ message: 'No airplanes found' });
       }
   
       res.status(200).json(planes);
     } catch (error) {
-
+      console.error('Error fetching Airplanes:', error);
       res.status(500).json({ message: 'Error fetching planes', error });
     }
   }
@@ -121,4 +122,4 @@ const PlaneController = {
   
 };
 
-module.exports = PlaneController;
+module.exports = AirplaneController;

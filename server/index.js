@@ -55,7 +55,7 @@ const routeRoutes = require("./routes/routeRoute");
 
 // Setup routes
 app.use("/users", userRoutes);
-app.use("/planes", planeRoutes); // Added plane routes
+app.use("/airplanes", planeRoutes); // Added plane routes
 app.use("/airports", airportRoutes); 
 app.use("/routes", routeRoutes);
 

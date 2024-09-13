@@ -1,58 +1,69 @@
 
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
-import '../styles/adminairportdash.css';
+import '../styles/adminairplanedash.css';
 import React, { useState, useEffect } from "react";
 import { Notyf } from 'notyf';
 import 'notyf/notyf.min.css';
 
-export default function AdminAirportDash() {
+export default function AdminAirplaneDash() {
   const notyf = new Notyf({ duration: 3000 });
-  const [airports, setAirports] = useState([]);
+  const [airplanes, setAirplanes] = useState([]);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
   const [searchQuery, setSearchQuery] = useState("");
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedAirport, setSelectedAirport] = useState(null);
+  const [selectedAirplane, setSelectedAirplane] = useState(null);
   const [isModalVisible, setModalVisible] = useState(false);
   const [isAddModalVisible, setAddModalVisible] = useState(false);
   const [columnSearch, setColumnSearch] = useState({
-    airportName: "",
-    airportCode: "",
-    airportCity: "",
-    airportCountry: "",
+    planeId: "",
+    brand: "",
+    model: "",
+    airlineName: "",
+    totalSeats: "0",
+    economySeat: "0",
+    premiumSeat: "0",
+    businessSeat: "0",
+    firstClass: "0",
+    isActive: false
   });
-  const [newAirport, setNewAirport] = useState({
-    airportName: "",
-    airportCode: "",
-    airportCity: "",
-    airportCountry: "",
+  const [newAirplane, setNewAirplane] = useState({
+    planeId: "",
+    brand: "",
+    model: "",
+    airlineName: "",
+    totalSeats: "0",
+    economySeat: "0",
+    premiumSeat: "0",
+    businessSeat: "0",
+    firstClass: "0",
     isActive: true
   });
 
   useEffect(() => {
-    // Fetch data from the API
-    const fetchAirports = async () => {
+    //FETCH DATA FROM API
+    const fetchAirplanes = async () => {
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/airports/all`);
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/airplanes/all`);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
         const data = await response.json();
-        setAirports(data);
+        setAirplanes(data);
       } catch (error) {
         console.error('There was a problem with the fetch operation:', error);
       }
     };
 
-    fetchAirports();
+    fetchAirplanes();
   }, []);
 
   const toggleIsActive = async (id, isActive) => {
     const action = isActive ? 'archive' : 'activate';
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/airports/${action}/${id}`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/airplanes/${action}/${id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -64,9 +75,9 @@ export default function AdminAirportDash() {
         throw new Error(response.message);
       }
 
-      setAirports((prevAirports) =>
-        prevAirports.map((airport) =>
-          airport._id === id ? { ...airport, isActive: !airport.isActive } : airport
+      setAirplanes((prevAirplanes) =>
+        prevAirplanes.map((airplane) =>
+          airplane._id === id ? { ...airplane, isActive: !airplane.isActive } : airplane
         )
       );
     } catch (error) {
@@ -82,10 +93,10 @@ export default function AdminAirportDash() {
     setSortConfig({ key, direction });
   };
 
-  const getSortedAirports = () => {
-    const sortedAirports = [...airports];
+  const getSortedAirplanes = () => {
+    const sortedAirplanes = [...airplanes];
     if (sortConfig.key) {
-      sortedAirports.sort((a, b) => {
+      sortedAirplanes.sort((a, b) => {
         const aValue = a[sortConfig.key];
         const bValue = b[sortConfig.key];
         if (aValue < bValue) return sortConfig.direction === "ascending" ? -1 : 1;
@@ -93,24 +104,24 @@ export default function AdminAirportDash() {
         return 0;
       });
     }
-    return sortedAirports;
+    return sortedAirplanes;
   };
 
-  const filteredAirports = getSortedAirports().filter((airport) =>
+  const filteredAirplanes = getSortedAirplanes().filter((airplane) =>
     Object.keys(columnSearch).every((key) => {
-      const airportValue = airport[key];
-      if (airportValue && typeof airportValue === "string") {
-        return airportValue.toLowerCase().includes(columnSearch[key].toLowerCase());
+      const airplaneValue = airplane[key];
+      if (airplaneValue && typeof airplaneValue === "string") {
+        return airplaneValue.toLowerCase().includes(columnSearch[key].toLowerCase());
       }
       return true;
     })
   );
 
-  const paginatedAirports = filteredAirports.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage);
-  const totalPages = Math.ceil(filteredAirports.length / rowsPerPage);
+  const paginatedAirplanes = filteredAirplanes.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage);
+  const totalPages = Math.ceil(filteredAirplanes.length / rowsPerPage);
 
-  const handleRowClick = (airport) => {
-    setSelectedAirport(airport);
+  const handleRowClick = (airplane) => {
+    setSelectedAirplane(airplane);
     setModalVisible(true);
   };
 
@@ -133,19 +144,19 @@ export default function AdminAirportDash() {
     </th>
   );
 
-  const handleAddAirport = async (event) => {
+  const handleAddAirplane = async (event) => {
     event.preventDefault(); // Prevent default form submission behavior
 
     try {
-      console.log('Sending new airport data:', newAirport); // Log the form data
+      console.log('Sending new airplane data:', newAirplane); // Log the form data
 
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/airports/`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/airplanes/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
         },
-        body: JSON.stringify(newAirport), // Send the form data
+        body: JSON.stringify(newAirplane), // Send the form data
       });
 
       const responseData = await response.json();
@@ -153,19 +164,19 @@ export default function AdminAirportDash() {
       console.log('Response data:', responseData);
 
       if (!response.ok) {
-        throw new Error(`Failed to add new airport: ${response.status} ${responseData.message}`);
+        throw new Error(`Failed to add new airplane: ${response.status} ${responseData.message}`);
       }
 
-      setAirports((prevAirports) => [...prevAirports, responseData]);
-      setAddModalVisible(false); // Close the modal after adding the airport
+      setAirplanes((prevAirplanes) => [...prevAirplanes, responseData]);
+      setAddModalVisible(false); // Close the modal after adding the airplane
     } catch (error) {
-      console.error('There was a problem with adding the airport:', error);
+      console.error('There was a problem with adding the airplane:', error);
     }
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setNewAirport((prev) => ({
+    setNewAirplane((prev) => ({
       ...prev,
       [name]: value
     }));
@@ -176,7 +187,7 @@ export default function AdminAirportDash() {
   return (
     <div>
       <div className="d-flex justify-content-between mb-3">
-        <Button variant="primary" onClick={() => setAddModalVisible(true)}>Add Airport</Button>
+        <Button variant="primary" onClick={() => setAddModalVisible(true)}>Add Airplane</Button>
         <select
           className='ms-auto'
           value={rowsPerPage}
@@ -192,37 +203,49 @@ export default function AdminAirportDash() {
       <table>
         <thead>
           <tr>
-            {renderTableHeader("AIRPORT NAME", "airportName")}
-            {renderTableHeader("AIRPORT CODE", "airportCode")}
-            {renderTableHeader("CITY", "airportCity")}
-            {renderTableHeader("COUNTRY", "airportCountry")}
-            {renderTableHeader("STATUS", "isActive")}
+            {renderTableHeader("AIRPLANE ID", "planeId")}
+            {renderTableHeader("MAKER", "brand")}
+            {renderTableHeader("MODEL", "model")}
+            {renderTableHeader("AIRLINE", "airlineName")}
+            {renderTableHeader("TOTAL SEATS", "totalSeats")}
+            {renderTableHeader("FIRSTCLASS", "firstClass")}
+            {renderTableHeader("BUSINESS", "businessSeat")}
+            {renderTableHeader("PREMIUM", "premiumSeat")}
+            {renderTableHeader("ECONOMY", "economySeat")}
+            {renderTableHeader("ECONOMY", "isActive")}
+            
           </tr>
         </thead>
         <tbody>
-          {paginatedAirports.length > 0 ? (
-            paginatedAirports.map((airport) => (
-              <tr key={airport._id} onClick={() => handleRowClick(airport)}>
-                <td>{airport.airportName}</td>
-                <td>{airport.airportCode}</td>
-                <td>{airport.airportCity}</td>
-                <td>{airport.airportCountry}</td>
+          {paginatedAirplanes.length > 0 ? (
+            paginatedAirplanes.map((airplane) => (
+              <tr key={airplane._id} onClick={() => handleRowClick(airplane)}>
+                <td>{airplane.planeId}</td>
+                <td>{airplane.brand}</td>
+                <td>{airplane.model}</td>
+                <td>{airplane.airlineName}</td>
+                <td>{airplane.totalSeats}</td>
+                <td>{airplane.firstClass}</td>
+                <td>{airplane.businessSeat}</td>
+                <td>{airplane.premiumSeat}</td>
+                <td>{airplane.economySeat}</td>
+                
                 <td>
                   <Button
-                    variant={airport.isActive ? "success" : "danger"}
+                    variant={airplane.isActive ? "success" : "danger"}
                     onClick={(e) => {
                       e.stopPropagation(); // Prevent row click event
-                      toggleIsActive(airport._id, airport.isActive);
+                      toggleIsActive(airplane._id, airplane.isActive);
                     }}
                   >
-                    {airport.isActive ? "Activated" : "Archived"}
+                    {airplane.isActive ? "Activated" : "Archived"}
                   </Button>
                 </td>
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan="5">No airports available</td>
+              <td colSpan="5">No airplanes available</td>
             </tr>
           )}
         </tbody>
@@ -244,19 +267,19 @@ export default function AdminAirportDash() {
         </Button>
       </div>
 
-      {selectedAirport && (
+      {selectedAirplane && (
         <Modal show={isModalVisible} onHide={handleCloseModal}>
           <Modal.Header closeButton>
-            <Modal.Title>Airport Details - {selectedAirport.airportName}</Modal.Title>
+            <Modal.Title>Airplane Details - {selectedAirplane.airplaneName}</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <p><strong>Name:</strong> {selectedAirport.airportName}</p>
-            <p><strong>Code:</strong> {selectedAirport.airportCode}</p>
-            <p><strong>City:</strong> {selectedAirport.airportCity}</p>
-            <p><strong>Country:</strong> {selectedAirport.airportCountry}</p>
-            <p><strong>Status:</strong> {selectedAirport.isActive ? "Active" : "Archived"}</p>
-            <p><strong>Created:</strong> {selectedAirport.createdAt.date}</p>
-            <p><strong>Last Update:</strong> {selectedAirport.updatedAt.date}</p>
+            <p><strong>Name:</strong> {selectedAirplane.airplaneName}</p>
+            <p><strong>Code:</strong> {selectedAirplane.airplaneCode}</p>
+            <p><strong>City:</strong> {selectedAirplane.airplaneCity}</p>
+            <p><strong>Country:</strong> {selectedAirplane.airplaneCountry}</p>
+            <p><strong>Status:</strong> {selectedAirplane.isActive ? "Active" : "Archived"}</p>
+            <p><strong>Created:</strong> {selectedAirplane.createdAt.date}</p>
+            <p><strong>Last Update:</strong> {selectedAirplane.updatedAt.date}</p>
 
           </Modal.Body>
           <Modal.Footer>
@@ -269,46 +292,46 @@ export default function AdminAirportDash() {
 
       <Modal show={isAddModalVisible} onHide={handleCloseAddModal}>
         <Modal.Header closeButton>
-          <Modal.Title>Add New Airport</Modal.Title>
+          <Modal.Title>Add New Airplane</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <form onSubmit={handleAddAirport}> {/* Fix the form submission */}
+          <form onSubmit={handleAddAirplane}> {/* Fix the form submission */}
             <div className="mb-3">
-              <label htmlFor="airportName" className="form-label">Airport Name</label>
+              <label htmlFor="airplaneName" className="form-label">Airplane Name</label>
               <input
                 type="text"
                 className="form-control"
-                id="airportName"
-                name="airportName"
-                value={newAirport.airportName}
+                id="airplaneName"
+                name="airplaneName"
+                value={newAirplane.airplaneName}
                 onChange={handleInputChange}
                 required
-                placeholder="Enter the airport name"
+                placeholder="Enter the airplane name"
               />
             </div>
 
             <div className="mb-3">
-              <label htmlFor="airportCode" className="form-label">Airport Code</label>
+              <label htmlFor="airplaneCode" className="form-label">Airplane Code</label>
               <input
                 type="text"
                 className="form-control"
-                id="airportCode"
-                name="airportCode"
-                value={newAirport.airportCode}
+                id="airplaneCode"
+                name="airplaneCode"
+                value={newAirplane.airplaneCode}
                 onChange={handleInputChange}
                 required
-                placeholder="Enter the 3-digit airport code"
+                placeholder="Enter the 3-digit airplane code"
               />
             </div>
 
             <div className="mb-3">
-              <label htmlFor="airportCity" className="form-label">City</label>
+              <label htmlFor="airplaneCity" className="form-label">City</label>
               <input
                 type="text"
                 className="form-control"
-                id="airportCity"
-                name="airportCity"
-                value={newAirport.airportCity}
+                id="airplaneCity"
+                name="airplaneCity"
+                value={newAirplane.airplaneCity}
                 onChange={handleInputChange}
                 required
                 placeholder="Enter city name"
@@ -316,13 +339,13 @@ export default function AdminAirportDash() {
             </div>
 
             <div className="mb-3">
-              <label htmlFor="airportCountry" className="form-label">Country</label>
+              <label htmlFor="airplaneCountry" className="form-label">Country</label>
               <input
                 type="text"
                 className="form-control"
-                id="airportCountry"
-                name="airportCountry"
-                value={newAirport.airportCountry}
+                id="airplaneCountry"
+                name="airplaneCountry"
+                value={newAirplane.airplaneCountry}
                 onChange={handleInputChange}
                 required
                 placeholder="Enter country name"
@@ -334,7 +357,7 @@ export default function AdminAirportDash() {
                 Close
               </Button>
               <Button type="submit" variant="primary">
-                Add Airport
+                Add Airplane
               </Button>
             </Modal.Footer>
           </form>
