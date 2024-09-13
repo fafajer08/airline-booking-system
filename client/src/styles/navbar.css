@@ -176,7 +176,7 @@ body.night-mode .custom-component {
 
 /* Ensure links are styled appropriately in night mode */
 body.night-mode a {
-  color: #bb86fc !important;           /* Change link color for better contrast in night mode */
+  color: #007A8C !important;           /* Change link color for better contrast in night mode */
 }
 
 /* Style specific sections or divs if needed */
