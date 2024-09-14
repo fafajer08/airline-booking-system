@@ -52,7 +52,7 @@ export default function AdminAirportDash() {
     const action = isActive ? 'archive' : 'activate';
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/airports/${action}/${id}`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/airports/${id}/${action}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -287,19 +287,20 @@ export default function AdminAirportDash() {
         </Button>
       </div>
 
-      {/* Modals */}
+      {/* MODAL FOR DETAILS*/}
       {selectedAirport && (
         <Modal show={isModalVisible} onHide={handleCloseModal}>
           <Modal.Header closeButton>
-            <Modal.Title>Airport Details - {selectedAirport.airportName}</Modal.Title>
+            <Modal.Title>Airport Details</Modal.Title>
           </Modal.Header>
           <Modal.Body>
+            <p><strong>Airport Name:</strong> {selectedAirport.airportName}</p>
             <p><strong>Code:</strong> {selectedAirport.airportCode}</p>
             <p><strong>City:</strong> {selectedAirport.airportCity}</p>
             <p><strong>Country:</strong> {selectedAirport.airportCountry}</p>
             <p><strong>Status:</strong> {selectedAirport.isActive ? "Active" : "Archived"}</p>
-            <p><strong>Created:</strong> {selectedAirport.createdAt.date}</p>
-            <p><strong>Last Update:</strong> {selectedAirport.updatedAt.date}</p>
+            <p><strong>Created:</strong> {selectedAirport.createdAt}</p>
+            <p><strong>Last Update:</strong> {selectedAirport.updatedAt}</p>
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={handleCloseModal}>
@@ -309,7 +310,7 @@ export default function AdminAirportDash() {
         </Modal>
       )}
 
-      {/* Add Airport Modal */}
+      {/* MODAL FOR ADD AIRPORT */}
       <Modal show={isAddModalVisible} onHide={handleCloseAddModal}>
         <Modal.Header closeButton>
           <Modal.Title>Add New Airport</Modal.Title>

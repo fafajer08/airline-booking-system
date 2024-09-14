@@ -6,26 +6,43 @@ const AirplaneController = {
   // Add a new plane
   async addAirplane(req, res) {
     try {
-      const { planeId, brand, model, airlineName, totalSeats, economySeat, premiumSeat, businessSeat, firstClass } = req.body;
+        console.log("Request received:", req.body);  // Debugging: Log request body
 
-      const newPlane = new Plane({
-        planeId,
-        brand,
-        model,
-        airlineName,
-        totalSeats,
-        economySeat,
-        premiumSeat,
-        businessSeat,
-        firstClass
-      });
+        const { planeId, brand, model, airlineName, totalSeats, economySeat, premiumSeat, businessSeat, firstClass, isActive } = req.body;
 
-      const savedPlane = await newPlane.save();
-      res.status(201).json(savedPlane);
+        // Validate required fields
+        if (!planeId || !brand || !model || !airlineName || !totalSeats) {
+            console.error("Missing required fields");  // Debugging: Log missing fields
+            return res.status(400).json({ message: 'Missing required fields' });
+        }
+
+        console.log("Creating new plane with the following details:", {
+            planeId, brand, model, airlineName, totalSeats, economySeat, premiumSeat, businessSeat, firstClass
+        });  // Debugging: Log plane details
+
+        const newAirplane = new Airplane({
+            planeId,
+            brand,
+            model,
+            airlineName,
+            totalSeats,
+            economySeat,
+            premiumSeat,
+            businessSeat,
+            firstClass,
+            isActive // Ensure `isActive` is assigned
+        });
+
+        const savedAirplane = await newAirplane.save();
+
+        console.log("Plane saved successfully:", savedAirplane);  // Debugging: Log saved plane details
+
+        res.status(201).json(savedAirplane);
     } catch (error) {
-      res.status(500).json({ message: 'Error adding plane', error });
+        console.error("Error adding plane:", error);  // Debugging: Log the error
+        res.status(500).json({ message: 'Error adding plane', error });
     }
-  },
+},
 
   // Edit an existing plane by _id
   async editAirplane(req, res) {
@@ -46,36 +63,47 @@ const AirplaneController = {
   // Archive a plane by _id (soft delete, using an `isActive` flag)
   async archiveAirplane(req, res) {
     try {
-      const { id } = req.params; // Use _id
-      const updatedPlane = await Plane.findByIdAndUpdate(
-        id,
-        { isActive: false }, // Set the plane as inactive
-        { new: true }
-      );
+        //console.log("Archive request received with ID:", req.params.id);  // Debugging: Log the ID from request parameters
 
-      if (!updatedPlane) {
-        return res.status(404).json({ message: 'Plane not found' });
-      }
-      res.status(200).json({ message: 'Plane archived successfully', updatedPlane });
+        const { id } = req.params; // Use _id
+
+        //console.log("Attempting to archive plane with ID:", id);  // Debugging: Log the ID being used for update
+
+        const updatedAirplane = await Airplane.findByIdAndUpdate(
+            id,
+            { isActive: false }, // Set the plane as inactive
+            { new: true }
+        );
+
+        if (!updatedAirplane) {
+            //console.error("Plane not found with ID:", id);  // Debugging: Log if the plane is not found
+            return res.status(404).json({ message: 'Plane not found' });
+        }
+
+        //console.log("Plane archived successfully:", updatedAirplane);  // Debugging: Log the updated plane details
+
+        res.status(200).json({ message: 'Plane archived successfully', updatedAirplane });
     } catch (error) {
-      res.status(500).json({ message: 'Error archiving plane', error });
+        //console.error("Error archiving plane:", error);  // Debugging: Log the error
+        res.status(500).json({ message: 'Error archiving plane', error });
     }
-  },
+},
+
 
   // Activate a plane by _id (set `isActive` flag to true)
   async activateAirplane(req, res) {
     try {
       const { id } = req.params; // Use _id
-      const updatedPlane = await Plane.findByIdAndUpdate(
+      const updatedAirplane = await Airplane.findByIdAndUpdate(
         id,
         { isActive: true }, // Set the plane as active
         { new: true }
       );
 
-      if (!updatedPlane) {
+      if (!updatedAirplane) {
         return res.status(404).json({ message: 'Plane not found' });
       }
-      res.status(200).json({ message: 'Plane activated successfully', updatedPlane });
+      res.status(200).json({ message: 'Plane activated successfully', updatedAirplane });
     } catch (error) {
       res.status(500).json({ message: 'Error activating plane', error });
     }
@@ -104,7 +132,7 @@ const AirplaneController = {
       console.log('Fetching all Airplanes...');
       // Query the database and log the raw result
       const airplanes = await Airplane.find({});
-      console.log('Raw Airplanes data:', airplanes);
+      // console.log('Raw Airplanes data:', airplanes);
 
   
       if (!airplanes || airplanes.length === 0) {

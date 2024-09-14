@@ -135,6 +135,16 @@ export default function AdminRouteDash() {
           placeholder={`Search ${key}`}
           className="table-search-input"
         />
+      ) : type === 'boolean' ? (
+        <select
+          value={columnSearch[key] || ""}
+          onChange={(e) => setColumnSearch({ ...columnSearch, [key]: e.target.value })}
+          className="table-search-input"
+        >
+          <option value="">All</option>
+          <option value="true">Activated</option>
+          <option value="false">Archived</option>
+        </select>
       ) : (
         <input
           type="text"
@@ -146,6 +156,7 @@ export default function AdminRouteDash() {
       )}
     </td>
   );
+
 
   // Function to toggle route activation
   const toggleIsActive = async (id, isActive) => {
@@ -242,14 +253,18 @@ export default function AdminRouteDash() {
       <table>
         <thead>
           <tr>
+            {renderTableHeader("DEPARTURE CITY", "departure.airportCity")} 
             {renderTableHeader("DEPARTURE", "departure.airportName")}
+            {renderTableHeader("DESTINATION CITY", "destination.airportCity")}
             {renderTableHeader("DESTINATION", "destination.airportName")}
             {renderTableHeader("DISTANCE (KM)", "distanceKM")}
             {renderTableHeader("DURATION (MINS)", "durationMins")}
             {renderTableHeader("STATUS", "isActive")}
           </tr>
           <tr>
+            {renderTableSearch("departure city", "text")}
             {renderTableSearch("departure", "text")}
+            {renderTableSearch("destination city", "text")}
             {renderTableSearch("destination", "text")}
             {renderTableSearch("distanceKM", "number")}
             {renderTableSearch("durationMins", "number")}
@@ -260,10 +275,13 @@ export default function AdminRouteDash() {
           {paginatedRoutes.length > 0 ? (
             paginatedRoutes.map((route) => (
               <tr key={route._id} onClick={() => handleRowClick(route)}>
+                <td>{route.departure.airportCity}</td>
                 <td>{route.departure.airportName}</td>
+                <td>{route.destination.airportCity}</td>
                 <td>{route.destination.airportName}</td>
                 <td>{route.distanceKM}</td>
                 <td>{route.durationMins}</td>
+ 
                 <td>
                   <Button
                     variant={route.isActive ? "success" : "danger"}
@@ -301,17 +319,21 @@ export default function AdminRouteDash() {
         </Button>
       </div>
 
-      {/* Modals */}
+      {/* MODAL FOR DETAILS */}
       {selectedRoute && (
         <Modal show={isModalVisible} onHide={handleCloseModal}>
           <Modal.Header closeButton>
             <Modal.Title>Route Details</Modal.Title>
           </Modal.Header>
           <Modal.Body>
+            <p><strong>Departure City:</strong> {selectedRoute.departure.airportCity}</p>
             <p><strong>Departure:</strong> {selectedRoute.departure.airportName}</p>
+            <p><strong>Destination City:</strong> {selectedRoute.destination.airportCity}</p>
             <p><strong>Destination:</strong> {selectedRoute.destination.airportName}</p>
             <p><strong>Distance (KM):</strong> {selectedRoute.distanceKM}</p>
             <p><strong>Duration (Mins):</strong> {selectedRoute.durationMins}</p>
+            <p><strong>Created:</strong> {selectedRoute.createdAt}</p>
+            <p><strong>Last Update:</strong> {selectedRoute.updatedAt}</p>
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={handleCloseModal}>
@@ -321,6 +343,8 @@ export default function AdminRouteDash() {
         </Modal>
       )}
 
+
+      {/* MODAL FOR ADDING ROUTES */}
       <Modal show={isAddModalVisible} onHide={handleCloseAddModal}>
         <Modal.Header closeButton>
           <Modal.Title>Add New Route</Modal.Title>
@@ -338,11 +362,13 @@ export default function AdminRouteDash() {
                 required
               >
                 <option value="">Select Departure Airport</option>
-                {airports.map((airport) => (
-                  <option key={airport._id} value={airport._id}>
-                    {airport.airportName}
-                  </option>
-                ))}
+                {airports
+                  .sort((a, b) => a.airportCity.localeCompare(b.airportCity)) // Sort airports by airportCity
+                  .map((airport) => (
+                    <option key={airport._id} value={airport._id}>
+                      {airport.airportCity} - {airport.airportName}
+                    </option>
+                  ))}
               </select>
             </div>
 
@@ -359,10 +385,11 @@ export default function AdminRouteDash() {
               >
                 <option value="">Select Destination Airport</option>
                 {airports
-                  .filter(airport => airport._id !== newRoute.departure) // Filter out selected departure airport
+                  .filter(airport => airport._id !== newRoute.departure)
+                  .sort((a, b) => a.airportCity.localeCompare(b.airportCity)) 
                   .map((airport) => (
                     <option key={airport._id} value={airport._id}>
-                      {airport.airportName}
+                    {airport.airportCity} - {airport.airportName}
                     </option>
                   ))}
               </select>
