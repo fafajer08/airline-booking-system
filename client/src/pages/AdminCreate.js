@@ -3,7 +3,7 @@ import React, { useState, useContext } from "react";
 import Airplanes from "../components/AdminAirplaneDash";
 import Airports from "../components/AdminAirportDash";
 import Routes from "../components/AdminRouteDash";
-import CreateFlight from "../components/AdminFlightDash";
+import Flights from "../components/AdminFlightDash";
 import { Button, Row, Col } from 'react-bootstrap';
 import UserContext from '../context/UserContext';
 import '../styles/admincreate.css'; // Ensure the CSS file is correctly linked
@@ -21,8 +21,8 @@ export default function Admin() {
         return <Airports />;
       case "Routes":
         return <Routes />;
-      case "Create Flight":
-         return <CreateFlight />;
+      case "Flights":
+         return <Flights />;
       default:
         return null;
     }
@@ -65,11 +65,11 @@ export default function Admin() {
               Routes
             </Button>
             <Button 
-              variant={activeComponent === "Create Flight" ? "primary" : "outline-primary"} 
-              onClick={() => setActiveComponent("Create Flight")}
+              variant={activeComponent === "Flights" ? "primary" : "outline-primary"} 
+              onClick={() => setActiveComponent("Flights")}
               className="ms-2"
             >
-              Create Flight
+              Flights
             </Button>
           </Col>
         </Row>

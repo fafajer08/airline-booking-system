@@ -109,15 +109,22 @@ export default function AdminFlightDash() {
     }
   };
 
-  // Sorting logic
-  const handleSort = (key) => {
-    let direction = "ascending";
-    if (sortConfig.key === key && sortConfig.direction === "ascending") {
-      direction = "descending";
-    }
-    console.log(`Sorting by ${key}, direction: ${direction}`);
-    setSortConfig({ key, direction });
+  // Helper function to get nested value
+  const getNestedValue = (object, keysArray) => {
+    return keysArray.reduce((acc, key) => (acc ? acc[key] : undefined), object);
   };
+
+
+
+ // Sorting logic
+    const handleSort = (keysArray) => {
+      let direction = "ascending";
+      if (sortConfig.key === keysArray.join('.') && sortConfig.direction === "ascending") {
+        direction = "descending";
+      }
+      console.log(`Sorting by ${keysArray.join('.')}, direction: ${direction}`);
+      setSortConfig({ key: keysArray.join('.'), direction });
+    };
 
   // Get sorted flights based on the selected sort key
   const getSortedFlights = () => {
@@ -125,8 +132,9 @@ export default function AdminFlightDash() {
     const sortedFlights = [...flights];
     if (sortConfig.key) {
       sortedFlights.sort((a, b) => {
-        const aValue = a[sortConfig.key];
-        const bValue = b[sortConfig.key];
+        const keysArray = sortConfig.key.split('.');
+        const aValue = getNestedValue(a, keysArray);
+        const bValue = getNestedValue(b, keysArray);
         if (aValue < bValue) return sortConfig.direction === "ascending" ? -1 : 1;
         if (aValue > bValue) return sortConfig.direction === "ascending" ? 1 : -1;
         return 0;
@@ -135,28 +143,32 @@ export default function AdminFlightDash() {
     return sortedFlights;
   };
 
-  const filteredFlights = getSortedFlights().filter((flight) =>
-    Object.keys(columnSearch).every((key) => {
-      const flightValue = key.includes('.') 
-        ? key.split('.').reduce((acc, part) => acc[part], flight) // handle nested keys
-        : flight[key];
-      const searchValue = columnSearch[key];
+// Filtering logic
+const filteredFlights = getSortedFlights().filter((flight) =>
+  Object.keys(columnSearch).every((keyArrayString) => {
+    const keysArray = keyArrayString.split(','); 
+    const searchValue = columnSearch[keyArrayString].trim(); // Trim to avoid spaces issue
 
-      if (searchValue === "") {
-        return true; // If search input is empty, return all results
-      }
+    // If search input is empty, return all results for this field
+    if (!searchValue) return true;
 
-      if (typeof flightValue === "string") {
+    // Check if any of the keys in the array match the search value
+    return keysArray.some(key => {
+      const flightValue = getNestedValue(flight, key.split('.')); // Handle nested keys
+
+      if (typeof flightValue === 'string') {
         return flightValue.toLowerCase().includes(searchValue.toLowerCase());
       }
 
-      if (typeof flightValue === "number") {
+      if (typeof flightValue === 'number') {
         return flightValue === Number(searchValue);
       }
 
-      return true;
-    })
-  );
+      return false; // Default return if no match is found
+    });
+  })
+);
+  
 
   const paginatedFlights = filteredFlights.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage);
   const totalPages = Math.ceil(filteredFlights.length / rowsPerPage);
@@ -179,44 +191,69 @@ export default function AdminFlightDash() {
     handleSort(key);
   };
 
-  const renderTableHeader = (label, key) => (
-    <th onClick={() => handleHeaderClick(key)}>
-      {label}
-    </th>
-  );
+  const renderTableHeader = (label, keysArray) => {
+    // Ensure keysArray is always an array
+    keysArray = Array.isArray(keysArray) ? keysArray : [keysArray];
+  
+    return (
+      <th data-keys={keysArray.join(',')} onClick={() => handleHeaderClick(keysArray)}>
+        {label}
+      </th>
+    );
+  };
+  
 
-  const renderTableSearch = (key, type) => (
-    <td>
-      {type === 'number' ? (
-        <input
-          type="number"
-          value={columnSearch[key] || ""}
-          onChange={(e) => setColumnSearch({ ...columnSearch, [key]: e.target.value })}
-          placeholder={`Search ${key}`}
-          className="table-search-input"
-        />
-      ) : type === 'boolean' ? (
-        <select
-          value={columnSearch[key] || ""}
-          onChange={(e) => setColumnSearch({ ...columnSearch, [key]: e.target.value })}
-          className="table-search-input"
-        >
-          <option value="">All</option>
-          <option value="true">Activated</option>
-          <option value="false">Archived</option>
-        </select>
-      ) : (
-        <input
-          type="text"
-          value={columnSearch[key] || ""}
-          onChange={(e) => setColumnSearch({ ...columnSearch, [key]: e.target.value })}
-          placeholder={`Search ${key}`}
-          className="table-search-input"
-        />
-      )}
-    </td>
-  );
-
+  const renderTableSearch = (keysArray, type, headerLabel) => {
+    // Ensure keysArray is always an array
+    keysArray = Array.isArray(keysArray) ? keysArray : [keysArray];
+    const keyArrayString = keysArray.join(',');
+  
+    return (
+      <td>
+        {type === 'number' ? (
+          <input
+            type="number"
+            value={columnSearch[keyArrayString] || ""}
+            onChange={(e) => {
+              const updatedSearch = { ...columnSearch };
+              updatedSearch[keyArrayString] = e.target.value; // Directly set the value
+              setColumnSearch(updatedSearch);
+            }}
+            placeholder={`Search ${headerLabel}`} 
+            className="table-search-input"
+          />
+        ) : type === 'boolean' ? (
+          <select
+            value={columnSearch[keyArrayString] || ""}
+            onChange={(e) => {
+              const updatedSearch = { ...columnSearch };
+              updatedSearch[keyArrayString] = e.target.value;
+              setColumnSearch(updatedSearch);
+            }}
+            className="table-search-input"
+          >
+            <option value="">All</option>
+            <option value="true">Activated</option>
+            <option value="false">Archived</option>
+          </select>
+        ) : (
+          <input
+            type="text"
+            value={columnSearch[keyArrayString] || ""}
+            onChange={(e) => {
+              const updatedSearch = { ...columnSearch };
+              updatedSearch[keyArrayString] = e.target.value; // Directly set the value
+              setColumnSearch(updatedSearch);
+            }}
+            placeholder={`Search ${headerLabel}`} 
+            className="table-search-input"
+          />
+        )}
+      </td>
+    );
+  };
+  
+    
   const handleCloseAddModal = () => {
     console.log("Closing add modal...");
     setAddModalVisible(false);
@@ -290,42 +327,44 @@ export default function AdminFlightDash() {
     <table>
     <thead>
         <tr>
-        {renderTableHeader("Flight No", "flightNo")}
-        {renderTableHeader("Airplane Id", "airplane")}
-        {renderTableHeader("Departure City", "departureCity")}
-        {renderTableHeader("Departure Airport", "departureAirport")}
-        {renderTableHeader("Destination City", "destinationCity")}
-        {renderTableHeader("Destination Airport", "destinationAirport")}
-        {renderTableHeader("Total Seats", "totalSeats")}
-        {renderTableHeader("Day", "day")}
-        {renderTableHeader("Time", "time")}
-        {renderTableHeader("Status", "isActive")}
+          {renderTableHeader("Flight No", ["flightNo"])}
+          {renderTableHeader("Airplane Id", ["airplane.planeId"])}
+          {renderTableHeader("Departure City", ["route.departure.airportCity", "route.departure.airportCode"])}
+          {renderTableHeader("Departure Airport", ["route.departure.airportName"])}
+          {renderTableHeader("Destination City", ["route.destination.airportCity", "route.destination.airportCode"])}
+          {renderTableHeader("Destination Airport", ["route.destination.airportName"])}
+          {renderTableHeader("Total Seats", ["airplane.totalSeats"])}
+          {renderTableHeader("Day", ["day"])}
+          {renderTableHeader("Time", ["time"])}
+          {renderTableHeader("Status", ["isActive"])}
         </tr>
         <tr>
-        {renderTableSearch("flightNo", "text")}
-        {renderTableSearch("airplane", "text")}
-        {renderTableSearch("epartureCity", "text")}
-        {renderTableSearch("departureAirport", "text")}
-        {renderTableSearch("destinationCity", "text")}
-        {renderTableSearch("destinationAirport", "text")}
-        {renderTableSearch("totalSeats", "number")}
-        {renderTableSearch("day", "number")}
-        {renderTableSearch("time", "text")}
-        {renderTableSearch("isActive", "boolean")}
+          {renderTableSearch(["flightNo"], "text", "Flight No")}
+          {renderTableSearch(["airplane.planeId"], "text", "Airplane Id")}
+          {renderTableSearch(["route.departure.airportCity", "route.departure.airportCode"], "text", "Departure City")}
+          {renderTableSearch(["route.departure.airportName"], "text", "Departure Airport")}
+          {renderTableSearch(["route.destination.airportCity", "route.destination.airportCode"], "text", "Destination City")}
+          {renderTableSearch(["route.destination.airportName"], "text", "Destination Airport")}
+          {renderTableSearch(["airplane.totalSeats"], "number", "Total Seats")}
+          {renderTableSearch(["day"], "day", "Day")}
+          {renderTableSearch(["time"], "text", "Time")}
+          {renderTableSearch(["isActive"], "boolean", "Status")}
         </tr>
-    </thead>
+      </thead>
+
+
 
         <tbody>
         {paginatedFlights.length > 0 ? (
             paginatedFlights.map((flight) => (
             <tr key={flight._id} onClick={() => handleRowClick(flight)}>
                 <td>{flight.flightNo}</td>
-                <td>{flight?.airplane?.planeId || "N/A"}</td>
-                <td>{flight?.route?.departure?.airportCity || "N/A"} - {flight?.route?.departure?.airportCode || "N/A"}</td>
-                <td>{flight?.route?.departure?.airportName || "N/A"}</td>
-                <td>{flight?.route?.destination?.airportCity || "N/A"} - {flight?.route?.destination?.airportCode || "N/A"}</td>
-                <td>{flight?.route?.destination?.airportName || "N/A"}</td>
-                <td>{flight?.airplane?.totalSeats || "N/A"}</td>
+                <td>{flight.airplane?.planeId}</td>
+                <td>{flight.route?.departure.airportCity} - {flight?.route?.departure?.airportCode}</td>
+                <td>{flight.route?.departure.airportName}</td>
+                <td>{flight.route?.destination.airportCity} - {flight?.route?.destination?.airportCode}</td>
+                <td>{flight.route?.destination.airportName}</td>
+                <td>{flight.airplane?.totalSeats}</td>
                 <td>{mapDayToWeekday(flight.day)}</td>
                 <td>{flight.time}</td>
                 <td>
