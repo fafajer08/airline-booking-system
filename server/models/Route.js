@@ -15,7 +15,11 @@ const routeSchema = new mongoose.Schema({
       required: true }, // Distance in kilometers
     durationMins: { 
       type: Number, 
-      required: true } // Duration in minutes
-});
+      required: true },
+    isActive: {
+      type: Boolean,
+      default: true  // Set default value to true
+    } // Duration in minutes
+}, { timestamps: true });
 
 module.exports = mongoose.model('Route', routeSchema);

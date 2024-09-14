@@ -7,28 +7,36 @@ const routeController = {
   async addRoute(req, res) { 
     try {
       const { departure, destination, distanceKM, durationMins } = req.body;
-
+  
       // Validate airports
       const departureAirport = await Airport.findById(departure);
       const destinationAirport = await Airport.findById(destination);
-
+  
       if (!departureAirport || !destinationAirport) {
         return res.status(404).json({ message: 'Departure or destination airport not found' });
       }
-
+  
       const newRoute = new Route({
         departure,
         destination,
         distanceKM,
         durationMins
       });
-
+  
       const savedRoute = await newRoute.save();
-      res.status(201).json(savedRoute);
+      
+      // Populate the departure and destination fields
+      const populatedRoute = await Route.findById(savedRoute._id)
+        .populate('departure')
+        .populate('destination');
+  
+      res.status(201).json(populatedRoute);
     } catch (error) {
       res.status(500).json({ message: 'Error adding route', error });
     }
   },
+  
+
 
   // Edit an existing route by ID
   async editRoute(req, res) {
@@ -87,7 +95,10 @@ const routeController = {
   // View all routes
   async viewAllRoutes(req, res) {
     try {
+      console.log('Fetching all Routes...');
       const routes = await Route.find().populate('departure').populate('destination');
+      // console.log('Raw Routes data:', routes);
+      
       if (!routes || routes.length === 0) {
         return res.status(404).json({ message: 'No routes found' });
       }

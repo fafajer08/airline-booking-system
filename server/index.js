@@ -49,15 +49,17 @@ app.use(passport.session());
 
 // Define routes
 const userRoutes = require("./routes/userRoute");
-const planeRoutes = require("./routes/planeRoute");
+const airplaneRoutes = require("./routes/airplaneRoute");
 const airportRoutes = require("./routes/airportRoute");
 const routeRoutes = require("./routes/routeRoute");
+const flightRoutes = require("./routes/flightRoute");
 
 // Setup routes
 app.use("/users", userRoutes);
-app.use("/planes", planeRoutes); // Added plane routes
+app.use("/airplanes", airplaneRoutes); // Added plane routes
 app.use("/airports", airportRoutes); 
 app.use("/routes", routeRoutes);
+app.use("/flights", flightRoutes);
 
 // Initialize the server
 if (require.main === module) {

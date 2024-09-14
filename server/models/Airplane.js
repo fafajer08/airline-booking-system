@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const planeSchema = new mongoose.Schema({
+const airplaneSchema = new mongoose.Schema({
   planeId: {
     type: String,
     required: true,
@@ -20,7 +20,8 @@ const planeSchema = new mongoose.Schema({
   airlineName: {
     type: String,
     required: true,
-    trim: true
+    trim: true,
+    default: 'Fly Airline'
   },
   totalSeats: {
     type: Number,
@@ -48,6 +49,6 @@ const planeSchema = new mongoose.Schema({
   }
 }, { timestamps: true });
 
-const Plane = mongoose.model('Plane', planeSchema);
+const Airplane = mongoose.model('Airplane', airplaneSchema);
 
-module.exports = Plane;
+module.exports = Airplane;

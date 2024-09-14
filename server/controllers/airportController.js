@@ -83,15 +83,15 @@ const AirportController = {
       console.log('Fetching all Airports...');
       
       // Query the database and log the raw result
-      const Airports = await Airport.find({});
-      console.log('Raw Airports data:', Airports);
+      const airports = await Airport.find({});
+      // console.log('Raw Airports data:', airports);
   
-      if (!Airports || Airports.length === 0) {
+      if (!airports || airports.length === 0) {
         console.log('No Airports found');
         return res.status(404).json({ message: 'No Airports found' });
       }
   
-      res.status(200).json(Airports);
+      res.status(200).json(airports);
     } catch (error) {
       console.error('Error fetching Airports:', error);
       res.status(500).json({ message: 'Error fetching Airports', error });
