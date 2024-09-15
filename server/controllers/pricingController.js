@@ -140,7 +140,7 @@ const pricingController = {
         return res.status(404).json({ message: 'No pricings found' });
       }
 
-      console.log('All pricings:', pricings); // Debugging
+      // console.log('All pricings:', pricings); // Debugging
       res.status(200).json(pricings);
     } catch (error) {
       console.error('Error fetching pricings:', error); // Debugging

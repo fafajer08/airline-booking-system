@@ -4,6 +4,7 @@ import Button from 'react-bootstrap/Button';
 import { Notyf } from 'notyf';
 import 'notyf/notyf.min.css';
 import '../styles/admincomponentsdash.css';
+import '../styles/admincommercialflightdash.css';
 
 export default function CommercialFlights() {
   const notyf = new Notyf({ duration: 3000 });
@@ -72,7 +73,7 @@ export default function CommercialFlights() {
     }
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/commercialflights/generate`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/commercialflights/multi`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -135,7 +136,7 @@ export default function CommercialFlights() {
           {paginatedCommercialFlights.length > 0 ? (
             paginatedCommercialFlights.map((commercialFlight) => (
               <tr key={commercialFlight._id} onClick={() => handleOpenDetailsModal(commercialFlight)}> {/* Open details modal */}
-                <td>{commercialFlight.flightNo}</td>
+                <td>{commercialFlight.flight.flightNo}</td>
                 <td>{commercialFlight.departureCity} - {commercialFlight.departureCode}</td>
                 <td>{commercialFlight.destinationCity} - {commercialFlight.destinationCode}</td>
                 <td>{new Date(commercialFlight.date).toLocaleDateString()}</td>
@@ -235,27 +236,105 @@ export default function CommercialFlights() {
       </Modal>
 
       {/* Modal for Flight Details */}
-      <Modal show={isDetailsModalVisible} onHide={handleCloseDetailsModal}>
-        <Modal.Header closeButton>
-          <Modal.Title>Flight Details</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {selectedFlightDetails && (
-            <>
-              <p><strong>Flight No:</strong> {selectedFlightDetails.flightNo}</p>
-              <p><strong>Departure:</strong> {selectedFlightDetails.departureCity} - {selectedFlightDetails.departureCode}</p>
-              <p><strong>Destination:</strong> {selectedFlightDetails.destinationCity} - {selectedFlightDetails.destinationCode}</p>
-              <p><strong>Date:</strong> {new Date(selectedFlightDetails.date).toLocaleDateString()}</p>
-              <p><strong>Status:</strong> {selectedFlightDetails.isActive ? "Active" : "Inactive"}</p>
-            </>
+{/* Modal for Flight Details */}
+<Modal show={isDetailsModalVisible} onHide={handleCloseDetailsModal}>
+  <Modal.Header closeButton>
+    <Modal.Title>Flight Details</Modal.Title>
+  </Modal.Header>
+  <Modal.Body>
+    {selectedFlightDetails && (
+      <div className="flight-details-container">
+      {/* Flight Information Section */}
+      <div className="flight-details-section full-width">
+        <div className="flight-details-section-header">Flight Information</div>
+        <div className="flight-detail-item">
+          <span className="flight-detail-label">Flight No:</span>
+          <span className="flight-detail-value">{selectedFlightDetails.flightNo}</span>
+        </div>
+        <div className="flight-detail-item">
+          <span className="flight-detail-label">Date:</span>
+          <span className="flight-detail-value">{new Date(selectedFlightDetails.date).toLocaleDateString()}</span>
+        </div>
+        <div className="flight-detail-item">
+          <span className="flight-detail-label">Status:</span>
+          <span className="flight-detail-value">{selectedFlightDetails.isActive ? "Active" : "Inactive"}</span>
+        </div>
+      </div>
+
+        {/* Route Information Section */}
+        <div className="flight-details-section">
+          <div className="flight-details-section-header">Route Information</div>
+          <div className="flight-detail-item">
+            <span className="flight-detail-label">Departure:</span>
+            <span className="flight-detail-value">
+              {selectedFlightDetails.flight.route.departure.airportCity} - {selectedFlightDetails.flight.route.departure.airportCode}
+            </span>
+          </div>
+          <div className="flight-detail-item">
+            <span className="flight-detail-label">Destination:</span>
+            <span className="flight-detail-value">
+              {selectedFlightDetails.flight.route.destination.airportCity} - {selectedFlightDetails.flight.route.destination.airportCode}
+            </span>
+          </div>
+          <div className="flight-detail-item">
+            <span className="flight-detail-label">Distance (KM):</span>
+            <span className="flight-detail-value">{selectedFlightDetails.route?.distanceKM || "N/A"}</span>
+          </div>
+          <div className="flight-detail-item">
+            <span className="flight-detail-label">Duration (mins):</span>
+            <span className="flight-detail-value">{selectedFlightDetails.route?.durationMins || "N/A"}</span>
+          </div>
+        </div>
+
+        {/* Airplane Details Section */}
+        <div className="flight-details-section">
+          <div className="flight-details-section-header">Airplane Details</div>
+          <div className="flight-detail-item">
+            <span className="flight-detail-label">Airline:</span>
+            <span className="flight-detail-value">{selectedFlightDetails.flight?.airplane?.airlineName}</span>
+          </div>
+          <div className="flight-detail-item">
+            <span className="flight-detail-label">Model:</span>
+            <span className="flight-detail-value">{selectedFlightDetails.flight?.airplane?.model}</span>
+          </div>
+          <div className="flight-detail-item">
+            <span className="flight-detail-label">Total Seats:</span>
+            <span className="flight-detail-value">{selectedFlightDetails.flight?.airplane?.totalSeats}</span>
+          </div>
+        </div>
+
+        {/* Pricing Details Section */}
+        <div className="flight-details-section">
+          <div className="flight-details-section-header">Pricing Details</div>
+          <div className="flight-detail-item">
+            <span className="flight-detail-label">Base Price:</span>
+            <span className="flight-detail-value">{selectedFlightDetails.pricing?.basePrice}</span>
+          </div>
+          {/* Add more pricing details as needed */}
+        </div>
+
+        {/* Additional Details Section */}
+        <div className="flight-details-section full-width">
+          <div className="flight-details-section-header">Additional Details</div>
+          <div className="flight-detail-item">
+            <span className="flight-detail-label">Created At:</span>
+            <span className="flight-detail-value">{new Date(selectedFlightDetails.createdAt).toLocaleString()}</span>
+          </div>
+          <div className="flight-detail-item">
+            <span className="flight-detail-label">Updated At:</span>
+            <span className="flight-detail-value">{new Date(selectedFlightDetails.updatedAt).toLocaleString()}</span>
+          </div>
+        </div>
+      </div>
           )}
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseDetailsModal}>
-            Close
-          </Button>
-        </Modal.Footer>
-      </Modal>
+  </Modal.Body>
+  <Modal.Footer>
+    <Button variant="secondary" onClick={handleCloseDetailsModal}>
+      Close
+    </Button>
+  </Modal.Footer>
+</Modal>
+
     </div>
   );
 }

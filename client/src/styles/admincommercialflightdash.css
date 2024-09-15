@@ -1,0 +1,35 @@
+/* Modal Container */
+.modal-flex-container {
+    display: flex;
+    flex-direction: column; /* Stack children vertically */
+    justify-content: center; /* Center content vertically */
+    align-items: center; /* Center content horizontally */
+    padding: 20px;
+    max-height: 80vh; /* Prevent overflow */
+    overflow-y: auto; /* Allow vertical scrolling if content overflows */
+  }
+  
+  /* Modal Header, Body, and Footer */
+  .modal-header,
+  .modal-body,
+  .modal-footer {
+    width: 100%; /* Take full width of the container */
+    padding: 10px;
+    box-sizing: border-box;
+  }
+  
+  /* Optional: Adjust modal body for flex */
+  .modal-body {
+    flex: 1; /* Grow to take up available space */
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  /* Modal Footer Alignment */
+  .modal-footer {
+    display: flex;
+    justify-content: flex-end; /* Align buttons to the right */
+    gap: 10px;
+  }
+  

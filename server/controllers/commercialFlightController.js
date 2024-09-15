@@ -1,4 +1,8 @@
 const CommercialFlight = require('../models/CommercialFlight');
+const Booking = require('../models/Booking');
+const Pricing = require('../models/Pricing');
+const Flight = require('../models/Flight');
+
 
 const commercialFlightController = {
   // Add a new commercial flight with unique check
@@ -240,21 +244,38 @@ const commercialFlightController = {
   async viewAllCommercialFlights(req, res) {
     try {
       console.log('Received request to view all commercial flights'); // Debugging
-
-      const commercialFlights = await CommercialFlight.find({}).populate('flight pricing bookings');
-
+  
+      const commercialFlights = await CommercialFlight.find({})
+        .populate({
+          path: 'flight',
+          populate: [
+            {
+              path: 'airplane',
+            },
+            {
+              path: 'route',
+              populate: [
+                { path: 'departure', model: 'Airport' },
+                { path: 'destination', model: 'Airport' },
+              ],
+            },
+          ],
+        })
+        .populate('pricing')
+        .populate('bookings');
+  
       if (!commercialFlights || commercialFlights.length === 0) {
         console.log('No commercial flights found'); // Debugging
         return res.status(404).json({ message: 'No commercial flights found' });
       }
-
-      console.log('All commercial flights:', commercialFlights); // Debugging
+  
       res.status(200).json(commercialFlights);
     } catch (error) {
       console.error('Error fetching commercial flights:', error); // Debugging
       res.status(500).json({ message: 'Error fetching commercial flights', error });
     }
   }
-};
-
+  
+  
+}
 module.exports = commercialFlightController;
