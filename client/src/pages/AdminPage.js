@@ -3,7 +3,7 @@ import Destinations from "../components/AdminDestinationsDash";
 import Deals from "../components/AdminDealsDash";
 import { Button, Row, Col } from 'react-bootstrap';
 import UserContext from '../context/UserContext';
-import '../styles/adminpage.css'; // Ensure the CSS file is correctly linked
+import '../styles/admindash.css'; // Ensure the CSS file is correctly linked
 
 export default function Admin() {
   const { user } = useContext(UserContext);
@@ -35,7 +35,7 @@ export default function Admin() {
           </Col>
 
           {/* Button Row */}
-          <Col md={3} className="d-flex justify-content-end button-row">
+          <Col md={3} className="d-flex justify-content-end admin-page-button-row">
             <Button 
               variant={activeComponent === "Destinations" ? "primary" : "outline-primary"} 
               onClick={() => setActiveComponent("Destinations")}

@@ -3,7 +3,7 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import { Notyf } from 'notyf';
 import 'notyf/notyf.min.css';
-import '../styles/adminairportdash.css';
+
 
 export default function AdminRouteDash() {
   const notyf = new Notyf({ duration: 3000 });

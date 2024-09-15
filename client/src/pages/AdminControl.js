@@ -4,7 +4,6 @@ import Airplanes from "../components/AdminAirplaneDash";
 import Airports from "../components/AdminAirportDash";
 import Routes from "../components/AdminRouteDash";
 import Flights from "../components/AdminFlightDash";
-import CommercialFlights from "../components/AdminCommercialFlightDash";
 import { Button, Row, Col } from 'react-bootstrap';
 import UserContext from '../context/UserContext';
 import '../styles/admindash.css'; // Ensure the CSS file is correctly linked
@@ -24,8 +23,6 @@ export default function Admin() {
         return <Routes />;
       case "Flights":
          return <Flights />;
-      case "CommercialFlights":
-        return <CommercialFlights />;
       default:
         return null;
     }
@@ -73,14 +70,6 @@ export default function Admin() {
               className="ms-2"
             >
               Flights
-            </Button>
-
-            <Button 
-              variant={activeComponent === "CommercialFlights" ? "primary" : "outline-primary"} 
-              onClick={() => setActiveComponent("CommercialFlights")}
-              className="ms-2"
-            >
-              Commercial Flights
             </Button>
           </Col>
         </Row>
