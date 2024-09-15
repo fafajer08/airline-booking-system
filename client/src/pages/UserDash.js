@@ -1,8 +1,4 @@
 import React, { useState, useEffect, useContext } from "react";
-import NavBar from "../components/NavBar";
-import '../styles/admin.css';  // Import the CSS file
-import Flights from "../components/AdminFlightsDash";
-import Bookings from "../components/AdminBookingsDash";
 import { Container, Col, Row, Button, Form} from 'react-bootstrap'
 import UserContext from "../context/UserContext";
 

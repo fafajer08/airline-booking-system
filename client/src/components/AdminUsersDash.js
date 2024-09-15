@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import usersData from '../data/usersData';
-import '../styles/adminusersdash.css';  // Ensure your styles are being used correctly
+import '../styles/admincomponentsdash.css';  // Ensure your styles are being used correctly
 
 export default function AdminUsersDash() {
   const [users, setUsers] = useState([]);

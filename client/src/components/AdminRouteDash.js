@@ -3,7 +3,7 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import { Notyf } from 'notyf';
 import 'notyf/notyf.min.css';
-import '../styles/adminairportdash.css';
+
 
 export default function AdminRouteDash() {
   const notyf = new Notyf({ duration: 3000 });
@@ -262,10 +262,10 @@ export default function AdminRouteDash() {
             {renderTableHeader("STATUS", "isActive")}
           </tr>
           <tr>
-            {renderTableSearch("departure city", "text")}
-            {renderTableSearch("departure", "text")}
-            {renderTableSearch("destination city", "text")}
-            {renderTableSearch("destination", "text")}
+            {renderTableSearch("departure.airportCity", "text")}
+            {renderTableSearch("departure.airportName", "text")}
+            {renderTableSearch("destination.airportCity", "text")}
+            {renderTableSearch("destination.airportName", "text")}
             {renderTableSearch("distanceKM", "number")}
             {renderTableSearch("durationMins", "number")}
             {renderTableSearch("isActive", "boolean")}

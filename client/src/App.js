@@ -16,7 +16,7 @@ import Destinations from './pages/Destinations';
 import LoginPage from './pages/LoginPage';
 
 // admin pages exclusive
-import AdminFlights from './pages/AdminFlights';
+import AdminControl from './pages/AdminControl';
 import AdminPage from './pages/AdminPage';
 import AdminCreate from './pages/AdminCreate';
 
@@ -50,7 +50,7 @@ function App() {
 
 
             <Route path='/admin/create' element={<AdminCreate />} />
-            <Route path='/admin/control' element={<AdminFlights />} />
+            <Route path='/admin/control' element={<AdminControl />} />
             <Route path='/admin/page' element={<AdminPage />} />
             <Route path='/users' element={<Users />} />
             <Route path='/profile' element={<Profile />} />

@@ -29,9 +29,10 @@ export default function SearchFlight() {
   // Fetch data from API and fall back to mock data if necessary
   const fetchData = async () => {
     try {
-      const response = await fetch('https://api.example.com/flights'); // Replace with actual API
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/flights/airports`);// Replace with actual API
       const data = await response.json();
-      setPortOptions(parseData(data));
+      console.log("Fetched airports:", data);
+      setPortOptions(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error("Error fetching data, using mock data:", error);
       // Use parsed mock data in case of error

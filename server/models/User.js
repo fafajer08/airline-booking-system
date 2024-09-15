@@ -28,6 +28,16 @@ const userSchema = new mongoose.Schema({
     required: true,
     match: [/^\d{11}$/, 'Please enter a valid 10-digit phone number']
   },
+  acculatedDistance: {
+    type: Number,
+    min: 0,
+    default: 0
+  },
+  acculatedPayment: {
+    type: Number,
+    min: 0,
+    default: 0
+  },
   isAdmin: {
     type: Boolean,
     default: false
@@ -36,10 +46,10 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: true
   },
-  bookings: {
+  bookings: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Booking',  // Reference to the Booking schema
-  }
+  }]
 }, { timestamps: true });
 
 const User = mongoose.model('User', userSchema);

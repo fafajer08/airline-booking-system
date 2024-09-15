@@ -9,6 +9,8 @@ router.put('/:id', flightController.editFlight);
 router.patch('/archive/:id', flightController.archiveFlight);
 router.patch('/activate/:id', flightController.activateFlight);
 router.get('/all', flightController.viewAllFlights);
+router.get('/airports', flightController.getAllAirports)
 router.get('/:id', flightController.getFlightDetails);
+
 
 module.exports = router;
