@@ -3,27 +3,37 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import { Notyf } from 'notyf';
 import 'notyf/notyf.min.css';
-// import '../styles/adminflightdash.css';
 
 export default function AdminFlightDash() {
   const notyf = new Notyf({ duration: 3000 });
   const [flights, setFlights] = useState([]);
   const [airplanes, setAirplanes] = useState([]);
   const [routes, setRoutes] = useState([]);
+  const [pricings, setPricings] = useState([]);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
-  const [searchQuery, setSearchQuery] = useState("");
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [commercialFlights, setCommercialFlights] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedFlight, setSelectedFlight] = useState(null);
-  const [isModalVisible, setModalVisible] = useState(false);
+  const [selectedPrice, setSelectedPrice] = useState(""); // For price selection
+  const [isModalVisible, setModalVisible] = useState(false); // For flight details
   const [isAddModalVisible, setAddModalVisible] = useState(false);
+  const [isGenerateModalVisible, setGenerateModalVisible] = useState(false);
+  const [dateRange, setDateRange] = useState({ start: "", end: "" });
+  const [flightToGenerate, setFlightToGenerate] = useState(null);
+
+  // Added columnSearch state for search functionality
   const [columnSearch, setColumnSearch] = useState({
-    flightNo: "",
-    airplane: "",
-    route: "",
-    day: "",
-    time: "",
-    isActive: ""
+    'flightNo': "",
+    'airplane.planeId': "",
+    'route.departure.airportCity': "",
+    'route.departure.airportName': "",
+    'route.destination.airportCity': "",
+    'route.destination.airportName': "",
+    'airplane.totalSeats': "",
+    'day': "",
+    'time': "",
+    'isActive': ""
   });
 
   // For adding a new flight
@@ -36,53 +46,41 @@ export default function AdminFlightDash() {
     isActive: true
   });
 
-  // Fetch flights, airplanes, and routes from backend
+  // Fetch flights, airplanes, routes, and pricing from backend
   useEffect(() => {
-    const fetchFlights = async () => {
+    const fetchData = async () => {
       try {
-        console.log("Fetching flights...");
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/flights/all`);
-        const data = await response.json();
-        console.log("Fetched flights:", data);
-        setFlights(data);
+        const [flightsRes, airplanesRes, routesRes, pricingRes] = await Promise.all([
+          fetch(`${process.env.REACT_APP_API_URL}/flights/all`),
+          fetch(`${process.env.REACT_APP_API_URL}/airplanes/all`),
+          fetch(`${process.env.REACT_APP_API_URL}/routes/all`),
+          fetch(`${process.env.REACT_APP_API_URL}/pricing/all`)
+        ]);
+        const flightsData = await flightsRes.json();
+        const airplanesData = await airplanesRes.json();
+        const routesData = await routesRes.json();
+        const pricingData = await pricingRes.json();
+
+        setFlights(flightsData);
+        setAirplanes(airplanesData);
+        setRoutes(routesData);
+        setPricings(pricingData);
       } catch (error) {
-        console.error('Error fetching flights:', error);
+        console.error('Error fetching data:', error);
       }
     };
-
-    const fetchAirplanes = async () => {
-      try {
-        console.log("Fetching airplanes...");
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/airplanes/all`);
-        const data = await response.json();
-        console.log("Fetched airplanes:", data);
-        setAirplanes(data);
-      } catch (error) {
-        console.error('Error fetching airplanes:', error);
-      }
-    };
-
-    const fetchRoutes = async () => {
-      try {
-        console.log("Fetching routes...");
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/routes/all`);
-        const data = await response.json();
-        console.log("Fetched routes:", data);
-        setRoutes(data);
-      } catch (error) {
-        console.error('Error fetching routes:', error);
-      }
-    };
-
-    fetchFlights();
-    fetchAirplanes();
-    fetchRoutes();
+    
+    fetchData();
   }, []);
+
+  const mapDayToWeekday = (day) => {
+    const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    return daysOfWeek[day - 1] || 'N/A';
+  };
 
   // Function to toggle flight activation
   const toggleIsActive = async (id, isActive) => {
     const action = isActive ? 'archive' : 'activate';
-    console.log(`Toggling flight status: ${action}, ID: ${id}`);
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/flights/${action}/${id}`, {
         method: 'PATCH',
@@ -92,7 +90,6 @@ export default function AdminFlightDash() {
       });
 
       if (response.ok) {
-        console.log(`Flight ${action}d successfully.`);
         setFlights((prevFlights) => 
           prevFlights.map((flight) => 
             flight._id === id ? { ...flight, isActive: !flight.isActive } : flight
@@ -100,11 +97,9 @@ export default function AdminFlightDash() {
         );
         notyf.success(`Flight ${isActive ? 'archived' : 'activated'} successfully.`);
       } else {
-        console.error(`Failed to ${action} the flight.`);
         notyf.error(`Failed to ${isActive ? 'archive' : 'activate'} the flight.`);
       }
     } catch (error) {
-      console.error('Error updating flight status:', error);
       notyf.error('Error updating flight status.');
     }
   };
@@ -114,27 +109,25 @@ export default function AdminFlightDash() {
     return keysArray.reduce((acc, key) => (acc ? acc[key] : undefined), object);
   };
 
-
-
- // Sorting logic
-    const handleSort = (keysArray) => {
-      let direction = "ascending";
-      if (sortConfig.key === keysArray.join('.') && sortConfig.direction === "ascending") {
-        direction = "descending";
-      }
-      console.log(`Sorting by ${keysArray.join('.')}, direction: ${direction}`);
-      setSortConfig({ key: keysArray.join('.'), direction });
-    };
+  // Sorting logic
+  const handleSort = (keysArray) => {
+    const key = keysArray.join('.');
+    let direction = "ascending";
+    if (sortConfig.key === key && sortConfig.direction === "ascending") {
+      direction = "descending";
+    }
+    setSortConfig({ key, direction });
+  };
 
   // Get sorted flights based on the selected sort key
   const getSortedFlights = () => {
-    console.log("Sorting flights with config:", sortConfig);
-    const sortedFlights = [...flights];
+    const sortedFlights = Array.isArray(flights) ? [...flights] : [];
     if (sortConfig.key) {
       sortedFlights.sort((a, b) => {
         const keysArray = sortConfig.key.split('.');
         const aValue = getNestedValue(a, keysArray);
         const bValue = getNestedValue(b, keysArray);
+
         if (aValue < bValue) return sortConfig.direction === "ascending" ? -1 : 1;
         if (aValue > bValue) return sortConfig.direction === "ascending" ? 1 : -1;
         return 0;
@@ -143,125 +136,158 @@ export default function AdminFlightDash() {
     return sortedFlights;
   };
 
-// Filtering logic
-const filteredFlights = getSortedFlights().filter((flight) =>
-  Object.keys(columnSearch).every((keyArrayString) => {
-    const keysArray = keyArrayString.split(','); 
-    const searchValue = columnSearch[keyArrayString].trim(); // Trim to avoid spaces issue
-
-    // If search input is empty, return all results for this field
-    if (!searchValue) return true;
-
-    // Check if any of the keys in the array match the search value
-    return keysArray.some(key => {
-      const flightValue = getNestedValue(flight, key.split('.')); // Handle nested keys
-
+  // Filtering logic
+  const filteredFlights = getSortedFlights().filter((flight) =>
+    Object.keys(columnSearch).every((key) => {
+      const searchValue = columnSearch[key].trim();
+      if (!searchValue) return true;
+      const flightValue = getNestedValue(flight, key.split('.'));
       if (typeof flightValue === 'string') {
         return flightValue.toLowerCase().includes(searchValue.toLowerCase());
       }
-
       if (typeof flightValue === 'number') {
-        return flightValue === Number(searchValue);
+        return flightValue.toString().includes(searchValue);
       }
-
-      return false; // Default return if no match is found
-    });
-  })
-);
-  
+      if (typeof flightValue === 'boolean') {
+        return flightValue.toString() === searchValue;
+      }
+      return false;
+    })
+  );
 
   const paginatedFlights = filteredFlights.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage);
   const totalPages = Math.ceil(filteredFlights.length / rowsPerPage);
 
   const handleRowClick = (flight) => {
-    console.log("Row clicked:", flight);
-    console.log("Departure airport:", flight?.route?.departure?.airportCity);
-    console.log("Destination airport:", flight?.route?.destination?.airportCity);
+    if (!flight) return;
     setSelectedFlight(flight);
     setModalVisible(true);
   };
-  
 
   const handleCloseModal = () => {
-    console.log("Closing modal...");
     setModalVisible(false);
   };
 
-  const handleHeaderClick = (key) => {
-    handleSort(key);
+  const openGenerateModal = (flight) => {
+    setFlightToGenerate(flight);
+    setGenerateModalVisible(true);
   };
 
+  const handleCloseGenerateModal = () => {
+    setGenerateModalVisible(false);
+    setDateRange({ start: "", end: "" });
+  };
+
+  const handleGenerateCommercialFlights = async () => {
+    if (!flightToGenerate || !dateRange.start || !dateRange.end || !selectedPrice) {
+      notyf.error("Please select a flight, date range, and price.");
+      return;
+    }
+
+    const startDate = new Date(dateRange.start);
+    const endDate = new Date(dateRange.end);
+    const generatedFlights = [];
+
+    for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+      if (d.getDay() + 1 === parseInt(flightToGenerate.day)) {
+        generatedFlights.push({
+          flightId: flightToGenerate,
+          date: new Date(d).toISOString().split('T')[0],
+          priceId: selectedPrice,
+        });
+      }
+    }
+
+    console.log(generatedFlights);
+
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/commercialflights/multiple`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ flights: generatedFlights }),
+      });
+
+      const responseData = await response.json();
+      if (!response.ok) {
+        throw new Error(`Failed to generate commercial flights: ${response.status} ${responseData.message}`);
+      }
+
+      notyf.success("Commercial flights generated successfully.");
+      setCommercialFlights((prev) => [...prev, ...responseData]);
+      setGenerateModalVisible(false);
+    } catch (error) {
+      notyf.error('Error generating commercial flights.');
+    }
+  };
+
+  // Function to render search inputs
+  const renderTableSearch = (key, type) => (
+    <td>
+      {key === 'day' ? (
+        <select
+          value={columnSearch[key] || ""}
+          onChange={(e) => setColumnSearch({ ...columnSearch, [key]: e.target.value })}
+          className="table-search-input"
+        >
+          <option value="">All Days</option>
+          <option value="1">Sunday</option>
+          <option value="2">Monday</option>
+          <option value="3">Tuesday</option>
+          <option value="4">Wednesday</option>
+          <option value="5">Thursday</option>
+          <option value="6">Friday</option>
+          <option value="7">Saturday</option>
+        </select>
+      ) : type === 'number' ? (
+        <input
+          type="number"
+          value={columnSearch[key] || ""}
+          onChange={(e) => setColumnSearch({ ...columnSearch, [key]: e.target.value })}
+          placeholder={`Search`}
+          className="table-search-input"
+        />
+      ) : type === 'boolean' ? (
+        <select
+          value={columnSearch[key] || ""}
+          onChange={(e) => setColumnSearch({ ...columnSearch, [key]: e.target.value })}
+          className="table-search-input"
+        >
+          <option value="">All</option>
+          <option value="true">Activated</option>
+          <option value="false">Archived</option>
+        </select>
+      ) : (
+        <input
+          type="text"
+          value={columnSearch[key] || ""}
+          onChange={(e) => setColumnSearch({ ...columnSearch, [key]: e.target.value })}
+          placeholder={`Search`}
+          className="table-search-input"
+        />
+      )}
+    </td>
+  );
+
+  // Function to render table headers with sorting
   const renderTableHeader = (label, keysArray) => {
-    // Ensure keysArray is always an array
-    keysArray = Array.isArray(keysArray) ? keysArray : [keysArray];
-  
+    const key = keysArray.join('.');
     return (
-      <th data-keys={keysArray.join(',')} onClick={() => handleHeaderClick(keysArray)}>
-        {label}
+      <th onClick={() => handleSort(keysArray)} style={{ cursor: 'pointer' }}>
+        {label} {sortConfig.key === key ? (sortConfig.direction === 'ascending' ? '▲' : '▼') : ''}
       </th>
     );
   };
-  
 
-  const renderTableSearch = (keysArray, type, headerLabel) => {
-    // Ensure keysArray is always an array
-    keysArray = Array.isArray(keysArray) ? keysArray : [keysArray];
-    const keyArrayString = keysArray.join(',');
-  
-    return (
-      <td>
-        {type === 'number' ? (
-          <input
-            type="number"
-            value={columnSearch[keyArrayString] || ""}
-            onChange={(e) => {
-              const updatedSearch = { ...columnSearch };
-              updatedSearch[keyArrayString] = e.target.value; // Directly set the value
-              setColumnSearch(updatedSearch);
-            }}
-            placeholder={`Search ${headerLabel}`} 
-            className="table-search-input"
-          />
-        ) : type === 'boolean' ? (
-          <select
-            value={columnSearch[keyArrayString] || ""}
-            onChange={(e) => {
-              const updatedSearch = { ...columnSearch };
-              updatedSearch[keyArrayString] = e.target.value;
-              setColumnSearch(updatedSearch);
-            }}
-            className="table-search-input"
-          >
-            <option value="">All</option>
-            <option value="true">Activated</option>
-            <option value="false">Archived</option>
-          </select>
-        ) : (
-          <input
-            type="text"
-            value={columnSearch[keyArrayString] || ""}
-            onChange={(e) => {
-              const updatedSearch = { ...columnSearch };
-              updatedSearch[keyArrayString] = e.target.value; // Directly set the value
-              setColumnSearch(updatedSearch);
-            }}
-            placeholder={`Search ${headerLabel}`} 
-            className="table-search-input"
-          />
-        )}
-      </td>
-    );
-  };
-  
-    
-  const handleCloseAddModal = () => {
-    console.log("Closing add modal...");
-    setAddModalVisible(false);
-  };
-
+  // Handle adding a new flight
   const handleAddFlight = async (event) => {
     event.preventDefault(); // Prevent default form submission behavior
-    console.log("Adding flight:", newFlight);
+
+    if (!newFlight.flightNo || !newFlight.airplane || !newFlight.route || !newFlight.day || !newFlight.time) {
+      notyf.error('Please fill in all required fields.');
+      return;
+    }
 
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/flights/`, {
@@ -274,283 +300,313 @@ const filteredFlights = getSortedFlights().filter((flight) =>
       });
 
       const responseData = await response.json();
-      console.log("Flight added:", responseData);
       if (!response.ok) {
         throw new Error(`Failed to add new flight: ${response.status} ${responseData.message}`);
       }
-      
+
       setFlights((prevFlights) => [...prevFlights, responseData]);
       setAddModalVisible(false); // Close the modal after adding the flight
+      notyf.success('Flight added successfully.');
     } catch (error) {
       console.error('Error adding flight:', error);
+      notyf.error('Error adding flight.');
     }
+  };
+
+  const handleCloseAddModal = () => {
+    setAddModalVisible(false);
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    console.log(`Input change - ${name}: ${value}`);
     setNewFlight((prev) => ({
       ...prev,
       [name]: value
     }));
   };
 
-  const mapDayToWeekday = (day) => {
-    const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-    return days[day - 1];
-  };
-
   return (
     <div>
-    <div className="d-flex justify-content-between mb-3">
-    <Button variant="primary" onClick={() => setAddModalVisible(true)}>Add Flight</Button>
-    <Button variant="secondary" onClick={() => setColumnSearch({
-        flightNo: "",
-        airplane: "",
-        route: "",
-        day: "",
-        time: "",
-        isActive: ""
-    })} className="ms-2">Clear Search</Button>
-    <select
-        className='ms-auto'
-        value={rowsPerPage}
-        onChange={(e) => setRowsPerPage(Number(e.target.value))}
-    >
-        <option value={10}>10</option>
-        <option value={20}>20</option>
-        <option value={50}>50</option>
-        <option value={100}>100</option>
-    </select>
-    </div>
+      <div className="d-flex justify-content-between mb-3">
+        <Button variant="primary" onClick={() => setAddModalVisible(true)}>Add Flight</Button>
+        <Button variant="secondary" onClick={() => setColumnSearch({
+          'flightNo': "",
+          'airplane.planeId': "",
+          'route.departure.airportCity': "",
+          'route.departure.airportName': "",
+          'route.destination.airportCity': "",
+          'route.destination.airportName': "",
+          'airplane.totalSeats': "",
+          'day': "",
+          'time': "",
+          'isActive': ""
+        })} className="ms-2">Clear Search</Button>
+        <select
+          className='ms-auto'
+          value={rowsPerPage}
+          onChange={(e) => setRowsPerPage(Number(e.target.value))}
+        >
+          <option value={10}>10</option>
+          <option value={20}>20</option>
+          <option value={50}>50</option>
+          <option value={100}>100</option>
+        </select>
+      </div>
 
-    <table>
-    <thead>
-        <tr>
-          {renderTableHeader("Flight No", ["flightNo"])}
-          {renderTableHeader("Airplane Id", ["airplane.planeId"])}
-          {renderTableHeader("Departure City", ["route.departure.airportCity", "route.departure.airportCode"])}
-          {renderTableHeader("Departure Airport", ["route.departure.airportName"])}
-          {renderTableHeader("Destination City", ["route.destination.airportCity", "route.destination.airportCode"])}
-          {renderTableHeader("Destination Airport", ["route.destination.airportName"])}
-          {renderTableHeader("Total Seats", ["airplane.totalSeats"])}
-          {renderTableHeader("Day", ["day"])}
-          {renderTableHeader("Time", ["time"])}
-          {renderTableHeader("Status", ["isActive"])}
-        </tr>
-        <tr>
-          {renderTableSearch(["flightNo"], "text", "Flight No")}
-          {renderTableSearch(["airplane.planeId"], "text", "Airplane Id")}
-          {renderTableSearch(["route.departure.airportCity", "route.departure.airportCode"], "text", "Departure City")}
-          {renderTableSearch(["route.departure.airportName"], "text", "Departure Airport")}
-          {renderTableSearch(["route.destination.airportCity", "route.destination.airportCode"], "text", "Destination City")}
-          {renderTableSearch(["route.destination.airportName"], "text", "Destination Airport")}
-          {renderTableSearch(["airplane.totalSeats"], "number", "Total Seats")}
-          {renderTableSearch(["day"], "day", "Day")}
-          {renderTableSearch(["time"], "text", "Time")}
-          {renderTableSearch(["isActive"], "boolean", "Status")}
-        </tr>
-      </thead>
-
-
-
+      <table>
+        <thead>
+          <tr>
+            {renderTableHeader("Flight No", ["flightNo"])}
+            {renderTableHeader("Airplane Id", ["airplane", "planeId"])}
+            {renderTableHeader("Departure City", ["route", "departure", "airportCity"])}
+            {renderTableHeader("Departure Airport", ["route", "departure", "airportName"])}
+            {renderTableHeader("Destination City", ["route", "destination", "airportCity"])}
+            {renderTableHeader("Destination Airport", ["route", "destination", "airportName"])}
+            {renderTableHeader("Total Seats", ["airplane", "totalSeats"])}
+            {renderTableHeader("Day", ["day"])}
+            {renderTableHeader("Time", ["time"])}
+            {renderTableHeader("Status", ["isActive"])}
+            <th>Action</th>
+          </tr>
+          {/* Added search inputs below the headers */}
+          <tr>
+            {renderTableSearch('flightNo', 'text')}
+            {renderTableSearch('airplane.planeId', 'text')}
+            {renderTableSearch('route.departure.airportCity', 'text')}
+            {renderTableSearch('route.departure.airportName', 'text')}
+            {renderTableSearch('route.destination.airportCity', 'text')}
+            {renderTableSearch('route.destination.airportName', 'text')}
+            {renderTableSearch('airplane.totalSeats', 'number')}
+            {renderTableSearch('day', 'day')} {/* Changed 'number' to 'day' */}
+            {renderTableSearch('time', 'text')}
+            {renderTableSearch('isActive', 'boolean')}
+            <td></td> {/* Empty cell for 'Action' column */}
+          </tr>
+        </thead>
         <tbody>
-        {paginatedFlights.length > 0 ? (
+          {paginatedFlights.length > 0 ? (
             paginatedFlights.map((flight) => (
-            <tr key={flight._id} onClick={() => handleRowClick(flight)}>
-                <td>{flight.flightNo}</td>
-                <td>{flight.airplane?.planeId}</td>
-                <td>{flight.route?.departure.airportCity} - {flight?.route?.departure?.airportCode}</td>
-                <td>{flight.route?.departure.airportName}</td>
-                <td>{flight.route?.destination.airportCity} - {flight?.route?.destination?.airportCode}</td>
-                <td>{flight.route?.destination.airportName}</td>
-                <td>{flight.airplane?.totalSeats}</td>
-                <td>{mapDayToWeekday(flight.day)}</td>
-                <td>{flight.time}</td>
+              <tr key={flight?._id} onClick={() => handleRowClick(flight)}>
+                <td>{flight?.flightNo || 'N/A'}</td>
+                <td>{flight?.airplane?.planeId || 'N/A'}</td>
+                <td>{flight?.route?.departure?.airportCity || 'N/A'}</td>
+                <td>{flight?.route?.departure?.airportName || 'N/A'}</td>
+                <td>{flight?.route?.destination?.airportCity || 'N/A'}</td>
+                <td>{flight?.route?.destination?.airportName || 'N/A'}</td>
+                <td>{flight?.airplane?.totalSeats || 'N/A'}</td>
+                <td>{mapDayToWeekday(flight?.day) || 'N/A'}</td>
+                <td>{flight?.time || 'N/A'}</td>
                 <td>
-                <Button
-                    variant={flight.isActive ? "success" : "danger"}
+                  <Button
+                    variant={flight?.isActive ? "success" : "danger"}
                     onClick={(e) => {
-                    e.stopPropagation(); // Prevent row click event
-                    toggleIsActive(flight._id, flight.isActive);
+                      e.stopPropagation();
+                      toggleIsActive(flight?._id, flight?.isActive);
                     }}
-                >
-                    {flight.isActive ? "Activated" : "Archived"}
-                </Button>
+                  >
+                    {flight?.isActive ? "Activated" : "Archived"}
+                  </Button>
                 </td>
-            </tr>
+                <td>
+                  <Button onClick={(e) => {
+                    e.stopPropagation();
+                    openGenerateModal(flight);
+                  }}>Commercial Flight</Button>
+                </td>
+              </tr>
             ))
-        ) : (
+          ) : (
             <tr>
-            <td colSpan="10">No flights available</td>
+              <td colSpan="11">No flights available</td>
             </tr>
-        )}
+          )}
         </tbody>
+      </table>
 
-    </table>
+      <div className="pagination-controls">
+        <Button
+          disabled={currentPage === 1}
+          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+        >
+          Previous
+        </Button>
+        <span>Page {currentPage} of {totalPages}</span>
+        <Button
+          disabled={currentPage === totalPages}
+          onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+        >
+          Next
+        </Button>
+      </div>
 
-    <div className="pagination-controls">
-    <Button
-        disabled={currentPage === 1}
-        onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-    >
-        Previous
-    </Button>
-    <span>Page {currentPage} of {totalPages}</span>
-    <Button
-        disabled={currentPage === totalPages}
-        onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-    >
-        Next
-    </Button>
-    </div>
+      {/* MODAL FOR FLIGHT DETAILS */}
+      {selectedFlight && (
+        <Modal show={isModalVisible} onHide={handleCloseModal}>
+          <Modal.Header closeButton>
+            <Modal.Title>Flight Details</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            {/* Add flight details here */}
+            <p><strong>Flight No:</strong> {selectedFlight?.flightNo || 'N/A'}</p>
+            {/* Add more details as needed */}
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleCloseModal}>Close</Button>
+          </Modal.Footer>
+        </Modal>
+      )}
 
-    {/* MODAL FOR DETAILS*/}
-    {selectedFlight && (
-    <Modal show={isModalVisible} onHide={handleCloseModal}>
+      {/* MODAL FOR GENERATING COMMERCIAL FLIGHTS */}
+      <Modal show={isGenerateModalVisible} onHide={handleCloseGenerateModal}>
         <Modal.Header closeButton>
-        <Modal.Title>Flight Details</Modal.Title>
+          <Modal.Title>
+            {flightToGenerate
+              ? `${flightToGenerate.flightNo} - ${flightToGenerate.route.departure.airportCode} (${flightToGenerate.route.destination.airportCode}) - ${mapDayToWeekday(flightToGenerate.day)}`
+              : "Generate Commercial Flights"}
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-        <p><strong>Flight No:</strong> {selectedFlight.flightNo}</p>
-        <p><strong>Airplane Id:</strong> {selectedFlight.airplane.planeId}</p>
-        <p><strong>Airplane Brand:</strong> {selectedFlight.airplane.brand}</p>
-        <p><strong>Airplane Model:</strong> {selectedFlight.airplane.model}</p>
-        <p><strong>Departure City:</strong> {selectedFlight.route.departure.airportCity} - {selectedFlight.route.departure.airportCode}</p>
-        <p><strong>Departure Airport:</strong> {selectedFlight.route.departure.airportName}</p>
-        <p><strong>Destination City:</strong> {selectedFlight.route.destination.airportCity} - {selectedFlight.route.destination.airportCode}</p>
-        <p><strong>Destination Airport:</strong> {selectedFlight.route.destination.airportName}</p>
-        <p><strong>Total Seats:</strong> {selectedFlight.airplane.totalSeats}</p>
-        <p><strong>First Class:</strong> {selectedFlight.airplane.firstClass}</p>
-        <p><strong>Business Class:</strong> {selectedFlight.airplane.businessSeat}</p>
-        <p><strong>Premium Class:</strong> {selectedFlight.airplane.premiumSeat}</p>
-        <p><strong>Economy Class:</strong> {selectedFlight.airplane.economySeat}</p>
-        <p><strong>Every:</strong> {mapDayToWeekday(selectedFlight.day)}</p>
-        <p><strong>Time:</strong> {selectedFlight.time}</p>
-        <p><strong>Flight Duration (minutes):</strong> {selectedFlight.route.durationMins}</p>
-        <p><strong>Status:</strong> {selectedFlight.isActive ? "Activated" : "Archived"}</p>
+          <div>
+            <label>Start Date:</label>
+            <input
+              type="date"
+              value={dateRange.start}
+              onChange={(e) => setDateRange({ ...dateRange, start: e.target.value })}
+            />
+          </div>
+          <div>
+            <label>End Date:</label>
+            <input
+              type="date"
+              value={dateRange.end}
+              onChange={(e) => setDateRange({ ...dateRange, end: e.target.value })}
+            />
+          </div>
+          <div>
+            <label>Select Pricing:</label>
+            <select
+              value={selectedPrice}
+              onChange={(e) => setSelectedPrice(e.target.value)}
+            >
+              <option value="">Select Pricing</option>
+              {pricings.map((price) => (
+                <option key={price._id} value={price._id}>
+                  {`${price.priceName}`}
+                </option>
+              ))}
+            </select>
+          </div>
         </Modal.Body>
         <Modal.Footer>
-        <Button variant="secondary" onClick={handleCloseModal}>
-            Close
-        </Button>
+          <Button variant="secondary" onClick={handleCloseGenerateModal}>Close</Button>
+          <Button variant="primary" onClick={handleGenerateCommercialFlights}>Generate</Button>
         </Modal.Footer>
-    </Modal>
-    )}
+      </Modal>
 
-    {/* Modal for Adding Flights */}
-    <Modal show={isAddModalVisible} onHide={handleCloseAddModal}>
-    <Modal.Header closeButton>
-        <Modal.Title>Add New Flight</Modal.Title>
-    </Modal.Header>
-    <Modal.Body>
-        <form onSubmit={handleAddFlight}>
-        <div className="mb-3">
-            <label htmlFor="flightNo" className="form-label">Flight No</label>
-            <input
-            type="text"
-            className="form-control"
-            id="flightNo"
-            name="flightNo"
-            value={newFlight.flightNo}
-            onChange={handleInputChange}
-            required
-            placeholder="Enter flight number"
-            />
-        </div>
+      {/* MODAL FOR ADDING A NEW FLIGHT */}
+      <Modal show={isAddModalVisible} onHide={handleCloseAddModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Add New Flight</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <form onSubmit={handleAddFlight}>
+            <div className="mb-3">
+              <label htmlFor="flightNo" className="form-label">Flight No</label>
+              <input
+                type="text"
+                className="form-control"
+                id="flightNo"
+                name="flightNo"
+                value={newFlight.flightNo}
+                onChange={handleInputChange}
+                required
+                placeholder="Enter flight number"
+              />
+            </div>
 
-        <div className="mb-3">
-            <label htmlFor="airplane" className="form-label">Airplane</label>
-            <select
-            className="form-select"
-            id="airplane"
-            name="airplane"
-            value={newFlight.airplane}
-            onChange={handleInputChange}
-            required
-            >
-            <option value="">Select Airplane</option>
-            {airplanes
-                .sort((a, b) => a.planeId.localeCompare(b.planeId)) // Sort by planeId
-                .map((airplane) => (
-                    <option key={airplane._id} value={airplane._id}>
-                    {airplane.planeId}
-                    </option>
+            <div className="mb-3">
+              <label htmlFor="airplane" className="form-label">Airplane</label>
+              <select
+                className="form-select"
+                id="airplane"
+                name="airplane"
+                value={newFlight.airplane}
+                onChange={handleInputChange}
+                required
+              >
+                <option value="">Select Airplane</option>
+                {airplanes.map((plane) => (
+                  <option key={plane._id} value={plane._id}>
+                    {plane.planeId}
+                  </option>
                 ))}
-            </select>
-        </div>
+              </select>
+            </div>
 
-        <div className="mb-3">
-            <label htmlFor="route" className="form-label">Route</label>
-            <select
-            className="form-select"
-            id="route"
-            name="route"
-            value={newFlight.route}
-            onChange={handleInputChange} 
-            required
-            >
-            <option value="">Select Route</option>
-            {routes
-                .sort((a, b) => a.departure.airportCity.localeCompare(b.departure.airportCity))
-                .map((route) => (
-                <option key={route._id} value={route._id}>
-                {route.departure.airportCity}-{route.departure.airportCode} to {route.destination.airportCity}-{route.destination.airportCode}
-                </option>
-            ))}
-            </select>
-        </div>
+            <div className="mb-3">
+              <label htmlFor="route" className="form-label">Route</label>
+              <select
+                className="form-select"
+                id="route"
+                name="route"
+                value={newFlight.route}
+                onChange={handleInputChange}
+                required
+              >
+                <option value="">Select Route</option>
+                {routes.map((route) => (
+                  <option key={route._id} value={route._id}>
+                    {`${route.departure.airportCity} (${route.departure.airportCode}) - ${route.destination.airportCity} (${route.destination.airportCode})`}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-        <div className="mb-3">
-            <label htmlFor="day" className="form-label">Day</label>
-            <select
-            className="form-select"
-            id="day"
-            name="day"
-            value={newFlight.day}
-            onChange={handleInputChange}
-            required
-            >
-            <option value="">Select Day</option>
-            <option value={1}>Sunday</option>
-            <option value={2}>Monday</option>
-            <option value={3}>Tuesday</option>
-            <option value={4}>Wednesday</option>
-            <option value={5}>Thursday</option>
-            <option value={6}>Friday</option>
-            <option value={7}>Saturday</option>
-            </select>
-        </div>
+            <div className="mb-3">
+              <label htmlFor="day" className="form-label">Day</label>
+              <select
+                className="form-select"
+                id="day"
+                name="day"
+                value={newFlight.day}
+                onChange={handleInputChange}
+                required
+              >
+                <option value="">Select Day</option>
+                <option value="1">Sunday</option>
+                <option value="2">Monday</option>
+                <option value="3">Tuesday</option>
+                <option value="4">Wednesday</option>
+                <option value="5">Thursday</option>
+                <option value="6">Friday</option>
+                <option value="7">Saturday</option>
+              </select>
+            </div>
 
-        <div className="mb-3">
-            <label htmlFor="time" className="form-label">Time (HH:mm)</label>
-            <input
-            type="text"
-            className="form-control"
-            id="time"
-            name="time"
-            value={newFlight.time}
-            onChange={handleInputChange}
-            required
-            placeholder="Enter time (e.g., 14:30)"
-            />
-        </div>
+            <div className="mb-3">
+              <label htmlFor="time" className="form-label">Time</label>
+              <input
+                type="time"
+                className="form-control"
+                id="time"
+                name="time"
+                value={newFlight.time}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
 
-        <Modal.Footer>
-            <Button variant="secondary" onClick={handleCloseAddModal}>
-            Close
-            </Button>
-            <Button type="submit" variant="primary">
-            Add Flight
-            </Button>
-        </Modal.Footer>
-        </form>
-    </Modal.Body>
-    </Modal>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={handleCloseAddModal}>
+                Close
+              </Button>
+              <Button type="submit" variant="primary">
+                Add Flight
+              </Button>
+            </Modal.Footer>
+          </form>
+        </Modal.Body>
+      </Modal>
     </div>
   );
 }
-
-
-
-

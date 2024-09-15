@@ -1,6 +1,7 @@
 import React, { useState, useContext } from "react";
 import Destinations from "../components/AdminDestinationsDash";
 import Deals from "../components/AdminDealsDash";
+import Promo from "../components/PromoDash";
 import { Button, Row, Col } from 'react-bootstrap';
 import UserContext from '../context/UserContext';
 import '../styles/admindash.css'; // Ensure the CSS file is correctly linked
@@ -16,6 +17,9 @@ export default function Admin() {
         return <Destinations />;
       case "Deals":
         return <Deals />;
+      case "Promo":
+        return <Promo />;
+      
       default:
         return null;
     }
@@ -49,6 +53,13 @@ export default function Admin() {
               className="ms-2"
             >
               Deals
+            </Button>
+            <Button 
+              variant={activeComponent === "Promo" ? "primary" : "outline-primary"} 
+              onClick={() => setActiveComponent("Promo")}
+              className="ms-2"
+            >
+              Promo
             </Button>
           </Col>
         </Row>

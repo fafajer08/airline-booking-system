@@ -129,7 +129,7 @@ res.status(201).json(populatedFlight);
           { path: 'destination', model: 'Airport' } // Populate destination airport details
         ]
       });// Populate airplane and route details
-      console.log('Fetched flights:', flights); // Log the fetched flights
+      // console.log('Fetched flights:', flights); // Log the fetched flights
   
       if (!flights || flights.length === 0) {
         console.log('No flights found'); // Log when no flights are found

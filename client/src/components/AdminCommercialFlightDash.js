@@ -10,7 +10,9 @@ export default function CommercialFlights() {
   const [commercialFlights, setCommercialFlights] = useState([]);
   const [flights, setFlights] = useState([]);
   const [selectedFlight, setSelectedFlight] = useState(null);
+  const [selectedFlightDetails, setSelectedFlightDetails] = useState(null); // State for flight details modal
   const [isAddModalVisible, setAddModalVisible] = useState(false);
+  const [isDetailsModalVisible, setDetailsModalVisible] = useState(false); // State for details modal
   const [dateRange, setDateRange] = useState({ start: "", end: "" });
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
@@ -43,7 +45,18 @@ export default function CommercialFlights() {
 
   // Handle modal open/close
   const handleCloseAddModal = () => setAddModalVisible(false);
-  const handleOpenAddModal = () => setAddModalVisible(true);
+  const handleOpenAddModal = () => {
+    setSelectedFlight(null); // Reset selected flight
+    setDateRange({ start: "", end: "" }); // Reset date range
+    setAddModalVisible(true);
+  };
+
+  // Handle flight details modal
+  const handleCloseDetailsModal = () => setDetailsModalVisible(false);
+  const handleOpenDetailsModal = (flight) => {
+    setSelectedFlightDetails(flight); // Set the selected flight details
+    setDetailsModalVisible(true); // Open the details modal
+  };
 
   // Handle input change for date range
   const handleDateRangeChange = (e) => {
@@ -81,8 +94,16 @@ export default function CommercialFlights() {
     }
   };
 
-  const paginatedCommercialFlights = commercialFlights.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage);
-  const totalPages = Math.ceil(commercialFlights.length / rowsPerPage);
+  // Safely check if commercialFlights is an array, and set default value if not
+  const flightsArray = Array.isArray(commercialFlights) ? commercialFlights : [];
+
+  console.log('Commercial Flights:', flightsArray); // Debugging: Log the flights array
+
+  const paginatedCommercialFlights = flightsArray.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage);
+  const totalPages = Math.ceil(flightsArray.length / rowsPerPage);
+
+  console.log('Paginated Commercial Flights:', paginatedCommercialFlights); // Debugging: Log the paginated result
+  console.log('Total Pages:', totalPages); // Debugging: Log the total number of pages
 
   return (
     <div>
@@ -113,7 +134,7 @@ export default function CommercialFlights() {
         <tbody>
           {paginatedCommercialFlights.length > 0 ? (
             paginatedCommercialFlights.map((commercialFlight) => (
-              <tr key={commercialFlight._id}>
+              <tr key={commercialFlight._id} onClick={() => handleOpenDetailsModal(commercialFlight)}> {/* Open details modal */}
                 <td>{commercialFlight.flightNo}</td>
                 <td>{commercialFlight.departureCity} - {commercialFlight.departureCode}</td>
                 <td>{commercialFlight.destinationCity} - {commercialFlight.destinationCode}</td>
@@ -163,11 +184,15 @@ export default function CommercialFlights() {
                 required
               >
                 <option value="">Select Flight</option>
-                {flights.map((flight) => (
-                  <option key={flight._id} value={flight._id}>
-                    {flight.flightNo} - {flight.route.departure.airportCity} to {flight.route.destination.airportCity}
-                  </option>
-                ))}
+                {Array.isArray(flights) && flights.map((flight) => {
+                  const daysOfWeek = ["", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+                  
+                  return (
+                    <option key={flight._id} value={flight._id}>
+                      {flight.flightNo} - {flight.route.departure.airportCity} to {flight.route.destination.airportCity} ({daysOfWeek[flight.day]})
+                    </option>
+                  );
+                })}
               </select>
             </div>
 
@@ -207,6 +232,29 @@ export default function CommercialFlights() {
             </Modal.Footer>
           </form>
         </Modal.Body>
+      </Modal>
+
+      {/* Modal for Flight Details */}
+      <Modal show={isDetailsModalVisible} onHide={handleCloseDetailsModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Flight Details</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {selectedFlightDetails && (
+            <>
+              <p><strong>Flight No:</strong> {selectedFlightDetails.flightNo}</p>
+              <p><strong>Departure:</strong> {selectedFlightDetails.departureCity} - {selectedFlightDetails.departureCode}</p>
+              <p><strong>Destination:</strong> {selectedFlightDetails.destinationCity} - {selectedFlightDetails.destinationCode}</p>
+              <p><strong>Date:</strong> {new Date(selectedFlightDetails.date).toLocaleDateString()}</p>
+              <p><strong>Status:</strong> {selectedFlightDetails.isActive ? "Active" : "Inactive"}</p>
+            </>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseDetailsModal}>
+            Close
+          </Button>
+        </Modal.Footer>
       </Modal>
     </div>
   );

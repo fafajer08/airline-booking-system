@@ -1,13 +1,6 @@
-const scheduleSchema = new mongoose.Schema({
-  dayOfWeek: { type: String, enum: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'], required: true },
-  departureTime: { type: String, required: true }, // Use a string to store "HH:mm" time format
-  arrivalTime: { type: String, required: true },
-  // Optionally store date-specific overrides
-  departureDate: { type: Date },  // If you need date-specific overrides
-});const mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
 const passengerSchema = new mongoose.Schema({
-
   firstName: {
     type: String,
     required: true,
@@ -46,6 +39,9 @@ const passengerSchema = new mongoose.Schema({
     trim: true
   }
 }, { timestamps: true });
+
+// Create a compound index on firstName, lastName, and birthday
+passengerSchema.index({ firstName: 1, lastName: 1, birthday: 1 });
 
 const Passenger = mongoose.model('Passenger', passengerSchema);
 

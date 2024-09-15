@@ -262,10 +262,10 @@ export default function AdminRouteDash() {
             {renderTableHeader("STATUS", "isActive")}
           </tr>
           <tr>
-            {renderTableSearch("departure city", "text")}
-            {renderTableSearch("departure", "text")}
-            {renderTableSearch("destination city", "text")}
-            {renderTableSearch("destination", "text")}
+            {renderTableSearch("departure.airportCity", "text")}
+            {renderTableSearch("departure.airportName", "text")}
+            {renderTableSearch("destination.airportCity", "text")}
+            {renderTableSearch("destination.airportName", "text")}
             {renderTableSearch("distanceKM", "number")}
             {renderTableSearch("durationMins", "number")}
             {renderTableSearch("isActive", "boolean")}
