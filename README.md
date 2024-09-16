@@ -1,4 +1,4 @@
-# Technical Specifications Document for Qatar Airways Website
+# Technical Specifications Document for Fly Airlines Website
 
 ## 1. Introduction
 
