@@ -15,7 +15,7 @@ const Cards = ({ date, price, isSelected, onClick }) => {
 
     const cardClass = isSelected ? 'card selected' : 'card';
 
-    console.log(`Rendering card for ${formattedDate}: isSelected =`, isSelected);
+    // console.log(`Rendering card for ${formattedDate}: isSelected =`, isSelected);
 
     return (
         <div className={cardClass} onClick={onClick}>
@@ -75,7 +75,7 @@ const Carousel = () => {
                     const cardTimestamp = card.date.getTime();
                     const isSelected = selectedCard === cardTimestamp;
 
-                    console.log(`Comparing selectedCard (${selectedCard}) with card (${cardTimestamp}):`, isSelected);
+                    {/* console.log(`Comparing selectedCard (${selectedCard}) with card (${cardTimestamp}):`, isSelected); */}
 
                     return (
                         <Cards
