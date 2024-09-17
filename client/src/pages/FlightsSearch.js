@@ -85,11 +85,10 @@ export default function SearchFlight() {
       console.log("No promo code provided."); // Log when input is empty
     }
   
-    
     const formattedDepartureDate = departureDate ? new Date(departureDate).toISOString().split('T')[0] : null;
-
+  
     // Gather data to send in the API request
-    const data = {
+    const requestData = {
       departureCode: departurePort.code,
       destinationCode: destinationPort.code,
       departureDate: formattedDepartureDate,
@@ -97,11 +96,37 @@ export default function SearchFlight() {
       children: childCount,
       infants: infantsCount,
       promoCode: input,
-      promo: promoData, // Use the local variable here
+      promo: promoData,
     };
   
-    console.log("Data:", data); // Debugging data to be sent
-    navigate('/flights/options', { state: { data: data } });
+    console.log("Request Data:", requestData); // Debugging data to be sent
+  
+    try {
+      // Call the API to filter commercial flights
+      const flightResponse = await fetch(`${process.env.REACT_APP_API_URL}/commercialflights/filterbylocation`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ departureCode: requestData.departureCode, destinationCode: requestData.destinationCode, departureDate: formattedDepartureDate}),
+      });
+  
+      // Log the status of the response
+      console.log("Flight Filter API Response Status:", flightResponse.status);
+  
+      if (!flightResponse.ok) {
+        throw new Error(`Flight filter error: ${flightResponse.statusText}`);
+      }
+  
+      const filteredFlights = await flightResponse.json();
+      console.log("Filtered Flights (API Response):", filteredFlights); // Debugging filtered flight data
+  
+      // Navigate to the flights options page with the filtered flight data
+      navigate('/flights/options', { state: { data: { ...requestData, flights: filteredFlights } } });
+    } catch (error) {
+      console.error("Error fetching filtered flights:", error);
+      // Optionally, handle error cases like showing a message to the user
+    }
   };
   
 

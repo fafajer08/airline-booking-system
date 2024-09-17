@@ -58,7 +58,7 @@
 
 .card p {
     margin: 8px 0; /* Ensure some space between date and price */
-    font-size: 14px; /* Adjust font size for better readability */
+    font-size: 12px; /* Adjust font size for better readability */
 }
 
 .scroll-button {
