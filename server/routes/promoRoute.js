@@ -3,6 +3,7 @@ const router = express.Router();
 const promoController = require('../controllers/promoController');
 
 // Routes for Promo operations
+router.post('/searchpromocode', promoController.searchPromoByCode); // Get promo details by ID
 router.post('/', promoController.addPromo); // Add a new promo
 router.put('/:id', promoController.editPromo); // Edit an existing promo
 router.patch('/:id/activate', promoController.activatePromo); // Activate a promo

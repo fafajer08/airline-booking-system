@@ -55,7 +55,7 @@ const Carousel = ({ flights, departureDate, onDateSelect }) => {
     // Create cardsData and log each flight being processed
     const cardsData = generateDates(departureDate).map(date => {
         const formattedDate = date.toISOString().split('T')[0]; // Format date to YYYY-MM-DD for comparison
-        console.log(`Processing date: ${formattedDate}`);
+        // console.log(`Processing date: ${formattedDate}`);
     
         // Find if there's a flight on this date
         const flightForDate = flights.find(flight => {
@@ -65,11 +65,11 @@ const Carousel = ({ flights, departureDate, onDateSelect }) => {
             }
     
             // Directly compare the flight's date with the formatted date
-            console.log(`Checking flightDate: ${flight.date} against ${formattedDate}`);
+            // console.log(`Checking flightDate: ${flight.date} against ${formattedDate}`);
             return flight.date === formattedDate;
         });
     
-        console.log(`Flight found for ${formattedDate}:`, flightForDate);
+        // console.log(`Flight found for ${formattedDate}:`, flightForDate);
     
         return {
             date,
