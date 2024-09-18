@@ -7,10 +7,8 @@ const promoController = {
     try {
       const { promoName, promoCode, discount, absolutePricing, promoStart, promoEnd, numberOfSlots, isActive } = req.body;
 
-      // Debugging: Log the received request body
-      console.log('Received data for addPromo:', req.body);
+      console.log('Received data for addPromo:', req.body); // Debugging
 
-      // Validate required fields
       if (!promoName || !promoCode || !promoStart || !promoEnd) {
         console.log('Missing required fields:', { promoName, promoCode, promoStart, promoEnd }); // Debugging
         return res.status(400).json({ message: 'Missing required fields' });
@@ -28,11 +26,34 @@ const promoController = {
       });
 
       const savedPromo = await newPromo.save();
-      // console.log('New promo saved:', savedPromo); // Debugging
       res.status(201).json(savedPromo);
     } catch (error) {
       console.error('Error adding promo:', error); // Debugging
       res.status(500).json({ message: 'Error adding promo', error });
+    }
+  },
+
+  // Search promo by promoCode
+  async searchPromoByCode(req, res) {
+    try {
+      const { promoCode } = req.body;
+      console.log('Searching for promo with code:', promoCode); // Debugging
+
+      if (!promoCode) {
+        return res.status(400).json({ message: 'promoCode is required' });
+      }
+
+      const promo = await Promo.findOne({ promoCode });
+      if (!promo) {
+        console.log('Promo not found with code:', promoCode); // Debugging
+        return res.status(404).json({ message: 'Promo not found' });
+      }
+
+      console.log('Promo found:', promo); // Debugging
+      res.status(200).json(promo);
+    } catch (error) {
+      console.error('Error searching promo by code:', error); // Debugging
+      res.status(500).json({ message: 'Error searching promo by code', error });
     }
   },
 
@@ -42,7 +63,6 @@ const promoController = {
       const { id } = req.params;
       const updates = req.body;
 
-      // Debugging: Log the ID and updates
       console.log('Editing promo with ID:', id, 'Updates:', updates);
 
       const updatedPromo = await Promo.findByIdAndUpdate(id, updates, { new: true });

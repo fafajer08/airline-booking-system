@@ -2,12 +2,12 @@ import React, { useState, useRef, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import '../styles/guestdetailsform.css';
-import nationalities from '../data/nationalities';  // Import the nationalities list
+import nationalities from '../data/nationalities'; // Import the nationalities list
 
 function GuestDetailsForm({ setFinalGuests }) {
   const initialGuests = [
-    { title: '', firstName: '', lastName: '', day: '', month: '', year: '', nationality: '', mobileNumber: '', email: '' },
-    { title: '', firstName: '', lastName: '', day: '', month: '', year: '', nationality: '', mobileNumber: '', email: '' },
+    { title: '', firstName: '', lastName: '', day: '', month: '', year: '', nationality: '', passportNo: '', phoneNo: '', email: '' },
+    { title: '', firstName: '', lastName: '', day: '', month: '', year: '', nationality: '', passportNo: '', phoneNo: '', email: '' },
     // Add more guests as needed
   ];
 
@@ -28,7 +28,11 @@ function GuestDetailsForm({ setFinalGuests }) {
       index === guestIndex ? { ...guest, [name]: value } : guest
     );
 
-    if (guestIndex === guests.length - 1 && value !== "") {
+    // Check if all required fields (except passportNo) are filled before adding a new guest tab
+    const currentGuest = updatedGuests[guestIndex];
+    const allFieldsFilled = currentGuest.title && currentGuest.firstName && currentGuest.lastName && currentGuest.day && currentGuest.month && currentGuest.year && currentGuest.nationality && currentGuest.phoneNo && currentGuest.email;
+
+    if (guestIndex === guests.length - 1 && allFieldsFilled && value !== "") {
       updatedGuests.push({
         title: '',
         firstName: '',
@@ -38,7 +42,8 @@ function GuestDetailsForm({ setFinalGuests }) {
         year: '',
         age: '',
         nationality: '',
-        mobileNumber: '',
+        passportNo: '',
+        phoneNo: '',
         email: ''
       });
     }
@@ -177,14 +182,13 @@ function GuestForm({ guestIndex, guest, onInputChange, onDateChange }) {
           <div>
             <label>Age</label>
             <input
-                type="text"
-                name="age"
-                value={guest.age || ''}
-                placeholder="Age"
-                readOnly
+              type="text"
+              name="age"
+              value={guest.age || ''}
+              placeholder="Age"
+              readOnly
             />
           </div>
-
         </div>
         <DatePicker
           ref={datePickerRef}
@@ -195,11 +199,10 @@ function GuestForm({ guestIndex, guest, onInputChange, onDateChange }) {
           dropdownMode="select"
           onClickOutside={() => setIsDatePickerOpen(false)}
           open={isDatePickerOpen}
-          maxDate={new Date()}  
+          maxDate={new Date()}
           onSelect={() => setIsDatePickerOpen(false)} // Close date picker after selection
           className="hidden-datepicker"
         />
- 
       </div>
 
       <div className="form-group nationality-group">
@@ -214,34 +217,45 @@ function GuestForm({ guestIndex, guest, onInputChange, onDateChange }) {
         </select>
       </div>
 
+      <div className="form-group passport-group">
+        <label>Passport Number</label>
+        <input
+          type="text"
+          name="passportNo"
+          value={guest.passportNo || null}
+          placeholder="Passport Number"
+          onChange={onInputChange}
+        />
+      </div>
+
       <div className="form-group contact-group">
         <div>
-            <label>Contact Information</label>
-            <div className='contact-info'>
-                <div>
-                    <label>Mobile Number</label>
-                    <input
-                    type="text"
-                    name="mobileNumber"
-                    value={guest.mobileNumber || ''}
-                    placeholder="Mobile Number"
-                    onChange={onInputChange}
-                    />
-                </div>
-                <div>
-                    <label>Email</label>
-                    <input
-                    type="text"
-                    name="email"
-                    value={guest.email || ''}
-                    placeholder="Email"
-                    onChange={onInputChange}
-                    />
-                </div> 
+          <label>Contact Information</label>
+          <div className='contact-info'>
+            <div>
+              <label>Mobile Number</label>
+              <input
+                type="text"
+                name="phoneNo"
+                value={guest.phoneNo || ''}
+                placeholder="Mobile Number"
+                onChange={onInputChange}
+              />
             </div>
+            <div>
+              <label>Email</label>
+              <input
+                type="text"
+                name="email"
+                value={guest.email || ''}
+                placeholder="Email"
+                onChange={onInputChange}
+              />
+            </div>
+          </div>
         </div>
       </div>
-    </div> 
+    </div>
   );
 }
 

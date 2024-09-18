@@ -1,53 +1,49 @@
 const mongoose = require('mongoose');
 
 const bookingSchema = new mongoose.Schema({
-  bookingId: {
-    type: String,
-    required: true,
-    unique: true, // Ensures booking numbers are unique
-  },
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User', // Reference to the User schema
-    required: true
+    required: true,
   },
-  passengerId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Passenger', // Reference to the Passenger schema
-    required: true
-  },
+  passengerIds: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Passenger' // Reference to the Passenger schema
+    },
+  ],
   paymentId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Payment', // Reference to the Payment schema
-    required: true
+    default: null,
   },
   commercialFlightId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'CommercialFlight', // Reference to the 
-    required: true
+    ref: 'CommercialFlight', // Reference to the CommercialFlight schema
+    required: true,
   },
   promoId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Promo', // Reference to the 
+    ref: 'Promo', // Reference to the Promo schema
+    default: null,
   },
   seatClass: {
     type: String,
-    required: true
+    required: true,
   },
-
   bookingStatus: {
     type: String,
     enum: ['pending', 'confirmed', 'cancelled'], // Valid booking statuses
-    default: 'pending'
+    default: 'pending',
   },
   bookingDate: {
     type: Date,
-    default: Date.now // Automatically set to the current date and time
+    default: Date.now, // Automatically set to the current date and time
   },
   isCancelled: {
     type: Boolean,
-    default: false
-  }
+    default: false,
+  },
 }, { timestamps: true });
 
 const Booking = mongoose.model('Booking', bookingSchema);

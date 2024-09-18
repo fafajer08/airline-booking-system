@@ -74,7 +74,10 @@ function LoginWindow({ isVisible, onClose, handleSignUpClick, initialEmail }) { 
             email: user.email,
             mobileNo: user.mobileNo,
           });
-
+  
+          // Store the token in localStorage
+          localStorage.setItem('token', token);
+  
           navigate(user.isAdmin ? '/admin/flights' : '/users');
           setLoading(false);
           onClose(); // Optionally close the login window after navigating

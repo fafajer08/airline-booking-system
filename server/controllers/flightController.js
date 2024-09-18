@@ -222,7 +222,7 @@ const FlightController = {
       // Sort unique airports by city
       uniqueAirports.sort((a, b) => a.city.localeCompare(b.city));
   
-      console.log('Sorted Airports:', uniqueAirports); // Debugging sorted airports
+      // console.log('Sorted Airports:', uniqueAirports); // Debugging sorted airports
   
       res.status(200).json(uniqueAirports);
     } catch (error) {

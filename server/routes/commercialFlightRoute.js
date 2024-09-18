@@ -3,9 +3,9 @@ const router = express.Router();
 const commercialFlightController = require('../controllers/commercialFlightController');
 
 // Route to add a new commercial flight
-router.post('/', commercialFlightController.addCommercialFlight);
-
+router.post('/filterbylocation', commercialFlightController.filterByDepartureAndDestinationAirport);
 router.post('/multiple', commercialFlightController.addMultipleCommercialFlights);
+router.post('/', commercialFlightController.addCommercialFlight);
 
 // Route to edit an existing commercial flight
 router.put('/:id', commercialFlightController.editCommercialFlight);

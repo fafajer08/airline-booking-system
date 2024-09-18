@@ -1,18 +1,18 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom'; // Use Link and useNavigate for internal navigation
+import { useNavigate } from 'react-router-dom'; // Use useNavigate for internal navigation
 import searchIcon from '../assets/searchicon.png';
 import '../styles/buttons.css';
 
 // BaseButton component for common button styles
-function BaseButton({ className, onClick, children }) {
+function BaseButton({ className, onClick, type = "button", children }) {
   return (
-    <button type="button" className={className} onClick={onClick}>
+    <button type={type} className={className} onClick={onClick}>
       {children}
     </button>
   );
 }
 
-function SearchFlightButton({ link }) {
+function SearchFlightButton({ link, type = "button" }) {
   const navigate = useNavigate(); // Use useNavigate for navigation
   const handleNavigation = () => {
     if (link) {
@@ -21,7 +21,7 @@ function SearchFlightButton({ link }) {
   };
 
   return (
-    <BaseButton className="search-flight-button-link" onClick={handleNavigation}>
+    <BaseButton className="search-flight-button-link" onClick={handleNavigation} type={type}>
       <div className="search-flight-button-container">
         <span className="search-flight-button-text">Search Flights</span>
         <img className="search-flight-button-icon" src={searchIcon} alt="flight search" />
@@ -30,16 +30,9 @@ function SearchFlightButton({ link }) {
   );
 }
 
-function ContinueButton({ link }) {
-  const navigate = useNavigate(); // Use useNavigate for navigation
-  const handleNavigation = () => {
-    if (link) {
-      navigate(link);
-    }
-  };
-
+function ContinueButton({ onClick, type = "button" }) {
   return (
-    <BaseButton className="continue-button-link" onClick={handleNavigation}>
+    <BaseButton className="continue-button-link" onClick={onClick} type={type}>
       <div className="continue-button-container">
         <span className="continue-button-text">CONTINUE</span>
       </div>
@@ -47,7 +40,8 @@ function ContinueButton({ link }) {
   );
 }
 
-function BackButton({ link }) {
+
+function BackButton({ link, type = "button" }) {
   const navigate = useNavigate(); // Use useNavigate for navigation
   const handleNavigation = () => {
     if (link) {
@@ -56,7 +50,7 @@ function BackButton({ link }) {
   };
 
   return (
-    <BaseButton className="back-button-link" onClick={handleNavigation}>
+    <BaseButton className="back-button-link" onClick={handleNavigation} type={type}>
       <div className="back-button-container">
         <span className="back-button-text">BACK</span>
       </div>
@@ -64,20 +58,21 @@ function BackButton({ link }) {
   );
 }
 
-function SelectButton({ isSelected, onClick }) {
+function SelectButton({ isSelected, onClick, type = "button" }) {
   return (
     <BaseButton 
       className={`select-button ${isSelected ? 'selected' : ''}`} 
       onClick={onClick}
+      type={type}
     >
       <span className="select-button-text">{isSelected ? 'SELECTED' : 'SELECT'}</span>
     </BaseButton>
   );
 }
 
-function SubmitButton() {
+function SubmitButton({ type = "submit" }) {
   return (
-    <BaseButton className="submit-button-link">
+    <BaseButton className="submit-button-link" type={type}>
       <div className="submit-button-container">
         <span className="submit-button-text">Submit</span>
       </div>

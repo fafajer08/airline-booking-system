@@ -1,15 +1,97 @@
 import React, { useState } from 'react';
 import GuestDetailsForm from '../components/GuestDetailsForm';
-import NavBar from "../components/NavBar";
 import { BackButton, ContinueButton } from '../components/Buttons';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 function GuestDetailsPage() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { data } = location.state || {}; 
   const [finalGuests, setFinalGuests] = useState([]);
+  const [passengerIds, setPassengerIds] = useState([]);
+
+  console.log(`data: ${JSON.stringify(data)}`);
 
   const handleSubmit = () => {
-    console.log("Final Guests: ", finalGuests);
-    // Proceed with submission or next steps
-  };
+    // Destructure userId and selectedFlightId from data
+    const { userId, selectedFlightId, promoId } = data;
+
+    // Exclude the last guest from the list and format their birthday
+    const guestsToSubmit = finalGuests.slice(0, -1).map((guest) => {
+        const birthday = guest.year && guest.month && guest.day
+            ? `${guest.year}-${String(guest.month).padStart(2, '0')}-${String(guest.day).padStart(2, '0')}`
+            : '';
+
+        return {
+            ...guest,
+            birthday,
+        };
+    });
+
+    console.log('Guests to Submit: ', guestsToSubmit);
+
+    if (guestsToSubmit.length === 0) {
+        console.log('No guests to submit');
+        return;
+    }
+
+    // Submit passengers first
+    fetch(`${process.env.REACT_APP_API_URL}/passengers/addmultiple`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        },
+        body: JSON.stringify({ passengers: guestsToSubmit }),
+    })
+    .then((response) => {
+        if (!response.ok) {
+            throw new Error('Failed to add guests');
+        }
+        return response.json();
+    })
+    .then((data) => {
+        console.log('Guests added successfully:', data);
+        const passengerIds = data.passengerIds; // Use the passenger IDs from the response
+
+        // Prepare booking data after successfully getting passenger IDs
+        const bookingData = {
+            userId: userId, // Use userId from destructured data
+            passengerIds: passengerIds, // Use the fetched passenger IDs
+            commercialFlightId: selectedFlightId, // Use selectedFlightId from destructured data
+            promoId: promoId || null, // Use promoId from destructured data
+            seatClass: 'economy',
+        };
+
+        console.log('Booking data to submit:', bookingData);
+
+        // Make the booking
+        return fetch(`${process.env.REACT_APP_API_URL}/bookings/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            },
+            body: JSON.stringify(bookingData), // Pass the correct booking data object
+        });
+    })
+    .then((response) => {
+        if (!response.ok) {
+            throw new Error('Failed to add booking data');
+        }
+        return response.json();
+    })
+    .then((data) => {
+        console.log('Successfully logged booking:', data);
+        // Navigate to bookings page
+        navigate('/bookings');
+    })
+    .catch((error) => {
+        console.error('Error booking:', error);
+    });
+};
+
+
 
   return (
     <div>
@@ -20,7 +102,7 @@ function GuestDetailsPage() {
 
         <div>
           <BackButton link="/flights/options" />
-          <ContinueButton link="/bookings" onClick={handleSubmit} />
+          <ContinueButton onClick={handleSubmit} />
         </div>
 
         <div>

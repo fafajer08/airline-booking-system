@@ -3,12 +3,12 @@ const mongoose = require('mongoose');
 const promoSchema = new mongoose.Schema({
   promoName: {
     type: String,
-    unique: true,
     required: true,
-    trim: true,
+    trim: true
   },
   promoCode: {
     type: String,
+    unique: true,
     required: true,
     trim: true
   },

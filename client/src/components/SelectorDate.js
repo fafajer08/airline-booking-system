@@ -17,7 +17,8 @@ function DateSelector({ label, onDateChange }) {
 
     const handleDateChange = (selectedDate) => {
         setStartDate(selectedDate);
-        onDateChange(selectedDate); // Pass the selected date to the parent component
+        const formattedDate = selectedDate.toISOString().split('T')[0];
+        onDateChange(formattedDate || selectedDate); // Pass the selected date to the parent component
     };
 
     const day = startDate.toLocaleString('en-US', { weekday: 'short' });

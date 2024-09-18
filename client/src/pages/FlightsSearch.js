@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import SearchFlightButton from "../components/Buttons.js";
 import DateSelector from "../components/SelectorDate.js";
 import PortSelector from "../components/SelectorPort.js";
@@ -10,33 +11,41 @@ import parseData from '../components/FlightsDataParser.js'; // Updated import
 import flightsData from '../data/flightsData.js';
 
 export default function SearchFlight() {
+  const navigate = useNavigate(); // Initialize useNavigate
   const [portOptions, setPortOptions] = useState([]);
   const [flightType, setFlightType] = useState('oneway'); // Default flight type
   const [departurePort, setDeparturePort] = useState({});
   const [destinationPort, setDestinationPort] = useState({});
-  const [departureDate, setDepartureDate] = useState(null);
   const [returnDate, setReturnDate] = useState(null);
   const [adultsCount, setAdultsCount] = useState(0);
   const [childCount, setChildCount] = useState(0);
   const [infantsCount, setInfantsCount] = useState(0);
-  const [input, setInput] = useState(null);
+  const [input, setInput] = useState(null); // Promo code
+  const [promoDetails, setPromoDetails] = useState(null); // State to store promo code details
+  const [departureDate, setDepartureDate] = useState(() => {
+    const today = new Date();
+    return today.toISOString().split('T')[0]; // Format to 'YYYY-MM-DD'
+});
 
   const handleFlightTypeChange = (selectedType) => {
     setFlightType(selectedType);
-    console.log("Selected Flight Type:", selectedType);
+    // console.log("Selected Flight Type:", selectedType);
   };
 
+
+  console.log("departureDate: ", departureDate);
   // Fetch data from API and fall back to mock data if necessary
   const fetchData = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/flights/airports`);// Replace with actual API
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/flights/airports`); // Replace with actual API
       const data = await response.json();
-      console.log("Fetched airports:", data);
+      console.log("Fetched airports:", data); // Debugging fetched data
       setPortOptions(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error("Error fetching data, using mock data:", error);
-      // Use parsed mock data in case of error
-      setPortOptions(parseData(flightsData));
+      const mockData = parseData(flightsData);
+      console.log("Using mock data:", mockData); // Debugging mock data
+      setPortOptions(mockData);
     }
   };
 
@@ -44,9 +53,89 @@ export default function SearchFlight() {
     fetchData(); // Call the fetch function to load data
   }, []); // Empty dependency array to call this effect once
 
-  const portOptionsArray = [...portOptions]
-
-console.log("Port Options Array:", portOptionsArray);
+  // Handle the search button click
+  const handleSearch = async (event) => {
+    event.preventDefault(); // Prevent the default form submission behavior
+  
+    let promoData = null; // Local variable to store promo details
+  
+    // Fetch promo code details if a promo code is provided
+    if (input) {
+      console.log("Attempting to fetch promo code details..."); // Debugging before API call
+  
+      try {
+        const promoResponse = await fetch(`${process.env.REACT_APP_API_URL}/promos/searchpromocode`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ promoCode: input }),
+        });
+  
+        // Log the status of the response
+        console.log("Promo Code API Response Status:", promoResponse.status);
+  
+        if (!promoResponse.ok) {
+          throw new Error(`Promo code error: ${promoResponse.statusText}`);
+        }
+  
+        promoData = await promoResponse.json();
+        console.log("Promo Code Details (API Response):", promoData); // Debugging promo code data
+        setPromoDetails(promoData);
+      } catch (error) {
+        console.error("Error fetching promo code:", error);
+        setPromoDetails(null); // Reset promo details if there's an error
+      }
+    } else {
+      console.log("No promo code provided."); // Log when input is empty
+    }
+  
+    // const formattedDepartureDate = departureDate ? new Date(departureDate).toISOString().split('T')[0] : null;
+  
+    // Gather data to send in the API request
+    const requestData = {
+      departureCode: departurePort.code,
+      destinationCode: destinationPort.code,
+      defaultDepartureDate: departureDate,
+      // departureDate: formattedDepartureDate,  //YYYY-MM-DD format
+      adults: adultsCount,
+      children: childCount,
+      infants: infantsCount,
+      promoCode: input,
+      promo: promoData,
+    };
+  
+    console.log("Request Data:", requestData); // Debugging data to be sent
+  
+    try {
+      // Call the API to filter commercial flights
+      const flightResponse = await fetch(`${process.env.REACT_APP_API_URL}/commercialflights/filterbylocation`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        // body: JSON.stringify({ departureCode: requestData.departureCode, destinationCode: requestData.destinationCode, departureDate: formattedDepartureDate}),
+        body: JSON.stringify({ departureCode: requestData.departureCode, destinationCode: requestData.destinationCode, departureDate: departureDate}),
+      });
+  
+      // Log the status of the response
+      console.log("Flight Filter API Response Status:", flightResponse.status);
+  
+      if (!flightResponse.ok) {
+        throw new Error(`Flight filter error: ${flightResponse.statusText}`);
+      }
+  
+      const filteredFlights = await flightResponse.json();
+      console.log("Filtered Flights (API Response):", filteredFlights); // Debugging filtered flight data
+  
+      // Navigate to the flights options page with the filtered flight data
+      navigate('/flights/options', { state: { data: { ...requestData, flightsByLocation: filteredFlights } } });
+    } catch (error) {
+      console.error("Error fetching filtered flights:", error);
+      // Optionally, handle error cases like showing a message to the user
+    }
+  };
+  
 
   return (
     <div className='search-flight-container my-5'>
@@ -57,7 +146,7 @@ console.log("Port Options Array:", portOptionsArray);
           <FlightTypeSelector onFlightTypeChange={handleFlightTypeChange} />
         </div>
         
-        <form>
+        <form onSubmit={handleSearch}>
             {flightType === 'oneway' && (
               <div className='search-flight-form-container'>
                 <div className='search-flight-row search-flight-row--oneway'>
@@ -66,7 +155,8 @@ console.log("Port Options Array:", portOptionsArray);
                       setDeparturePort={setDeparturePort} 
                       setDestinationPort={setDestinationPort} 
                   />
-                  <DateSelector label="DEPARTURE DATE" onDateChange={setDepartureDate} />
+                  {/* YYYY-MM-DD FORMAT*/}
+                  <DateSelector label="DEPARTURE DATE" onDateChange={setDepartureDate} />  
                 </div>
                 <div className='search-flight-row search-flight-row--oneway'>
                   <PaxSelector label={'ADULTS (12+ YEARS)'} setPaxCount={setAdultsCount} />
@@ -75,34 +165,16 @@ console.log("Port Options Array:", portOptionsArray);
                   <InputBox label="ENTER PROMO CODES" placeholder="Enter Code" onChange={setInput}/>
                 </div>
                 <div className='search-flight-submit-btn'>
-                  <SearchFlightButton link="/flights/options" />
+                  <SearchFlightButton type="submit" />
                 </div>
               </div>
             )}
-
             {flightType === 'roundtrip' && (
               <div className='search-flight-form-container'>
-                <div className="search-flight-row search-flight-row--roundtrip">
-                  <PortSelector 
-                      portOptions={portOptions} 
-                      setDeparturePort={setDeparturePort} 
-                      setDestinationPort={setDestinationPort} 
-                  />
-                  <DateSelector label="DEPARTURE DATE" onDateChange={setDepartureDate} />
-                  <DateSelector label="RETURN DATE" onDateChange={setReturnDate} />
-                </div>
-                <div className="search-flight-row search-flight-row--roundtrip">
-                  <PaxSelector label={'ADULTS (12+ YEARS)'} setPaxCount={setAdultsCount} />
-                  <PaxSelector label={'CHILDREN (2-11 YEARS)'} setPaxCount={setChildCount} />
-                  <PaxSelector label={'INFANTS (UNDER 2 YEARS)'} setPaxCount={setInfantsCount} />
-                  <InputBox label="ENTER PROMO CODES" placeholder="Enter Code" onChange={setInput}/>
-                </div>
-                <div className='search-flight-submit-btn'>
-                  <SearchFlightButton link="/flights/options" />
-                </div>
+                {/* Round-trip form fields */}
               </div>
             )}
-          </form>
+        </form>
       </div>
     </div>
   );

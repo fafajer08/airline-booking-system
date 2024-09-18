@@ -32,6 +32,81 @@ const passengerController = {
     }
   },
 
+  async addOrGetMultiplePassengers(req, res) {
+    try {
+      const passengers = req.body.passengers; // Expect an array of passengers
+  
+      if (!Array.isArray(passengers) || passengers.length === 0) {
+        return res.status(400).json({ message: 'Passengers data must be a non-empty array' });
+      }
+  
+      const passengerIds = [];
+  
+      for (const passenger of passengers) {
+        const { firstName, lastName, nationality, passportNo, birthday, email, phoneNo } = passenger;
+  
+        // Validate required fields
+        if (!firstName || !lastName || !nationality || !birthday || !email || !phoneNo) {
+          console.log('Missing required fields for passenger:', passenger); // Debugging
+          return res.status(400).json({ message: 'Missing required fields in one or more passengers' });
+        }
+  
+        try {
+          // Check if the passenger already exists using the compound index (firstName, lastName, birthday)
+          let existingPassenger = await Passenger.findOne({ firstName, lastName, birthday });
+  
+          if (existingPassenger) {
+            console.log('Passenger already exists:', existingPassenger); // Debugging
+            passengerIds.push(existingPassenger._id); // Push the existing passenger's ID
+          } else {
+            // If not found, create a new passenger entry
+            const newPassengerData = {
+              firstName,
+              lastName,
+              nationality,
+              birthday,
+              email,
+              phoneNo,
+            };
+  
+            // Only include passportNo if it's not an empty string
+            if (passportNo && passportNo.trim() !== '') {
+              newPassengerData.passportNo = passportNo;
+            }
+  
+            const newPassenger = new Passenger(newPassengerData);
+            const savedPassenger = await newPassenger.save();
+            console.log('New passenger saved:', savedPassenger); // Debugging
+            passengerIds.push(savedPassenger._id); // Push the new passenger's ID
+          }
+        } catch (error) {
+          console.error('Error processing passenger:', passenger, error); // Debugging
+  
+          // Check if the error is due to duplicate keys for `passportNo` or `email`
+          if (error.code === 11000) {
+            let duplicateField = 'unknown field';
+            if (error.keyPattern && error.keyPattern.passportNo) {
+              duplicateField = 'passport number';
+            } else if (error.keyPattern && error.keyPattern.email) {
+              duplicateField = 'email';
+            }
+            return res.status(400).json({ message: `Duplicate entry for ${duplicateField}` });
+          }
+  
+          return res.status(500).json({ message: 'Error processing passenger', passenger, error });
+        }
+      }
+  
+      // Return all passenger IDs
+      res.status(201).json({ passengerIds });
+    } catch (error) {
+      console.error('Error adding or getting passengers:', error); // Debugging
+      res.status(500).json({ message: 'Error adding or getting passengers', error });
+    }
+  },
+  
+  
+
   // Check if a passenger exists before adding a new one
   async checkAddPassenger(req, res) {
     try {

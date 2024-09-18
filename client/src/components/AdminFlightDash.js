@@ -178,28 +178,63 @@ export default function AdminFlightDash() {
     setDateRange({ start: "", end: "" });
   };
 
-  const handleGenerateCommercialFlights = async () => {
-    if (!flightToGenerate || !dateRange.start || !dateRange.end || !selectedPrice) {
-      notyf.error("Please select a flight, date range, and price.");
-      return;
-    }
 
-    const startDate = new Date(dateRange.start);
-    const endDate = new Date(dateRange.end);
-    const generatedFlights = [];
-
-    for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
-      if (d.getDay() + 1 === parseInt(flightToGenerate.day)) {
-        generatedFlights.push({
-          flightId: flightToGenerate,
-          date: new Date(d).toISOString().split('T')[0],
-          priceId: selectedPrice,
-        });
+  // Function to render search inputs
+ 
+  // const handleGenerateCommercialFlights = async () => {
+  //   if (!flightToGenerate || !dateRange.start || !dateRange.end || !selectedPrice) {
+  //     notyf.error("Please select a flight, date range, and price.");
+  //     return;
+  //   }
+  
+  //   const startDate = new Date(dateRange.start);
+  //   const endDate = new Date(dateRange.end);
+  //   const generatedFlights = [];
+  
+  //   for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+  //     if (d.getDay() + 1 === parseInt(flightToGenerate.day)) {
+  //       // Combine date and time from flightToGenerate
+  //       const departureDateTime = new Date(d);
+  //       const [hours, minutes] = flightToGenerate.time.split(':'); // Use the time from flightToGenerate row
+  //       departureDateTime.setHours(hours, minutes, 0, 0); // Set hours, minutes, seconds, milliseconds
+  
+  //       // Format the departureDateTime to preserve the local timezone
+  //       const localDepartureTime = new Date(departureDateTime.getTime() - departureDateTime.getTimezoneOffset() * 60000).toISOString();
+  
+  //       generatedFlights.push({
+  //         flightId: flightToGenerate._id, // Use only the flight ID here
+  //         date: new Date(d).toISOString().split('T')[0],
+  //         priceId: selectedPrice,
+  //         departureTime: localDepartureTime, // Include the adjusted local time
+  //       });
+  //     }
+  //   }
+    const handleGenerateCommercialFlights = async () => {
+      if (!flightToGenerate || !dateRange.start || !dateRange.end || !selectedPrice) {
+        notyf.error("Please select a flight, date range, and price.");
+        return;
       }
-    }
-
-    console.log(generatedFlights);
-
+    
+      const startDate = new Date(dateRange.start);
+      const endDate = new Date(dateRange.end);
+      const generatedFlights = [];
+    
+      for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+        if (d.getDay() + 1 === parseInt(flightToGenerate.day)) {
+          // Use the time directly from flightToGenerate
+          const departureTime = flightToGenerate.time; // e.g., "14:30"
+    
+          generatedFlights.push({
+            flightId: flightToGenerate._id, // Use only the flight ID here
+            date: new Date(d).toISOString().split('T')[0], // Store the date as "YYYY-MM-DD"
+            priceId: selectedPrice,
+            departureTime: departureTime, // Store the time as a string (e.g., "14:30")
+          });
+        }
+      }
+  
+    console.log(`generatedFlights ${JSON.stringify(generatedFlights)}`);
+  
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/commercialflights/multiple`, {
         method: 'POST',
@@ -208,21 +243,24 @@ export default function AdminFlightDash() {
         },
         body: JSON.stringify({ flights: generatedFlights }),
       });
-
+  
       const responseData = await response.json();
       if (!response.ok) {
         throw new Error(`Failed to generate commercial flights: ${response.status} ${responseData.message}`);
       }
-
+  
       notyf.success("Commercial flights generated successfully.");
-      setCommercialFlights((prev) => [...prev, ...responseData]);
+      setCommercialFlights((prev) => [...prev, ...responseData.added]); // Use responseData.added to update the list
       setGenerateModalVisible(false);
     } catch (error) {
+      console.error('Error generating commercial flights:', error); // Log the error for debugging
       notyf.error('Error generating commercial flights.');
     }
   };
-
-  // Function to render search inputs
+  
+ 
+ 
+ 
   const renderTableSearch = (key, type) => (
     <td>
       {key === 'day' ? (
@@ -356,6 +394,7 @@ export default function AdminFlightDash() {
       <table>
         <thead>
           <tr>
+       
             {renderTableHeader("Flight No", ["flightNo"])}
             {renderTableHeader("Airplane Id", ["airplane", "planeId"])}
             {renderTableHeader("Departure City", ["route", "departure", "airportCity"])}
@@ -367,6 +406,7 @@ export default function AdminFlightDash() {
             {renderTableHeader("Time", ["time"])}
             {renderTableHeader("Status", ["isActive"])}
             <th>Action</th>
+            
           </tr>
           {/* Added search inputs below the headers */}
           <tr>
@@ -377,10 +417,10 @@ export default function AdminFlightDash() {
             {renderTableSearch('route.destination.airportCity', 'text')}
             {renderTableSearch('route.destination.airportName', 'text')}
             {renderTableSearch('airplane.totalSeats', 'number')}
-            {renderTableSearch('day', 'day')} {/* Changed 'number' to 'day' */}
+            {renderTableSearch('day', 'day')}
             {renderTableSearch('time', 'text')}
             {renderTableSearch('isActive', 'boolean')}
-            <td></td> {/* Empty cell for 'Action' column */}
+            <td></td>
           </tr>
         </thead>
         <tbody>
