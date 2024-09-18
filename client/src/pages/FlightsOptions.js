@@ -1,81 +1,91 @@
-// import React, { useState } from 'react';
-// import { useLocation } from 'react-router-dom';
-// import NavBar from "../components/NavBar";
-// import Carousel from "../components/Carousel";
-// import { BackButton, ContinueButton } from '../components/Buttons';
-// import FlightTable from "../components/FlightTable";
-
-// export default function FlightOptions() {
-//   const location = useLocation();
-//   const { data } = location.state; // Retrieve data passed via navigate
-//   const [filteredFlights, setFilteredFlights] = useState(data.flights); // Store selected flights
-
-//   // Callback function to handle date selection in the carousel
-//   const handleDateSelection = (selectedDate) => {
-//     const filteredFlights = data.flights.filter(flight => {
-//       const flightDate = new Date(flight.departureDate).toDateString();
-//       console.log(`flightDate: ${flightDate}`);
-//       return flightDate === selectedDate.toDateString();
-//     });
-//     setFilteredFlights(filteredFlights);
-//     console.log(`filteredFlights: ${JSON.stringify(filteredFlights)}`);
-//   };
-
-//   return (
-//     <div>
-//       <div className="container">
-//         <h5 className="mt-5 ms-5 px-5">Select your flight</h5>
-//         <h2 className="ms-5 px-5">{data.departureCode} bound for {data.destinationCode}</h2>
-//         {/* Pass data and handleDateSelection callback to Carousel */}
-//         <Carousel flights={data.flights} departureDate={data.departureDate} onDateSelect={handleDateSelection} />
-//         <FlightTable flights={filteredFlights} /> {/* Pass selected flights to FlightTable */}
-//         <div className="button-container m-4">
-//           <BackButton link="/flights" /> 
-//           <ContinueButton link="/flights/guests" /> 
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
-
-import React, { useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import React, { useState, useEffect, useContext } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import NavBar from "../components/NavBar";
 import Carousel from "../components/Carousel";
 import { BackButton, ContinueButton } from '../components/Buttons';
-import FlightTable from "../components/FlightTable";
+import FlightTable from '../components/FlightTable';
+import UserContext from '../context/UserContext';
 
 export default function FlightOptions() {
+  const { user } = useContext(UserContext);
   const location = useLocation();
-  const { data } = location.state; // Retrieve data passed via navigate
-  const [selectedFlights, setSelectedFlights] = useState(data.flights); // Store selected flights
-  const [selectedDate, setSelectedDate] = useState(null); // State to store the selected date
+  const navigate = useNavigate();
+  const { data } = location.state; 
 
-  // Callback function to handle date selection in the carousel
-  const handleDateSelection = (date) => {
-    setSelectedDate(date); // Update selectedDate state
+  console.log(data);
+  
+  const { departureCode, destinationCode, defaultDepartureDate, flightsByLocation, promo = [] } = data;
+
+  const [departureDate, setDepartureDate] = useState(defaultDepartureDate);
+  const [flightsByDate, setFilteredFlights] = useState([]);
+  const [selectedFlightId, setSelectedFlightId] = useState(null); // Moved state here
+
+  // useEffect to automatically populate the table based on departureDate
+  useEffect(() => {
+    const filteredFlights = flightsByLocation.filter(flight => flight.date === departureDate);
+    setFilteredFlights(filteredFlights);
+  }, [departureDate, flightsByLocation]);
+
+  // Handler for date selection from the Carousel
+  const handleDateSelect = (date) => {
     const formattedDate = date.toISOString().split('T')[0];
+    setDepartureDate(formattedDate);
+  };
+
+  // Handler for flight selection from FlightTable
+  const handleFlightSelect = (flightId) => {
+    setSelectedFlightId(flightId);
+    console.log('Selected Flight Id:', flightId);
+  };
+
+  // Handler for Continue button click
+  const handleContinue = async () => {
+    if (!selectedFlightId) {
+      alert('Please select a flight before continuing.');
+      return;
+    }
     
-    // Filter flights based on selected date
-    const filteredFlights = data.flights.filter(flight => flight.date === formattedDate);
-    setSelectedFlights(filteredFlights); // Update state with filtered flights
-    
-    console.log(`Selected Date: ${formattedDate}`); // Print selected date
-    console.log(`Filtered Flights:`, filteredFlights); // Log filtered flights directly
+      // Prepare the data to send in the API request
+      const requestData = {
+        userId : user.id,
+        selectedFlightId: selectedFlightId,
+        promoId: promo?.id || null,
+      }
+        // Include any other necessary data
+
+
+      // Perform the API fetch
+      // Navigate to the next page, passing any necessary state
+      navigate('/flights/guests', { state: { data: requestData } });
+
   };
 
   return (
-    <div>
-      <div className="container">
-        <h5 className="mt-5 ms-5 px-5">Select your flight</h5>
-        <h2 className="ms-5 px-5">{data.departureCode} bound for {data.destinationCode}</h2>
-        {/* Pass data and handleDateSelection callback to Carousel */}
-        <Carousel flights={data.flights} departureDate={data.departureDate} onDateSelect={handleDateSelection} />
-        <FlightTable selectedFlights={selectedFlights} /> {/* Pass selected flights to FlightTable */}
-        <div className="button-container m-4">
-          <BackButton link="/flights" /> 
-          <ContinueButton link="/flights/guests" /> 
+    <div className="flight-options">
+      <div className="container mt-5">
+        <h5 className="ms-5 px-5">Select your flight</h5>
+        <h2 className="ms-5 px-5">
+          {departureCode} bound for {destinationCode}
+        </h2>
+
+        {/* Use the Carousel component and pass necessary props */}
+        <Carousel 
+          flights={flightsByLocation} 
+          departureDate={departureDate} 
+          onDateSelect={handleDateSelect} 
+        />
+
+        {/* Pass selectedFlightId and handleFlightSelect to FlightTable */}
+        <FlightTable 
+          selectedFlights={flightsByDate} 
+          selectedFlightId={selectedFlightId} 
+          onSelectFlight={handleFlightSelect} 
+        />
+
+        {/* Navigation Buttons */}
+        <div className="button-container m-4 d-flex justify-content-between">
+          <BackButton link="/flights" />
+          <ContinueButton onClick={handleContinue} />
         </div>
       </div>
     </div>

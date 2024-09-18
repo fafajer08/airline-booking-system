@@ -30,22 +30,16 @@ function SearchFlightButton({ link, type = "button" }) {
   );
 }
 
-function ContinueButton({ link, type = "button" }) {
-  const navigate = useNavigate(); // Use useNavigate for navigation
-  const handleNavigation = () => {
-    if (link) {
-      navigate(link);
-    }
-  };
-
+function ContinueButton({ onClick, type = "button" }) {
   return (
-    <BaseButton className="continue-button-link" onClick={handleNavigation} type={type}>
+    <BaseButton className="continue-button-link" onClick={onClick} type={type}>
       <div className="continue-button-container">
         <span className="continue-button-text">CONTINUE</span>
       </div>
     </BaseButton>
   );
 }
+
 
 function BackButton({ link, type = "button" }) {
   const navigate = useNavigate(); // Use useNavigate for navigation

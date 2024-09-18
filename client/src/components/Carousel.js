@@ -112,8 +112,8 @@ const Carousel = ({ flights, departureDate, onDateSelect }) => {
     const handleCardClick = (date) => {
         const dateTimestamp = date.getTime();
         const formattedDate = date.toISOString().split('T')[0];
-        console.log(`Card clicked for date: ${formattedDate}, timestamp: ${dateTimestamp}`);
-        setSelectedCard(dateTimestamp); // Update selected card
+        // console.log(`Card clicked for date: ${formattedDate}, timestamp: ${dateTimestamp}`);
+        setSelectedCard(formattedDate); // Update selected card
         onDateSelect(date); // Call the callback function to update the parent component
     };
 

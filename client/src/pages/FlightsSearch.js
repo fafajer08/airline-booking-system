@@ -16,19 +16,24 @@ export default function SearchFlight() {
   const [flightType, setFlightType] = useState('oneway'); // Default flight type
   const [departurePort, setDeparturePort] = useState({});
   const [destinationPort, setDestinationPort] = useState({});
-  const [departureDate, setDepartureDate] = useState(new Date());
   const [returnDate, setReturnDate] = useState(null);
   const [adultsCount, setAdultsCount] = useState(0);
   const [childCount, setChildCount] = useState(0);
   const [infantsCount, setInfantsCount] = useState(0);
   const [input, setInput] = useState(null); // Promo code
   const [promoDetails, setPromoDetails] = useState(null); // State to store promo code details
+  const [departureDate, setDepartureDate] = useState(() => {
+    const today = new Date();
+    return today.toISOString().split('T')[0]; // Format to 'YYYY-MM-DD'
+});
 
   const handleFlightTypeChange = (selectedType) => {
     setFlightType(selectedType);
-    console.log("Selected Flight Type:", selectedType);
+    // console.log("Selected Flight Type:", selectedType);
   };
 
+
+  console.log("departureDate: ", departureDate);
   // Fetch data from API and fall back to mock data if necessary
   const fetchData = async () => {
     try {
@@ -85,13 +90,14 @@ export default function SearchFlight() {
       console.log("No promo code provided."); // Log when input is empty
     }
   
-    const formattedDepartureDate = departureDate ? new Date(departureDate).toISOString().split('T')[0] : null;
+    // const formattedDepartureDate = departureDate ? new Date(departureDate).toISOString().split('T')[0] : null;
   
     // Gather data to send in the API request
     const requestData = {
       departureCode: departurePort.code,
       destinationCode: destinationPort.code,
-      departureDate: formattedDepartureDate,
+      defaultDepartureDate: departureDate,
+      // departureDate: formattedDepartureDate,  //YYYY-MM-DD format
       adults: adultsCount,
       children: childCount,
       infants: infantsCount,
@@ -108,7 +114,8 @@ export default function SearchFlight() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ departureCode: requestData.departureCode, destinationCode: requestData.destinationCode, departureDate: formattedDepartureDate}),
+        // body: JSON.stringify({ departureCode: requestData.departureCode, destinationCode: requestData.destinationCode, departureDate: formattedDepartureDate}),
+        body: JSON.stringify({ departureCode: requestData.departureCode, destinationCode: requestData.destinationCode, departureDate: departureDate}),
       });
   
       // Log the status of the response
@@ -122,7 +129,7 @@ export default function SearchFlight() {
       console.log("Filtered Flights (API Response):", filteredFlights); // Debugging filtered flight data
   
       // Navigate to the flights options page with the filtered flight data
-      navigate('/flights/options', { state: { data: { ...requestData, flights: filteredFlights } } });
+      navigate('/flights/options', { state: { data: { ...requestData, flightsByLocation: filteredFlights } } });
     } catch (error) {
       console.error("Error fetching filtered flights:", error);
       // Optionally, handle error cases like showing a message to the user
@@ -148,7 +155,8 @@ export default function SearchFlight() {
                       setDeparturePort={setDeparturePort} 
                       setDestinationPort={setDestinationPort} 
                   />
-                  <DateSelector label="DEPARTURE DATE" onDateChange={setDepartureDate} />
+                  {/* YYYY-MM-DD FORMAT*/}
+                  <DateSelector label="DEPARTURE DATE" onDateChange={setDepartureDate} />  
                 </div>
                 <div className='search-flight-row search-flight-row--oneway'>
                   <PaxSelector label={'ADULTS (12+ YEARS)'} setPaxCount={setAdultsCount} />

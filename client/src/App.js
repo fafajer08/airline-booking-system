@@ -22,7 +22,7 @@ import AdminCreate from './pages/AdminCreate';
 
 //logged users exclusive
 
-
+import MyBookingsPage from './pages/MyBookings';
 import Users from './pages/UserDash';
 import NotFound from './pages/NotFound';
 import Profile from './pages/Profile';
@@ -46,6 +46,7 @@ function App() {
             <Route path="/destinations" element={<Destinations />} />
             <Route path="/deals" element={<Deals />} />
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/mybookings" element={<MyBookingsPage />} />
 
 
 

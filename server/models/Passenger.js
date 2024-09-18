@@ -15,12 +15,11 @@ const passengerSchema = new mongoose.Schema({
     type: String,
     required: true,
     trim: true
-  },
+  }, 
   passportNo: {
     type: String,
-    required: true,
-    unique: true,
     trim: true
+
   },
   birthday: {
     type: Date,
@@ -29,7 +28,6 @@ const passengerSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
-    unique: true,
     lowercase: true,
     trim: true
   },
