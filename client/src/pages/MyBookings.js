@@ -61,7 +61,7 @@ export default function Admin() {
               className="ms-2"
             >
               Promo
-            </Button> */}
+            </Button> */ }
           </Col>
         </Row>
 

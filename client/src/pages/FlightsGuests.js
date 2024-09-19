@@ -84,7 +84,7 @@ function GuestDetailsPage() {
     .then((data) => {
         console.log('Successfully logged booking:', data);
         // Navigate to bookings page
-        navigate('/bookings');
+        navigate('/bookings', { state: { bookingData: data } });
     })
     .catch((error) => {
         console.error('Error booking:', error);

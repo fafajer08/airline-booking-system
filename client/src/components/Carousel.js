@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import '../styles/carousel.css';
 
 const Cards = ({ date, flightDetails, isSelected, onClick }) => {
@@ -31,6 +31,7 @@ const Cards = ({ date, flightDetails, isSelected, onClick }) => {
 const Carousel = ({ flights, departureDate, onDateSelect }) => {
     const [selectedCard, setSelectedCard] = useState(null);
     const [startIndex, setStartIndex] = useState(0); // Track the start index for visible cards
+    
 
     // Generate a list of 30 dates before and 30 dates after the departure date, but not earlier than today
     const generateDates = (centerDate) => {
@@ -81,19 +82,30 @@ const Carousel = ({ flights, departureDate, onDateSelect }) => {
     // Determine the initial set of visible cards centered on the departure date
     const departureTimestamp = new Date(departureDate).getTime();
     const departureIndex = cardsData.findIndex(card => card.date.getTime() === departureTimestamp);
-
+    
+    
+    const isFirstRender = useRef(true);
     // Set the initial selected card to the departure date and update the start index
     useEffect(() => {
-        console.log(`Setting initial selected card for departure date: ${new Date(departureDate).toISOString().split('T')[0]}`);
-        setSelectedCard(departureTimestamp);
 
-        // Center the departure date within the visible cards
-        let initialStartIndex = departureIndex - Math.floor(7 / 2);
-        if (initialStartIndex < 0) {
-            initialStartIndex = 0;
+        if (isFirstRender.current) {
+            console.log(`Setting initial selected card for departure date: ${new Date(departureDate).toISOString().split('T')[0]}`);
+            setSelectedCard(departureTimestamp);
+
+            // Center the departure date within the visible cards
+            let initialStartIndex = departureIndex - Math.floor(7 / 2);
+            if (initialStartIndex < 0) {
+                initialStartIndex = 0;
+            }
+            setStartIndex(initialStartIndex);
+            console.log(`Initial start index set to: ${initialStartIndex}`);
+
+            isFirstRender.current = false;
+        } else {
+            // On subsequent updates, only update selectedCard
+            setSelectedCard(departureTimestamp);
         }
-        setStartIndex(initialStartIndex);
-        console.log(`Initial start index set to: ${initialStartIndex}`);
+
     }, [departureTimestamp, departureIndex]);
 
     // Handle left button click

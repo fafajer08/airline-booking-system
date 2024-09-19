@@ -14,7 +14,8 @@ export default function FlightOptions() {
 
   console.log(data);
   
-  const { departureCode, destinationCode, defaultDepartureDate, flightsByLocation, promo = [] } = data;
+  const { departureCode, destinationCode, defaultDepartureDate, flightsByLocation, promo = null } = data;
+
 
   const [departureDate, setDepartureDate] = useState(defaultDepartureDate);
   const [flightsByDate, setFilteredFlights] = useState([]);
@@ -45,11 +46,15 @@ export default function FlightOptions() {
       return;
     }
     
+    if (!user) {
+      console.warn("User not logged in, proceeding as guest");
+    }
+
       // Prepare the data to send in the API request
       const requestData = {
-        userId : user.id,
+        userId: user?.id || null,  // let  user proceed even when not logged in
         selectedFlightId: selectedFlightId,
-        promoId: promo?.id || null,
+        promoId: promo && promo.id ? promo.id : null,
       }
         // Include any other necessary data
 
