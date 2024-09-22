@@ -4,7 +4,7 @@ const bookingSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User', // Reference to the User schema
-    required: true,
+    // required: true,  // To allow unregistered users to still book;
   },
   passengerIds: [
     {

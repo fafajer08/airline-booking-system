@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import NavBar from "../components/NavBar";
 import Carousel from "../components/Carousel";
 import { BackButton, ContinueButton } from '../components/Buttons';
 import FlightTable from '../components/FlightTable';
@@ -12,6 +11,7 @@ export default function FlightOptions() {
   const navigate = useNavigate();
   const { data } = location.state; 
 
+
   console.log(data);
   
   const { departureCode, destinationCode, defaultDepartureDate, flightsByLocation, promo = null } = data;
@@ -19,10 +19,18 @@ export default function FlightOptions() {
 
   const [departureDate, setDepartureDate] = useState(defaultDepartureDate);
   const [flightsByDate, setFilteredFlights] = useState([]);
-  const [selectedFlightId, setSelectedFlightId] = useState(null); // Moved state here
+  // const [selectedFlightId, setSelectedFlightId] = useState(null); // Moved state here
+  const [selectedFlight, setSelectedFlight] = useState(null); // Moved state here
 
   // useEffect to automatically populate the table based on departureDate
   useEffect(() => {
+
+    if(!data) {
+      navigate('/flights');
+      return null; // Exit early if no data is provided
+    }
+  
+
     const filteredFlights = flightsByLocation.filter(flight => flight.date === departureDate);
     setFilteredFlights(filteredFlights);
   }, [departureDate, flightsByLocation]);
@@ -34,18 +42,30 @@ export default function FlightOptions() {
   };
 
   // Handler for flight selection from FlightTable
-  const handleFlightSelect = (flightId) => {
-    setSelectedFlightId(flightId);
-    console.log('Selected Flight Id:', flightId);
+  // const handleFlightSelect = (flightId) => {
+  //   setSelectedFlightId(flightId);
+  //   console.log('Selected Flight Id:', flightId);
+  // };
+
+  const handleFlightSelect = (flight) => {
+    setSelectedFlight(flight);
+    console.log('Selected Flight:', flight);
   };
+
 
   // Handler for Continue button click
   const handleContinue = async () => {
-    if (!selectedFlightId) {
+    // if (!selectedFlightId) {
+    //   alert('Please select a flight before continuing.');
+    //   return;
+    // }
+    if (!selectedFlight) {
       alert('Please select a flight before continuing.');
       return;
     }
-    
+
+
+
     if (!user) {
       console.warn("User not logged in, proceeding as guest");
     }
@@ -53,8 +73,10 @@ export default function FlightOptions() {
       // Prepare the data to send in the API request
       const requestData = {
         userId: user?.id || null,  // let  user proceed even when not logged in
-        selectedFlightId: selectedFlightId,
-        promoId: promo && promo.id ? promo.id : null,
+        // selectedFlightId: selectedFlightId,
+        selectedFlight: selectedFlight,
+        // promoId: promo && promo.id ? promo.id : null,
+        promo: promo ? promo : null,
       }
         // Include any other necessary data
 
@@ -83,7 +105,8 @@ export default function FlightOptions() {
         {/* Pass selectedFlightId and handleFlightSelect to FlightTable */}
         <FlightTable 
           selectedFlights={flightsByDate} 
-          selectedFlightId={selectedFlightId} 
+          // selectedFlightId={selectedFlightId} 
+          selectedFlight={selectedFlight} 
           onSelectFlight={handleFlightSelect} 
         />
 

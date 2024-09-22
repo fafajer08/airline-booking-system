@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import GuestDetailsForm from '../components/GuestDetailsForm';
 import { BackButton, ContinueButton } from '../components/Buttons';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -10,11 +10,20 @@ function GuestDetailsPage() {
   const [finalGuests, setFinalGuests] = useState([]);
   const [passengerIds, setPassengerIds] = useState([]);
 
-  console.log(`data: ${JSON.stringify(data)}`);
+  const { userId, selectedFlight, promo } = data;
+
+  console.log(`flight guest recieved selectedflight: `, selectedFlight);
+  console.log(`flight guest recieved promo: ` , promo);
+
+  useEffect(() => { if(!data) {
+    navigate('/flights/options');
+    return null; // Exit early if no data is provided
+  }});
+ 
 
   const handleSubmit = () => {
     // Destructure userId and selectedFlightId from data
-    const { userId, selectedFlightId, promoId } = data;
+    const { userId=null, selectedFlightId, promoId } = data;
 
     // Exclude the last guest from the list and format their birthday
     const guestsToSubmit = finalGuests.slice(0, -1).map((guest) => {

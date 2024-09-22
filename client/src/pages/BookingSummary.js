@@ -1,7 +1,8 @@
-import { useLocation, useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
-import BookingSummaryTable from '../components/BookingSummaryTable'
-import { BackButton, ContinueButton } from '../components/Buttons';
+import React, { useEffect } from 'react';  // Import useEffect
+import { useLocation, useNavigate } from 'react-router-dom';  // Import useLocation and useNavigate
+import BookingSummaryTable from '../components/BookingSummaryTable';  // Import the BookingSummaryTable component
+import { BackButton, ContinueButton } from '../components/Buttons';  // Import BackButton and ContinueButton components
+
 
 export default function BookingSummary() {
   const location = useLocation();
@@ -17,6 +18,11 @@ export default function BookingSummary() {
 
   console.log('Booking data in BookingSummary:', bookingData);
 
+  const handleContinue = () => {
+    console.log('Continue clicked! Review has been accepted.');
+    // Any additional logic before navigating
+  };
+
   return (
     <div>
       <div className="container">
@@ -29,7 +35,7 @@ export default function BookingSummary() {
         <div className='d-flex'>
           <div className='ms-auto'>
             <BackButton link="/flights/guests" />
-            <ContinueButton link="/payment" />
+            <ContinueButton onClick={handleContinue} link="/payment" /> {/* Now both onClick and link are passed */}
           </div>
         </div>
       </div>
