@@ -35,18 +35,23 @@ module.exports = {
       .populate('userId') // Populate all fields from the User document
       .populate('passengerIds') // Populate all fields from Passenger documents
       .populate({
-        path: 'commercialFlightId', // First populate the commercialFlightId
-        populate: {
-          path: 'flight', // Populate the 'flight' field inside commercialFlightId
-          populate: { 
-            path: 'route', // Populate the 'route' field inside flight
-            populate: [
-              { path: 'destination' }, // Populate the 'destination' field inside route
-              { path: 'departure' }    // Populate the 'departure' field inside route
-            ]
+        path: 'commercialFlightId',  // First, populate the commercialFlightId
+        populate: [
+          {
+            path: 'flight',  // Populate the 'flight' field inside commercialFlightId
+            populate: {
+              path: 'route',  // Populate the 'route' field inside flight
+              populate: [
+                { path: 'destination' },  // Populate the 'destination' field inside route
+                { path: 'departure' }     // Populate the 'departure' field inside route
+              ]
+            }
+          },
+          {
+            path: 'pricing',  // Populate the 'pricing' field inside commercialFlightId
           }
-        }
-      });
+        ]
+      })
 
       console.log('New booking saved:', populatedBooking);
       res.status(201).json(populatedBooking);

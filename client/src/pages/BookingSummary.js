@@ -9,6 +9,8 @@ export default function BookingSummary() {
   const navigate = useNavigate();
   const { bookingData } = location.state || {};
 
+  console.log('Booking data ', bookingData); 
+
   useEffect(() => {
     if (!bookingData) {
       console.warn('No booking data found, redirecting...');

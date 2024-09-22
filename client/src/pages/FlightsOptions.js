@@ -72,7 +72,7 @@ export default function FlightOptions() {
 
       // Prepare the data to send in the API request
       const requestData = {
-        userId: user?.id || null,  // let  user proceed even when not logged in
+        user: user ? user : null,  // let  user proceed even when not logged in
         // selectedFlightId: selectedFlightId,
         selectedFlight: selectedFlight,
         // promoId: promo && promo.id ? promo.id : null,

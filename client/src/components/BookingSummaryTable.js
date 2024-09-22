@@ -93,7 +93,16 @@ function BookingSummaryTable({ bookingData }) {
             {/* Total cost */}
             <div className="d-flex justify-content-between total-summary px-5 mx-5">
                 <h4>Total</h4>
-                <h4>{(flightDetails?.departureTime) }</h4>
+                <h4>
+                    PHP {(
+                        ((flightDetails.flight.route.distanceKM * flightDetails.pricing.distanceFactor) + flightDetails.pricing.basePrice) 
+                        * passengerIds.length
+                    ).toLocaleString('en-US', {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    })}
+                    </h4>
+
             </div>
         </div>
     );

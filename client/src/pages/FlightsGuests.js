@@ -10,8 +10,9 @@ function GuestDetailsPage() {
   const [finalGuests, setFinalGuests] = useState([]);
   const [passengerIds, setPassengerIds] = useState([]);
 
-  const { userId, selectedFlight, promo } = data;
+  const { user, selectedFlight, promo } = data;
 
+  console.log(`flight guest recieved user: ` , user);
   console.log(`flight guest recieved selectedflight: `, selectedFlight);
   console.log(`flight guest recieved promo: ` , promo);
 
@@ -23,7 +24,8 @@ function GuestDetailsPage() {
 
   const handleSubmit = () => {
     // Destructure userId and selectedFlightId from data
-    const { userId=null, selectedFlightId, promoId } = data;
+    // const { userId=null, selectedFlightId, promoId } = data;
+    const { user, selectedFlight, promo } = data;
 
     // Exclude the last guest from the list and format their birthday
     const guestsToSubmit = finalGuests.slice(0, -1).map((guest) => {
@@ -64,13 +66,22 @@ function GuestDetailsPage() {
         const passengerIds = data.passengerIds; // Use the passenger IDs from the response
 
         // Prepare booking data after successfully getting passenger IDs
+        // const bookingData = {
+        //     user: user, // Use userId from destructured data
+        //     passengerIds: passengerIds, // Use the fetched passenger IDs
+        //     commercialFlightId: selectedFlightId, // Use selectedFlightId from destructured data
+        //     promo: promo || null, // Use promoId from destructured data
+        //     seatClass: 'economy',
+        // };
+
         const bookingData = {
-            userId: userId, // Use userId from destructured data
-            passengerIds: passengerIds, // Use the fetched passenger IDs
-            commercialFlightId: selectedFlightId, // Use selectedFlightId from destructured data
-            promoId: promoId || null, // Use promoId from destructured data
-            seatClass: 'economy',
-        };
+          userId: user, // Use userId from destructured data
+          passengerIds: passengerIds, // Use the fetched passenger IDs
+          commercialFlightId: selectedFlight, // Use selectedFlightId from destructured data
+          promoId: promo || null, // Use promoId from destructured data
+          seatClass: 'economy',
+      };
+
 
         console.log('Booking data to submit:', bookingData);
 
