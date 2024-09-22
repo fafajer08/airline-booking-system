@@ -28,4 +28,7 @@ router.get('/all', commercialFlightController.viewAllCommercialFlights);
 // Route to get details of a specific commercial flight
 router.get('/:id', commercialFlightController.getCommercialFlightDetails);
 
+router.patch('/:id', commercialFlightController.getCommercialFlightDetails);
+
+
 module.exports = router;

@@ -29,6 +29,9 @@ import Profile from './pages/Profile';
 import Deals from './pages/Deals';
 
 
+import Ticket from './components/Ticket';
+
+
 function App() {
   return (
     <>
@@ -55,6 +58,7 @@ function App() {
             <Route path='/admin/page' element={<AdminPage />} />
             <Route path='/users' element={<Users />} />
             <Route path='/profile' element={<Profile />} />
+            <Route path='/ticket' element={<Ticket />} />
             <Route path='/*' element={<NotFound />} />
           </Routes>
         </Router>

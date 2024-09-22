@@ -78,7 +78,7 @@ function LoginWindow({ isVisible, onClose, handleSignUpClick, initialEmail }) { 
           // Store the token in localStorage
           localStorage.setItem('token', token);
   
-          navigate(user.isAdmin ? '/admin/flights' : '/users');
+          navigate(user.isAdmin ? '/admin/create' : '/flights');
           setLoading(false);
           onClose(); // Optionally close the login window after navigating
         } else {

@@ -85,9 +85,9 @@ function SelectButton({ isSelected, onClick, type = "button" }) {
   );
 }
 
-function SubmitButton({ type = "submit" }) {
+function SubmitButton({ type = "submit", onClick }) {
   return (
-    <BaseButton className="submit-button-link" type={type}>
+    <BaseButton className="submit-button-link" type={type} onClick={onClick}>
       <div className="submit-button-container">
         <span className="submit-button-text">Submit</span>
       </div>

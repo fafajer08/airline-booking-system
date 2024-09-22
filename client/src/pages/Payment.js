@@ -1,16 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BackButton, SubmitButton } from '../components/Buttons';
 import { Modal, Button, Form } from 'react-bootstrap';
+import { useLocation, useNavigate } from 'react-router-dom';
+import Ticket from '../components/Ticket'; // Import TicketDetails
 
 export default function Payment() {
-  const [showModal, setShowModal] = useState(false); // State to handle modal visibility
+  const location = useLocation();
+  const navigate = useNavigate(); // Use navigate hook to navigate between routes
+  const { bookedData, totalCost, guestEmail } = location.state;
+  const [showModal, setShowModal] = useState(false); // State to handle credit card modal visibility
+  const [showTicket, setShowTicket] = useState(false); // State to handle showing ticket instead of modal
   const [paymentMethod, setPaymentMethod] = useState(''); // State to track the selected payment method
   const [expiryMonth, setExpiryMonth] = useState(''); // State for expiration month
   const [expiryYear, setExpiryYear] = useState(''); // State for expiration year
 
-  // Handle opening and closing of the modal
+  // Handle opening and closing of the credit card modal
   const handleShowModal = () => setShowModal(true);
   const handleCloseModal = () => setShowModal(false);
+
+  console.log('guestEmail payment ',guestEmail,bookedData);
+
+  useEffect(() => {
+    if (!bookedData){
+      navigate('/flights');
+    }
+  })
 
   // Handle the radio button change for payment methods
   const handlePaymentChange = (e) => {
@@ -23,86 +37,102 @@ export default function Payment() {
   const currentYear = new Date().getFullYear();
   const expirationYears = Array.from(new Array(15), (val, index) => currentYear + index); // Generate next 15 years
 
+  // Simulate payment request
+  const handlePaymentRequest = async () => {
+    try {
+      // After successful payment, show the ticket
+      setShowTicket(true);
+    } catch (err) {
+      console.error('Error processing payment:', err);
+      alert('Payment failed. Please try again.');
+    }
+  };
+
   return (
     <div>
-      <div className="container">
-        <h5>How would you like to pay?</h5>
-        <h2>Payment Method</h2>
-        <div className='px-5 py-3'>
-          <div>
-            <h3>Credit or Debit Card</h3>
+      {!showTicket ? (
+        <div className="container">
+          <h5>How would you like to pay?</h5>
+          <h2>Payment Method</h2>
+          <div className='px-5 py-3'>
+            <div>
+              <h3>Credit or Debit Card</h3>
+            </div>
+            <div className=''>
+              <input
+                className=''
+                type="radio"
+                name="paymentMethod"
+                id="creditCard"
+                value="creditCard"
+                onChange={handlePaymentChange}
+              />
+              <label className='px-5 py-3' htmlFor="creditCard">Credit, Debit or Prepaid Cards</label>
+            </div>
           </div>
-          <div className=''>
-            <input
-              className=''
-              type="radio"
-              name="paymentMethod"
-              id="creditCard"
-              value="creditCard"
-              onChange={handlePaymentChange}
-            />
-            <label className='px-5 py-3' htmlFor="creditCard">Credit, Debit or Prepaid Cards</label>
-          </div>
-        </div>
 
-        <div className='px-5 py-3'>
-          <div>
-            <h3>E-Wallet</h3>
+          <div className='px-5 py-3'>
+            <div>
+              <h3>E-Wallet</h3>
+            </div>
+            <div className=''>
+              <input
+                className=''
+                type="radio"
+                name="paymentMethod"
+                id="alipay"
+                value="alipay"
+                onChange={handlePaymentChange}
+              />
+              <label className='px-5 py-3' htmlFor="alipay">Alipay</label>
+            </div>
+            <div>
+              <input
+                type="radio"
+                name="paymentMethod"
+                id="applepay"
+                value="applepay"
+                onChange={handlePaymentChange}
+              />
+              <label className='px-5 py-3' htmlFor="applepay">Apple Pay</label>
+            </div>
+            <div>
+              <input
+                type="radio"
+                name="paymentMethod"
+                id="googlepay"
+                value="googlepay"
+                onChange={handlePaymentChange}
+              />
+              <label className='px-5 py-3' htmlFor="googlepay">Google Pay</label>
+            </div>
+            <div>
+              <input
+                type="radio"
+                name="paymentMethod"
+                id="paypal"
+                value="paypal"
+                onChange={handlePaymentChange}
+              />
+              <label className='px-5 py-3' htmlFor="paypal">PayPal</label>
+            </div>
           </div>
-          <div className=''>
-            <input
-              className=''
-              type="radio"
-              name="paymentMethod"
-              id="alipay"
-              value="alipay"
-              onChange={handlePaymentChange}
-            />
-            <label className='px-5 py-3' htmlFor="alipay">Alipay</label>
-          </div>
-          <div>
-            <input
-              type="radio"
-              name="paymentMethod"
-              id="applepay"
-              value="applepay"
-              onChange={handlePaymentChange}
-            />
-            <label className='px-5 py-3' htmlFor="applepay">Apple Pay</label>
-          </div>
-          <div>
-            <input
-              type="radio"
-              name="paymentMethod"
-              id="googlepay"
-              value="googlepay"
-              onChange={handlePaymentChange}
-            />
-            <label className='px-5 py-3' htmlFor="googlepay">Google Pay</label>
-          </div>
-          <div>
-            <input
-              type="radio"
-              name="paymentMethod"
-              id="paypal"
-              value="paypal"
-              onChange={handlePaymentChange}
-            />
-            <label className='px-5 py-3' htmlFor="paypal">Paypal</label>
-          </div>
-        </div>
 
-        <div>
-          <p>By clicking the ‘Continue’ button below, I confirm that I have read, understood, and accept all the Conditions set by the airline.</p>
-        </div>
+          <div>
+            <p>By clicking the ‘Continue’ button below, I confirm that I have read, understood, and accept all the Conditions set by the airline.</p>
+          </div>
 
-        <div className='d-flex'>
-          <div className='ms-auto'>
-            <BackButton link="/bookings" />
-            <SubmitButton />
+          <div className='d-flex'>
+            <div className='ms-auto'>
+              <BackButton link="/bookings" />
+              <SubmitButton onClick={handlePaymentRequest} />
+            </div>
           </div>
         </div>
-      </div>
+      ) : (
+        <Ticket guestEmail={guestEmail} bookedData={bookedData} totalCost={totalCost}/>
+
+      )}
 
       {/* Modal for Credit Card details */}
       <Modal show={showModal} onHide={handleCloseModal}>
