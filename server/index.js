@@ -58,6 +58,7 @@ const promoRoutes = require("./routes/promoRoute");
 const commercialFlightsRoutes = require("./routes/commercialFlightRoute");
 const bookingRoutes = require("./routes/bookingRoute");
 const passengerRoutes = require("./routes/passengerRoute");
+const paymentRoutes = require("./routes/paymentRoute");
 
 // Setup routes
 app.use("/users", userRoutes);
@@ -70,6 +71,7 @@ app.use("/promos", promoRoutes)
 app.use("/commercialflights", commercialFlightsRoutes);
 app.use("/bookings", bookingRoutes);
 app.use("/passengers", passengerRoutes);
+app.use("/payments", paymentRoutes);
 
 
 // Initialize the server

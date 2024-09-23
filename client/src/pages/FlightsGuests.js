@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import GuestDetailsForm from '../components/GuestDetailsForm';
 import { BackButton, ContinueButton } from '../components/Buttons';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { Modal, Button, Form } from 'react-bootstrap'; // Import Modal, Button, and Form from react-bootstrap
 
 function GuestDetailsPage() {
   const navigate = useNavigate();
@@ -9,89 +10,68 @@ function GuestDetailsPage() {
   const { data } = location.state || {}; 
   const [finalGuests, setFinalGuests] = useState([]);
   const [passengerIds, setPassengerIds] = useState([]);
+  const [showGuestModal, setShowGuestModal] = useState(false); // State to handle showing the modal
+  const [guestEmail, setGuestEmail] = useState(''); // State to track guest email input
+  const [emailError, setEmailError] = useState(''); // State to handle email validation
 
-  console.log(`data: ${JSON.stringify(data)}`);
+  const { user, selectedFlight, promo } = data;
 
-  const handleSubmit = () => {
-    // Destructure userId and selectedFlightId from data
-    const { userId, selectedFlightId, promoId } = data;
+  console.log(`flight guest received user: `, user);
+  console.log(`flight guest received selected flight: `, selectedFlight);
+  console.log(`flight guest received promo: `, promo);
+  
 
-    // Exclude the last guest from the list and format their birthday
-    const guestsToSubmit = finalGuests.slice(0, -1).map((guest) => {
-        const birthday = guest.year && guest.month && guest.day
-            ? `${guest.year}-${String(guest.month).padStart(2, '0')}-${String(guest.day).padStart(2, '0')}`
-            : '';
-
-        return {
-            ...guest,
-            birthday,
-        };
-    });
-
-    console.log('Guests to Submit: ', guestsToSubmit);
-
-    if (guestsToSubmit.length === 0) {
-        console.log('No guests to submit');
-        return;
+  useEffect(() => {
+    if (!selectedFlight) {
+      navigate('/flights');
+      return null; // Exit early if no data is provided
     }
 
-    // Submit passengers first
-    fetch(`${process.env.REACT_APP_API_URL}/passengers/addmultiple`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        },
-        body: JSON.stringify({ passengers: guestsToSubmit }),
-    })
-    .then((response) => {
-        if (!response.ok) {
-            throw new Error('Failed to add guests');
-        }
-        return response.json();
-    })
-    .then((data) => {
-        console.log('Guests added successfully:', data);
-        const passengerIds = data.passengerIds; // Use the passenger IDs from the response
+    // If the user is not logged in, show the modal
+    if (!user) {
+      setShowGuestModal(true);
+    }
+  }, [selectedFlight, user, navigate]);
 
-        // Prepare booking data after successfully getting passenger IDs
-        const bookingData = {
-            userId: userId, // Use userId from destructured data
-            passengerIds: passengerIds, // Use the fetched passenger IDs
-            commercialFlightId: selectedFlightId, // Use selectedFlightId from destructured data
-            promoId: promoId || null, // Use promoId from destructured data
-            seatClass: 'economy',
-        };
+  // Email format validation using regex
+  const validateEmailFormat = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
 
-        console.log('Booking data to submit:', bookingData);
+  const handleContinueToBookingSummary = () => {
+    if (!guestEmail && !user) {
+      setEmailError('Please provide your email to continue as a guest.');
+      return;
+    }
 
-        // Make the booking
-        return fetch(`${process.env.REACT_APP_API_URL}/bookings/`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('token')}`,
-            },
-            body: JSON.stringify(bookingData), // Pass the correct booking data object
-        });
-    })
-    .then((response) => {
-        if (!response.ok) {
-            throw new Error('Failed to add booking data');
-        }
-        return response.json();
-    })
-    .then((data) => {
-        console.log('Successfully logged booking:', data);
-        // Navigate to bookings page
-        navigate('/bookings');
-    })
-    .catch((error) => {
-        console.error('Error booking:', error);
-    });
-};
+    const bookingData = {
+      user: user || null, // If user is null, use guestEmail
+      selectedFlight,
+      promo,
+      finalGuests,
+    };
 
+    console.log('sending guest email', guestEmail);
+    navigate('/bookings', { state: { bookingData: bookingData, guestEmail:guestEmail } });
+  };
 
+  // Close the guest modal and submit email as guest
+  const handleGuestEmailSubmit = () => {
+    if (!guestEmail) {
+      setEmailError('Email is required to continue as a guest.');
+      return;
+    }
+
+    // Validate email format
+    if (!validateEmailFormat(guestEmail)) {
+      setEmailError('Please enter a valid email address.');
+      return;
+    }
+
+    setEmailError(''); // Clear any previous errors
+    setShowGuestModal(false); // Close the modal
+  };
 
   return (
     <div>
@@ -100,11 +80,13 @@ function GuestDetailsPage() {
         <h2 className="ms-5 px-5">Guest Details</h2>
         <GuestDetailsForm setFinalGuests={setFinalGuests} />
 
+        {/* Navigation buttons */}
         <div>
           <BackButton link="/flights/options" />
-          <ContinueButton onClick={handleSubmit} />
+          <ContinueButton onClick={handleContinueToBookingSummary} />
         </div>
 
+        {/* Final Guests display */}
         <div>
           <h3>Final Guests:</h3>
           <ul>
@@ -116,6 +98,41 @@ function GuestDetailsPage() {
           </ul>
         </div>
       </div>
+
+      {/* Modal for guest vs login with email input */}
+      <Modal show={showGuestModal} onHide={() => setShowGuestModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Complete Your Booking as a Guest</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>
+            You're continuing as a guest. To complete your booking, please provide your email address.
+            We will send your ticket and booking details to this email.
+          </p>
+          <p>
+            Kindly ensure your email is accurate so you can receive all necessary information regarding your trip.
+          </p>
+
+          {/* Email Input Form */}
+          <Form>
+            <Form.Group controlId="guestEmail">
+              <Form.Label>Guest Email</Form.Label>
+              <Form.Control
+                type="email"
+                placeholder="Enter your email"
+                value={guestEmail}
+                onChange={(e) => setGuestEmail(e.target.value)}
+              />
+              {emailError && <p style={{ color: 'red' }}>{emailError}</p>} {/* Display error if email is not valid */}
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="primary" onClick={handleGuestEmailSubmit}>
+            Continue as Guest
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }

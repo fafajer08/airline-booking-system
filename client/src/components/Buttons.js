@@ -30,9 +30,24 @@ function SearchFlightButton({ link, type = "button" }) {
   );
 }
 
-function ContinueButton({ onClick, type = "button" }) {
+function ContinueButton({ onClick = () => {}, link, type = "button" }) {
+  const navigate = useNavigate(); // Use useNavigate for navigation
+
+  const handleNavigation = () => {
+    if (link) {
+      navigate(link); // Navigate to the provided link
+    }
+  };
+
+  const handleClick = () => {
+    if (onClick) {
+      onClick(); // Execute any additional logic passed via onClick
+    }
+    handleNavigation(); // Then handle navigation if link is provided
+  };
+
   return (
-    <BaseButton className="continue-button-link" onClick={onClick} type={type}>
+    <BaseButton className="continue-button-link" onClick={handleClick} type={type}>
       <div className="continue-button-container">
         <span className="continue-button-text">CONTINUE</span>
       </div>
@@ -70,9 +85,9 @@ function SelectButton({ isSelected, onClick, type = "button" }) {
   );
 }
 
-function SubmitButton({ type = "submit" }) {
+function SubmitButton({ type = "submit", onClick }) {
   return (
-    <BaseButton className="submit-button-link" type={type}>
+    <BaseButton className="submit-button-link" type={type} onClick={onClick}>
       <div className="submit-button-container">
         <span className="submit-button-text">Submit</span>
       </div>

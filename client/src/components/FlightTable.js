@@ -2,7 +2,8 @@ import React from 'react';
 import { SelectButton } from './Buttons';
 import '../styles/flighttable.css';
 
-function FlightTable({ selectedFlights = [], selectedFlightId, onSelectFlight }) {
+// function FlightTable({ selectedFlights = [], selectedFlightId, onSelectFlight }) {
+  function FlightTable({ selectedFlights = [], selectedFlight, onSelectFlight }) {
   console.log('FlightTable received flights:', selectedFlights);
 
   // Function to format duration from minutes
@@ -40,7 +41,8 @@ function FlightTable({ selectedFlights = [], selectedFlightId, onSelectFlight })
                 ? flight.flight.route.destination.airportName 
                 : "N/A";
 
-              const isSelected = selectedFlightId === flight._id;
+              {/* const isSelected = selectedFlightId === flight._id; */}
+              const isSelected = selectedFlight === flight;
 
               return (
                 <tr key={flight._id} className={isSelected ? 'selected' : ''}>
@@ -48,11 +50,15 @@ function FlightTable({ selectedFlights = [], selectedFlightId, onSelectFlight })
                   <td>{arrivalAirport}</td>
                   <td>{flightDuration}</td>
                   <td>{flight.flight.flightNo}</td>
-                  <td>PHP {basePrice.toLocaleString()} ({flight.availableSeats.totalSeats} seats)</td>
+                  <td>PHP {((flight.flight.route.distanceKM * flight.pricing.distanceFactor) + flight.pricing.basePrice).toLocaleString('en-US', {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2
+                        })} ({flight.availableSeats.totalSeats} seats)</td>
                   <td>
                     <SelectButton 
                       isSelected={isSelected}
-                      onClick={() => onSelectFlight(flight._id)} 
+                      // onClick={() => onSelectFlight(flight._id)}
+                      onClick={() => onSelectFlight(flight)} 
                     />
                   </td>
                 </tr>

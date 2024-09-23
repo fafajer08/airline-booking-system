@@ -15,7 +15,7 @@ module.exports = {
       console.log('Received booking data:', req.body);
 
       // Check if required fields are present
-      if (!userId || !passengerIds || !commercialFlightId || !seatClass) {
+      if (!passengerIds || !commercialFlightId || !seatClass) {
         console.log('Missing required fields:', { userId, passengerIds, commercialFlightId, seatClass });
         return res.status(400).json({ message: 'Missing required fields' });
       }
@@ -28,10 +28,33 @@ module.exports = {
         promoId: promoId || null, // If promoId exists, use it; otherwise, set to null
       });
 
-      const savedBooking = await newBooking.save();
+      const savedBooking =  await newBooking.save();
 
-      console.log('New booking saved:', savedBooking);
-      res.status(201).json(savedBooking);
+      // Populate everything, including all nested fields in commercialFlightId
+      const populatedBooking = await Booking.findById(savedBooking._id)
+      .populate('userId') // Populate all fields from the User document
+      .populate('passengerIds') // Populate all fields from Passenger documents
+      .populate({
+        path: 'commercialFlightId',  // First, populate the commercialFlightId
+        populate: [
+          {
+            path: 'flight',  // Populate the 'flight' field inside commercialFlightId
+            populate: {
+              path: 'route',  // Populate the 'route' field inside flight
+              populate: [
+                { path: 'destination' },  // Populate the 'destination' field inside route
+                { path: 'departure' }     // Populate the 'departure' field inside route
+              ]
+            }
+          },
+          {
+            path: 'pricing',  // Populate the 'pricing' field inside commercialFlightId
+          }
+        ]
+      })
+
+      console.log('New booking saved:', populatedBooking);
+      res.status(201).json(populatedBooking);
     } catch (error) {
       console.error('Error adding booking:', error);
       res.status(500).json({ message: 'Error adding booking', error });
