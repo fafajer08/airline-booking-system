@@ -1,4 +1,4 @@
-const Route = require('../models/route');
+const Route = require('../models/Route');
 const Airport = require('../models/Airport'); // Adjust the path according to your project structure
 
 const routeController = {
