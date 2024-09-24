@@ -10,10 +10,11 @@ require('dotenv').config();
 const port = process.env.PORT || 3000;
 const mongodb = process.env.MONGODB_STRING;
 const secret = process.env.clientSecret;
+const frontend = process.env.FRONTEND;
 
 // Setup middleware
 const corsOptions = {
-    origin: ['http://localhost:3000'], // Adjust according to your frontend's URL
+    origin: ['http://localhost:3000', frontend], // Adjust according to your frontend's URL
     credentials: true,
     optionsSuccessStatus: 200
 };
@@ -44,8 +45,8 @@ app.use(session({
         maxAge: 24 * 60 * 60 * 1000 // 24 hours session expiry
     }
 }));
-app.use(passport.initialize());
-app.use(passport.session());
+// app.use(passport.initialize());
+// app.use(passport.session());
 
 // Define routes
 const userRoutes = require("./routes/userRoute");
@@ -60,6 +61,7 @@ const bookingRoutes = require("./routes/bookingRoute");
 const passengerRoutes = require("./routes/passengerRoute");
 const paymentRoutes = require("./routes/paymentRoute");
 
+
 // Setup routes
 app.use("/users", userRoutes);
 app.use("/airplanes", airplaneRoutes); // Added plane routes
@@ -72,6 +74,7 @@ app.use("/commercialflights", commercialFlightsRoutes);
 app.use("/bookings", bookingRoutes);
 app.use("/passengers", passengerRoutes);
 app.use("/payments", paymentRoutes);
+
 
 
 // Initialize the server

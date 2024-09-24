@@ -2,6 +2,7 @@
 
 const express = require('express');
 const router = express.Router();
+const { verify, verifyAdmin } = require("../auth");
 const bookingController = require('../controllers/bookingController'); // Adjust the path as needed
 
 // Route to add a new booking
@@ -15,5 +16,8 @@ router.patch('/:id/status', bookingController.updateBookingStatus);
 
 // Route to view all bookings
 router.get('/', bookingController.viewAllBookings);
+
+router.post('/mybookings', verify, bookingController.viewMyBookings);
+
 
 module.exports = router;
