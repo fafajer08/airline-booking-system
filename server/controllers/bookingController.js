@@ -136,4 +136,47 @@ module.exports = {
       res.status(500).json({ message: 'Error fetching bookings', error });
     }
   },
+
+  async viewMyBookings(req, res) {
+    try {
+      console.log('Fetching my bookings');
+      
+      const userId = req.user.id;
+      console.log('Fetching by userId:', userId);
+      
+      // Fetch bookings based on userId, then populate referenced fields
+      const bookings = await Booking.find({ userId: userId })
+        .populate('passengerIds')
+        .populate('promoId')
+        .populate({
+          path: 'commercialFlightId',
+          populate: [
+            {
+              path: 'flight',
+              populate: [
+                {
+                  path: 'route',
+                  populate: [
+                    { path: 'destination' }, // Correctly nested population for 'destination'
+                    { path: 'departure' }     // Correctly nested population for 'departure'
+                  ]
+                }
+              ]
+            },
+            {
+              path: 'pricing' // Separate path for 'pricing' population
+            }
+          ]
+        });
+  
+      console.log('All my bookings fetched:', bookings);
+      res.status(200).json(bookings);
+  
+    } catch (error) {
+      console.error('Error fetching my bookings:', error);
+      res.status(500).json({ message: 'Error fetching my bookings', error });
+    }
+  }
+  
+  
 };
