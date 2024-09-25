@@ -69,7 +69,7 @@ export default function AdminRouteDash() {
 
   // Get sorted routes based on the selected sort key
   const getSortedRoutes = () => {
-    const sortedRoutes = [...routes];
+    const sortedRoutes = Array.isArray(routes) ? [...routes] : []; 
     if (sortConfig.key) {
       sortedRoutes.sort((a, b) => {
         const aValue = a[sortConfig.key];
@@ -159,6 +159,32 @@ export default function AdminRouteDash() {
 
 
   // Function to toggle route activation
+  // const toggleIsActive = async (id, isActive) => {
+  //   const action = isActive ? 'archive' : 'activate';
+  //   try {
+  //     const response = await fetch(`${process.env.REACT_APP_API_URL}/routes/${action}/${id}`, {
+  //       method: 'PATCH',
+  //       headers: {
+  //         'Authorization': `Bearer ${localStorage.getItem('token')}`
+  //       }
+  //     });
+
+  //     if (response.ok) {
+
+  //       setRoutes((prevRoutes) => 
+  //         prevRoutes.map((route) => 
+  //           route._id === id ? { ...route, isActive: !route.isActive } : route
+  //         )
+  //       );
+  //       notyf.success(`Route ${isActive ? 'archived' : 'activated'} successfully.`);
+  //     } else {
+  //       notyf.error(`Failed to ${isActive ? 'archive' : 'activate'} the route.`);
+  //     }
+  //   } catch (error) {
+  //     console.error('Error updating route status:', error);
+  //     notyf.error('Error updating route status.');
+  //   }
+  // };
   const toggleIsActive = async (id, isActive) => {
     const action = isActive ? 'archive' : 'activate';
     try {
@@ -168,13 +194,17 @@ export default function AdminRouteDash() {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
       });
-
+  
       if (response.ok) {
-        setRoutes((prevRoutes) => 
-          prevRoutes.map((route) => 
-            route._id === id ? { ...route, isActive: !route.isActive } : route
-          )
-        );
+        setRoutes((prevRoutes) => {
+          if (Array.isArray(prevRoutes)) {
+            return prevRoutes.map((route) =>
+              route._id === id ? { ...route, isActive: !route.isActive } : route
+            );
+          } else {
+            return []; // Return an empty array if prevRoutes is not an array
+          }
+        });
         notyf.success(`Route ${isActive ? 'archived' : 'activated'} successfully.`);
       } else {
         notyf.error(`Failed to ${isActive ? 'archive' : 'activate'} the route.`);
@@ -184,6 +214,8 @@ export default function AdminRouteDash() {
       notyf.error('Error updating route status.');
     }
   };
+
+
 
   const handleCloseAddModal = () => {
     setAddModalVisible(false);
@@ -212,7 +244,7 @@ export default function AdminRouteDash() {
         throw new Error(`Failed to add new route: ${response.status} ${responseData.message}`);
       }
 
-      setRoutes((prevRoutes) => [...prevRoutes, responseData]);
+      setRoutes((prevRoutes) => (Array.isArray(prevRoutes) ? [...prevRoutes, responseData] : [responseData]));
       setAddModalVisible(false); // Close the modal after adding the route
     } catch (error) {
       console.error('Error adding route:', error);
@@ -272,35 +304,35 @@ export default function AdminRouteDash() {
           </tr>
         </thead>
         <tbody>
-          {paginatedRoutes.length > 0 ? (
+          {paginatedRoutes && paginatedRoutes.length > 0 ? (
             paginatedRoutes.map((route) => (
               <tr key={route._id} onClick={() => handleRowClick(route)}>
-                <td>{route.departure.airportCity}</td>
-                <td>{route.departure.airportName}</td>
-                <td>{route.destination.airportCity}</td>
-                <td>{route.destination.airportName}</td>
-                <td>{route.distanceKM}</td>
-                <td>{route.durationMins}</td>
- 
+                <td>{route?.departure?.airportCity || 'N/A'}</td>
+                <td>{route?.departure?.airportName || 'N/A'}</td>
+                <td>{route?.destination?.airportCity || 'N/A'}</td>
+                <td>{route?.destination?.airportName || 'N/A'}</td>
+                <td>{route?.distanceKM ?? 'N/A'}</td>
+                <td>{route?.durationMins ?? 'N/A'}</td>
                 <td>
                   <Button
-                    variant={route.isActive ? "success" : "danger"}
+                    variant={route?.isActive ? "success" : "danger"}
                     onClick={(e) => {
                       e.stopPropagation(); // Prevent row click event
-                      toggleIsActive(route._id, route.isActive);
+                      toggleIsActive(route?._id, route?.isActive);
                     }}
                   >
-                    {route.isActive ? "Activated" : "Archived"}
+                    {route?.isActive ? "Activated" : "Archived"}
                   </Button>
                 </td>
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan="5">No routes available</td>
+              <td colSpan="7">No routes available</td>
             </tr>
           )}
         </tbody>
+
       </table>
 
       <div className="pagination-controls">
@@ -437,3 +469,4 @@ export default function AdminRouteDash() {
     </div>
   );
 }
+

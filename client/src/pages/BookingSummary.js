@@ -2,13 +2,17 @@ import React, { useEffect } from 'react';  // Import useEffect
 import { useLocation, useNavigate } from 'react-router-dom';  // Import useLocation and useNavigate
 import BookingSummaryTable from '../components/BookingSummaryTable';  // Import the BookingSummaryTable component
 import { BackButton, ContinueButton } from '../components/Buttons';  // Import BackButton and ContinueButton components
+import { Notyf } from 'notyf';  // Import Notyf
+import 'notyf/notyf.min.css';   // Import Notyf styles
 
 
 export default function BookingSummary() {
+  const notyf = new Notyf();
   const location = useLocation();
   const navigate = useNavigate();
   const { bookingData, guestEmail } = location.state || {};
   const { user, selectedFlight, promo, finalGuests } = bookingData;
+  console.log(`user`, user);
 
   const totalCost = (
     (selectedFlight.flight.route.distanceKM * selectedFlight.pricing.distanceFactor + selectedFlight.pricing.basePrice)
@@ -76,12 +80,13 @@ export default function BookingSummary() {
         return response.json();
     })
     .then((data) => {
+        notyf.success('Guests added successfully');
         console.log('Guests added successfully:', data);
         const passengerIds = data.passengerIds; // Use the passenger IDs from the response
 
 
         const bookingData = {
-          userId: user, // Use userId from destructured data
+          userId: user.id, // Use userId from destructured data
           passengerIds: passengerIds, // Use the fetched passenger IDs
           commercialFlightId: selectedFlight, // Use selectedFlightId from destructured data
           promoId: promo || null, // Use promoId from destructured data
@@ -109,12 +114,14 @@ export default function BookingSummary() {
         return response.json();
     })
     .then((data) => {
+        notyf.success('Booking created successfully');
         console.log('Successfully logged booking:', data);
         console.log('guestEmail-booking summary:', guestEmail);
         // Navigate to bookings page
         navigate('/payment', { state: { bookedData: data, totalCost:totalCost, guestEmail:guestEmail } });
     })
     .catch((error) => {
+        notyf.error(`Error booking: ${error.message}`);
         console.error('Error booking:', error);
     });
 };

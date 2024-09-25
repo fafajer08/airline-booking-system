@@ -9,8 +9,11 @@ import FlightTypeSelector from "../components/SelectorFlightType.js";
 import '../styles/flightsearch.css';
 import parseData from '../components/FlightsDataParser.js'; // Updated import
 import flightsData from '../data/flightsData.js';
+import { Notyf } from 'notyf';
+import 'notyf/notyf.min.css';
 
 export default function SearchFlight() {
+  const notyf = new Notyf({ duration: 3000});
   const navigate = useNavigate(); // Initialize useNavigate
   const [portOptions, setPortOptions] = useState([]);
   const [flightType, setFlightType] = useState('oneway'); // Default flight type
@@ -26,6 +29,7 @@ export default function SearchFlight() {
     const today = new Date();
     return today.toISOString().split('T')[0]; // Format to 'YYYY-MM-DD'
 });
+const [loading, setLoading] = useState(false); // Loading state
 
   const handleFlightTypeChange = (selectedType) => {
     setFlightType(selectedType);
@@ -36,6 +40,7 @@ export default function SearchFlight() {
   console.log("departureDate: ", departureDate);
   // Fetch data from API and fall back to mock data if necessary
   const fetchData = async () => {
+    setLoading(true); // Start loading
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/flights/airports`); // Replace with actual API
       const data = await response.json();
@@ -46,6 +51,8 @@ export default function SearchFlight() {
       const mockData = parseData(flightsData);
       console.log("Using mock data:", mockData); // Debugging mock data
       setPortOptions(mockData);
+    } finally {
+      setLoading(false); // Stop loading
     }
   };
 
@@ -55,6 +62,7 @@ export default function SearchFlight() {
 
   // Handle the search button click
   const handleSearch = async (event) => {
+    setLoading(true); // Start loading
     event.preventDefault(); // Prevent the default form submission behavior
   
     let promoData = null; // Local variable to store promo details
@@ -82,9 +90,11 @@ export default function SearchFlight() {
         promoData = await promoResponse.json();
         console.log("Promo Code Details (API Response):", promoData); // Debugging promo code data
         setPromoDetails(promoData);
+        notyf.success('Promo code applied successfully!');
       } catch (error) {
         console.error("Error fetching promo code:", error);
         setPromoDetails(null); // Reset promo details if there's an error
+        notyf.error('Failed to apply promo code.');
       }
     } else {
       console.log("No promo code provided."); // Log when input is empty
@@ -130,9 +140,13 @@ export default function SearchFlight() {
   
       // Navigate to the flights options page with the filtered flight data
       navigate('/flights/options', { state: { data: { ...requestData, flightsByLocation: filteredFlights } } });
+      notyf.success('Flights found successfully!');
     } catch (error) {
       console.error("Error fetching filtered flights:", error);
+      notyf.error('Failed to search for flights.');
       // Optionally, handle error cases like showing a message to the user
+    }  finally {
+      setLoading(false); // Stop loading
     }
   };
   
