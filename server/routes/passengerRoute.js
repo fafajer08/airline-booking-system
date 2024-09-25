@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const passengerController = require('../controllers/passengerController');
+const { verify, verifyAdmin, isLoggedIn } = require("../auth");
 
 // Routes for Passenger operations
 router.post('/addmultiple', passengerController.addOrGetMultiplePassengers);

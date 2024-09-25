@@ -104,6 +104,23 @@ module.exports.getProfile = async (req, res) => {
     }
 }
 
+module.exports.getAllUsers = async (req, res) => {
+    try {
+        // const users = await User.find();
+        const users = await User.find().lean();
+        if (!users || users.length === 0) {
+            return res.status(404).send({ error: 'Users not found' });
+        } else {
+            console.log(`Users sent: `, users);
+            return res.status(200).send({ users: users });
+        }
+    }
+    catch (error) {
+        return errorHandler(error, req, res);
+    }
+}
+
+
 module.exports.setAsAdmin = async (req, res) => {
     try {
         const userId = req.params.id;
