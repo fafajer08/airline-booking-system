@@ -10,7 +10,8 @@ const cors = require("cors");
 const port = process.env.PORT || 3000;
 const mongodb = process.env.MONGODB_STRING;
 // const secret = process.env.clientSecret;
-const frontend = process.env.FRONTEND;
+const frontend = process.env.FRONTEND || 'https://airline-booking-system-5n0j.onrender.com';
+console.log("frontend ", frontend);
 
 mongoose.connect(mongodb, {
     useNewUrlParser: true,
@@ -29,7 +30,7 @@ const corsOptions = {
     credentials: true,
     optionsSuccessStatus: 200
 };
-
+ 
 
 app.use(cors(corsOptions));
 app.use(express.json());
