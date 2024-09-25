@@ -1,15 +1,10 @@
 const express = require("express");
 const app = express();
+const path = require('path');
+require('dotenv').config();
 
 const mongoose = require("mongoose");
 const cors = require("cors");
-
-// const passport = require('passport');
-const session = require('express-session');
-// require('./passport');
-require('dotenv').config();
-
-const path = require('path');
 
 // Define environment config
 const port = process.env.PORT || 3000;
@@ -17,14 +12,6 @@ const mongodb = process.env.MONGODB_STRING;
 // const secret = process.env.clientSecret;
 const frontend = process.env.FRONTEND;
 
-// Setup middleware
-const corsOptions = {
-    origin: ['http://localhost:3000', frontend], // Adjust according to your frontend's URL
-    credentials: true,
-    optionsSuccessStatus: 200
-};
-
-// Connect to MongoDB
 mongoose.connect(mongodb, {
     useNewUrlParser: true,
     useUnifiedTopology: true
@@ -34,12 +21,23 @@ mongoose.connect(mongodb, {
     console.error('Failed to connect to MongoDB', err);
 });
 
-// Setup the server
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Setup middleware
+const corsOptions = {
+    origin: ['http://localhost:3000', frontend], // Adjust according to your frontend's URL
+    credentials: true,
+    optionsSuccessStatus: 200
+};
+
+
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors(corsOptions));
 
+// const passport = require('passport');
+//const session = require('express-session');
+// require('./passport');
 // Setup session and passport
 // app.use(session({
 //     secret: secret,
