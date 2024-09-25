@@ -1,10 +1,15 @@
 const express = require("express");
+const app = express();
+
 const mongoose = require("mongoose");
 const cors = require("cors");
+
 // const passport = require('passport');
 const session = require('express-session');
 // require('./passport');
 require('dotenv').config();
+
+const path = require('path');
 
 // Define environment config
 const port = process.env.PORT || 3000;
@@ -30,7 +35,7 @@ mongoose.connect(mongodb, {
 });
 
 // Setup the server
-const app = express();
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors(corsOptions));

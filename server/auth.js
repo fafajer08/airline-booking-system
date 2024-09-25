@@ -16,6 +16,12 @@ module.exports.createAccessToken = (user) => {
 
 // Token Verification
 module.exports.verify = (req, res, next) => {
+	const openPaths = ['/manifest.json', '/favicon.ico']; // Add any other paths you want to exclude
+
+	// If the request path is in openPaths, skip authentication
+	if (openPaths.includes(req.path) || req.path.startsWith('/static')) {
+	  return next();
+	}
 	console.log("Verifying token from headers:", req.headers.authorization);
 
 	let token = req.headers.authorization;
