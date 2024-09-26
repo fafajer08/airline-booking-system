@@ -143,7 +143,8 @@ const [loading, setLoading] = useState(false); // Loading state
       notyf.success('Flights found successfully!');
     } catch (error) {
       console.error("Error fetching filtered flights:", error);
-      notyf.error('Failed to search for flights.');
+      // notyf.error('Failed to search for flights.');
+      notyf.error('No flights found for the selected route.');
       // Optionally, handle error cases like showing a message to the user
     }  finally {
       setLoading(false); // Stop loading
