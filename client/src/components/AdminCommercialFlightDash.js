@@ -127,6 +127,7 @@ export default function CommercialFlights() {
           <tr>
             <th>Flight No</th>
             <th>Departure</th>
+            <th>Departure</th>
             <th>Destination</th>
             <th>Date</th>
             <th>Status</th>
@@ -137,6 +138,7 @@ export default function CommercialFlights() {
             paginatedCommercialFlights.map((commercialFlight) => (
               <tr key={commercialFlight._id} onClick={() => handleOpenDetailsModal(commercialFlight)}> {/* Open details modal */}
                 <td>{commercialFlight.flight.flightNo}</td>
+                <td>{commercialFlight.departureTime}</td>
                 <td>{commercialFlight.flight.route.departure.airportCity} - {commercialFlight.flight.route.departure.airportCode}</td>
                 <td>{commercialFlight.flight.route.destination.airportCity} - {commercialFlight.flight.route.destination.airportCode}</td>
                 <td>{new Date(commercialFlight.date).toLocaleDateString()}</td>
