@@ -47,10 +47,13 @@ const [loading, setLoading] = useState(false); // Loading state
       console.log("Fetched airports:", data); // Debugging fetched data
       setPortOptions(Array.isArray(data) ? data : []);
     } catch (error) {
-      console.error("Error fetching data, using mock data:", error);
-      const mockData = parseData(flightsData);
-      console.log("Using mock data:", mockData); // Debugging mock data
-      setPortOptions(mockData);
+      // console.error("Error fetching data, using mock data:", error);
+      // const mockData = parseData(flightsData);
+      // console.log("Using mock data:", mockData); // Debugging mock data
+      // setPortOptions(mockData);
+      console.error("Error fetching airport data:", error);
+      notyf.error('Failed to load airport options. Please try again later.');
+     setPortOptions([]);
     } finally {
       setLoading(false); // Stop loading
     }

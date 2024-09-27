@@ -86,7 +86,7 @@ export default function BookingSummary() {
 
 
         const bookingData = {
-          userId: user.id, // Use userId from destructured data
+          userId: user?.id || null, // Use userId from destructured data
           passengerIds: passengerIds, // Use the fetched passenger IDs
           commercialFlightId: selectedFlight, // Use selectedFlightId from destructured data
           promoId: promo || null, // Use promoId from destructured data
