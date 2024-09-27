@@ -9,6 +9,7 @@ import FlightTypeSelector from "../components/SelectorFlightType.js";
 import '../styles/flightsearch.css';
 import { Notyf } from 'notyf';
 import 'notyf/notyf.min.css';
+import { Spinner } from 'react-bootstrap'; 
 
 export default function SearchFlight() {
   const notyf = new Notyf({ duration: 3000});
@@ -145,45 +146,101 @@ const [loading, setLoading] = useState(false); // Loading state
   };
   
 
+  // return (
+  //   <div className='search-flight-container my-5'>
+  //     <div className='search-flight-content container'>
+  //       <h1 className="search-flight-heading my-5 mx-5">Where would you like to go?</h1>
+        
+  //       <div className="search-flight-type-selector d-flex align-items-center justify-content-center mb-2">  
+  //         <FlightTypeSelector onFlightTypeChange={handleFlightTypeChange} />
+  //       </div>
+        
+  //       <form onSubmit={handleSearch}>
+  //           {flightType === 'oneway' && (
+  //             <div className='search-flight-form-container'>
+  //               <div className='search-flight-row search-flight-row--oneway'>
+  //                 <PortSelector 
+  //                     portOptions={portOptions} 
+  //                     setDeparturePort={setDeparturePort} 
+  //                     setDestinationPort={setDestinationPort} 
+  //                 />
+  //                 {/* YYYY-MM-DD FORMAT*/}
+  //                 <DateSelector label="DEPARTURE DATE" onDateChange={setDepartureDate} />  
+  //               </div>
+  //               <div className='search-flight-row search-flight-row--oneway'>
+  //                 <PaxSelector label={'ADULTS (12+ YEARS)'} setPaxCount={setAdultsCount} />
+  //                 <PaxSelector label={'CHILDREN (2-11 YEARS)'} setPaxCount={setChildCount} />
+  //                 <PaxSelector label={'INFANTS (UNDER 2 YEARS)'} setPaxCount={setInfantsCount} />
+  //                 <InputBox label="ENTER PROMO CODES" placeholder="Enter Code" onChange={setInput}/>
+  //               </div>
+  //               <div className='search-flight-submit-btn'>
+  //                 <SearchFlightButton type="submit" />
+  //               </div>
+  //             </div>
+  //           )}
+  //           {flightType === 'roundtrip' && (
+  //             <div className='search-flight-form-container'>
+  //               {/* Round-trip form fields */}
+  //             </div>
+  //           )}
+  //       </form>
+  //     </div>
+  //   </div>
+  // );
+
   return (
     <div className='search-flight-container my-5'>
       <div className='search-flight-content container'>
         <h1 className="search-flight-heading my-5 mx-5">Where would you like to go?</h1>
         
-        <div className="search-flight-type-selector d-flex align-items-center justify-content-center mb-2">  
-          <FlightTypeSelector onFlightTypeChange={handleFlightTypeChange} />
-        </div>
-        
-        <form onSubmit={handleSearch}>
-            {flightType === 'oneway' && (
-              <div className='search-flight-form-container'>
-                <div className='search-flight-row search-flight-row--oneway'>
-                  <PortSelector 
-                      portOptions={portOptions} 
-                      setDeparturePort={setDeparturePort} 
-                      setDestinationPort={setDestinationPort} 
-                  />
-                  {/* YYYY-MM-DD FORMAT*/}
-                  <DateSelector label="DEPARTURE DATE" onDateChange={setDepartureDate} />  
+        {loading && (
+          <div className="d-flex justify-content-center my-3">
+            <Spinner animation="border" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </Spinner>
+          </div>
+        )}
+
+        {!loading && (
+          <>
+            <div className="search-flight-type-selector d-flex align-items-center justify-content-center mb-2">  
+              <FlightTypeSelector onFlightTypeChange={handleFlightTypeChange} />
+            </div>
+            
+            <form onSubmit={handleSearch}>
+              {flightType === 'oneway' && (
+                <div className='search-flight-form-container'>
+                  <div className='search-flight-row search-flight-row--oneway'>
+                    <PortSelector 
+                        portOptions={portOptions} 
+                        setDeparturePort={setDeparturePort} 
+                        setDestinationPort={setDestinationPort} 
+                    />
+                    <DateSelector label="DEPARTURE DATE" onDateChange={setDepartureDate} />  
+                  </div>
+                  <div className='search-flight-row search-flight-row--oneway'>
+                    <PaxSelector label={'ADULTS (12+ YEARS)'} setPaxCount={setAdultsCount} />
+                    <PaxSelector label={'CHILDREN (2-11 YEARS)'} setPaxCount={setChildCount} />
+                    <PaxSelector label={'INFANTS (UNDER 2 YEARS)'} setPaxCount={setInfantsCount} />
+                    <InputBox label="ENTER PROMO CODES" placeholder="Enter Code" onChange={setInput}/>
+                  </div>
+                  <div className='search-flight-submit-btn'>
+                    <SearchFlightButton type="submit" />
+                  </div>
                 </div>
-                <div className='search-flight-row search-flight-row--oneway'>
-                  <PaxSelector label={'ADULTS (12+ YEARS)'} setPaxCount={setAdultsCount} />
-                  <PaxSelector label={'CHILDREN (2-11 YEARS)'} setPaxCount={setChildCount} />
-                  <PaxSelector label={'INFANTS (UNDER 2 YEARS)'} setPaxCount={setInfantsCount} />
-                  <InputBox label="ENTER PROMO CODES" placeholder="Enter Code" onChange={setInput}/>
+              )}
+              {flightType === 'roundtrip' && (
+                <div className='search-flight-form-container'>
+                  {/* Round-trip form fields */}
                 </div>
-                <div className='search-flight-submit-btn'>
-                  <SearchFlightButton type="submit" />
-                </div>
-              </div>
-            )}
-            {flightType === 'roundtrip' && (
-              <div className='search-flight-form-container'>
-                {/* Round-trip form fields */}
-              </div>
-            )}
-        </form>
+              )}
+            </form>
+          </>
+        )}
       </div>
     </div>
   );
+
+
+
 }
