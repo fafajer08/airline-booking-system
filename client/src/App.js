@@ -1,5 +1,5 @@
 import React from 'react';
-import { useEffect, useState} from 'react';
+//import { useEffect, useState} from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { UserProvider } from './context/UserContext';
 import NavBar from '../src/components/NavBar';
@@ -15,6 +15,7 @@ import Test from './pages/Test';
 import Destinations from './pages/Destinations';
 import LoginPage from './pages/LoginPage';
 
+
 // admin pages exclusive
 import AdminControl from './pages/AdminControl';
 import AdminPage from './pages/AdminPage';
@@ -29,7 +30,8 @@ import Profile from './pages/Profile';
 import Deals from './pages/Deals';
 
 
-import Ticket from './components/Ticket';
+import TicketC from './components/Ticket';
+import TicketP from './pages/Ticket';
 
 
 function App() {
@@ -58,7 +60,7 @@ function App() {
             <Route path='/admin/page' element={<AdminPage />} />
             <Route path='/users' element={<Users />} />
             <Route path='/profile' element={<Profile />} />
-            <Route path='/ticket' element={<Ticket />} />
+            <Route path='/ticket' element={<TicketP />} />
             <Route path='/*' element={<NotFound />} />
           </Routes>
         </Router>

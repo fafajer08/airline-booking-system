@@ -7,8 +7,6 @@ import PaxSelector from '../components/SelectorPax.js';
 import InputBox from '../components/InputBox.js';
 import FlightTypeSelector from "../components/SelectorFlightType.js";
 import '../styles/flightsearch.css';
-import parseData from '../components/FlightsDataParser.js'; // Updated import
-import flightsData from '../data/flightsData.js';
 import { Notyf } from 'notyf';
 import 'notyf/notyf.min.css';
 
@@ -19,7 +17,7 @@ export default function SearchFlight() {
   const [flightType, setFlightType] = useState('oneway'); // Default flight type
   const [departurePort, setDeparturePort] = useState({});
   const [destinationPort, setDestinationPort] = useState({});
-  const [returnDate, setReturnDate] = useState(null);
+  //const [returnDate, setReturnDate] = useState(null);
   const [adultsCount, setAdultsCount] = useState(0);
   const [childCount, setChildCount] = useState(0);
   const [infantsCount, setInfantsCount] = useState(0);
@@ -38,41 +36,36 @@ const [loading, setLoading] = useState(false); // Loading state
 
 
   console.log("departureDate: ", departureDate);
-  // Fetch data from API and fall back to mock data if necessary
-  const fetchData = async () => {
-    setLoading(true); // Start loading
-    try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/flights/airports`); // Replace with actual API
-      const data = await response.json();
-      console.log("Fetched airports:", data); // Debugging fetched data
-      setPortOptions(Array.isArray(data) ? data : []);
-    } catch (error) {
-      // console.error("Error fetching data, using mock data:", error);
-      // const mockData = parseData(flightsData);
-      // console.log("Using mock data:", mockData); // Debugging mock data
-      // setPortOptions(mockData);
-      console.error("Error fetching airport data:", error);
-      notyf.error('Failed to load airport options. Please try again later.');
-     setPortOptions([]);
-    } finally {
-      setLoading(false); // Stop loading
-    }
-  };
+
 
   useEffect(() => {
-    fetchData(); // Call the fetch function to load data
-  }, []); // Empty dependency array to call this effect once
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/flights/airports`); 
+        const data = await response.json();
+        console.log("Fetched airports:", data); // Debugging fetched data
+        setPortOptions(Array.isArray(data) ? data : []);
+      } catch (error) {
+        console.error("Error fetching airport data:", error);
+        notyf.error('Failed to load airport options. Please try again later.');
+       setPortOptions([]);
+      } finally {
+        setLoading(false); 
+      }
+    };
+    fetchData(); 
+  }, []); 
 
-  // Handle the search button click
+
   const handleSearch = async (event) => {
     setLoading(true); // Start loading
-    event.preventDefault(); // Prevent the default form submission behavior
+    event.preventDefault(); 
   
-    let promoData = null; // Local variable to store promo details
+    let promoData = null; 
   
-    // Fetch promo code details if a promo code is provided
     if (input) {
-      console.log("Attempting to fetch promo code details..."); // Debugging before API call
+      console.log("Attempting to fetch promo code details..."); 
   
       try {
         const promoResponse = await fetch(`${process.env.REACT_APP_API_URL}/promos/searchpromocode`, {
@@ -83,7 +76,7 @@ const [loading, setLoading] = useState(false); // Loading state
           body: JSON.stringify({ promoCode: input }),
         });
   
-        // Log the status of the response
+    
         console.log("Promo Code API Response Status:", promoResponse.status);
   
         if (!promoResponse.ok) {
@@ -96,16 +89,13 @@ const [loading, setLoading] = useState(false); // Loading state
         notyf.success('Promo code applied successfully!');
       } catch (error) {
         console.error("Error fetching promo code:", error);
-        setPromoDetails(null); // Reset promo details if there's an error
+        setPromoDetails(null); 
         notyf.error('Failed to apply promo code.');
       }
     } else {
-      console.log("No promo code provided."); // Log when input is empty
+      console.log("No promo code provided."); 
     }
   
-    // const formattedDepartureDate = departureDate ? new Date(departureDate).toISOString().split('T')[0] : null;
-  
-    // Gather data to send in the API request
     const requestData = {
       departureCode: departurePort.code,
       destinationCode: destinationPort.code,
@@ -118,7 +108,7 @@ const [loading, setLoading] = useState(false); // Loading state
       promo: promoData,
     };
   
-    console.log("Request Data:", requestData); // Debugging data to be sent
+    console.log("Request Data:", requestData); 
   
     try {
       // Call the API to filter commercial flights
@@ -127,11 +117,10 @@ const [loading, setLoading] = useState(false); // Loading state
         headers: {
           'Content-Type': 'application/json',
         },
-        // body: JSON.stringify({ departureCode: requestData.departureCode, destinationCode: requestData.destinationCode, departureDate: formattedDepartureDate}),
         body: JSON.stringify({ departureCode: requestData.departureCode, destinationCode: requestData.destinationCode, departureDate: departureDate}),
       });
   
-      // Log the status of the response
+
       console.log("Flight Filter API Response Status:", flightResponse.status);
   
       if (!flightResponse.ok) {
@@ -139,9 +128,10 @@ const [loading, setLoading] = useState(false); // Loading state
       }
   
       const filteredFlights = await flightResponse.json();
-      console.log("Filtered Flights (API Response):", filteredFlights); // Debugging filtered flight data
+      console.log("Filtered Flights (API Response):", filteredFlights); 
   
-      // Navigate to the flights options page with the filtered flight data
+     // Pass the filtered flights to the next page as state,
+     // and then navigate to the options page with the selected flight data.
       navigate('/flights/options', { state: { data: { ...requestData, flightsByLocation: filteredFlights } } });
       notyf.success('Flights found successfully!');
     } catch (error) {
