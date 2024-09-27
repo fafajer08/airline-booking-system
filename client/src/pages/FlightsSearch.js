@@ -53,7 +53,7 @@ const [loading, setLoading] = useState(false); // Loading state
       // setPortOptions(mockData);
       console.error("Error fetching airport data:", error);
       notyf.error('Failed to load airport options. Please try again later.');
-      setPortOptions([]);
+     setPortOptions([]);
     } finally {
       setLoading(false); // Stop loading
     }
