@@ -1,131 +1,195 @@
-/* General styles for screen */
-.ticket-details-container {
-    background: #ffffff;
-    border-radius: 20px;
-    border: 2px solid #e3e3e3;
-    padding: 30px;
-    margin-bottom: 30px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-    background: repeating-linear-gradient(
-      45deg,
-      #f9f9f9 0px,
-      #f9f9f9 20px,
-      #ffffff 20px,
-      #ffffff 40px
-    );
-    max-width: 850px;
-    margin: 30px auto;
-    font-family: 'Roboto', sans-serif;
-  }
-  
-  .ticket-header {
-    text-align: center;
-    margin-bottom: 20px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid #e3e3e3;
-  }
-  
-  .ticket-header h2 {
-    font-size: 2rem;
-    font-weight: 700;
-    color: #333;
-  }
-  
+/* Overall Page Styling */
+.ticket-page {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 20px;
+  background-color: #f0f4f8; /* Light blue-gray background for contrast */
+  min-height: 100vh;
+  font-family: 'Arial', sans-serif; /* Professional font */
+}
+
+/* Ticket Container */
+.ticket {
+  position: relative; /* For layering if needed */
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff; /* White background for flat design */
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  width: 100%;
+  max-width: 800px;
+  margin-bottom: 30px;
+  overflow: hidden;
+}
+
+/* Header Section */
+.ticket-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.ticket-logo {
+  width: 80px; /* Adjust as needed */
+  margin-bottom: 10px;
+}
+
+.ticket-header h2 {
+  color: #007BFF; /* Primary blue color */
+  font-size: 28px;
+  font-weight: bold;
+  margin: 0;
+}
+
+/* Divider */
+.divider {
+  border: none;
+  border-top: 2px solid #e0e0e0; /* Light gray divider */
+  margin: 15px 0;
+}
+
+/* Body Section */
+.ticket-body {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+/* Sections within Body */
+.ticket-section {
+  flex: 1;
+  padding: 10px;
+}
+
+.passenger-info, .flight-info {
+  background-color: #f9f9f9; /* Light gray background for sections */
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.ticket-section h3 {
+  color: #333333;
+  font-size: 18px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 5px;
+}
+
+.ticket-section p {
+  margin: 8px 0;
+  font-size: 14px;
+  color: #555555;
+  display: flex;
+  align-items: center;
+}
+
+.ticket-section p .icon {
+  margin-right: 10px;
+  color: #007BFF; /* Blue icons to match theme */
+  font-size: 16px;
+}
+
+/* QR Code Styling */
+.ticket-qr {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ticket-qr svg {
+  /* Optional: Add a border or background to QR code for better visibility */
+  background-color: #ffffff;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Footer Section */
+.ticket-footer {
+  text-align: center;
+  font-size: 12px;
+  color: #777777;
+  margin-top: 20px;
+}
+
+/* Button Styling */
+.ticket-actions {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.ticket-actions .btn {
+  background-color: #007BFF; /* Primary blue color */
+  color: #ffffff; /* White text */
+  padding: 10px 25px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.ticket-actions .btn:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Modal Styling (if needed) */
+.modal-header, .modal-body, .modal-footer {
+  font-family: 'Arial', sans-serif;
+}
+
+/* Media Query for Responsiveness */
+@media (max-width: 768px) {
   .ticket-body {
-    margin-bottom: 20px;
+    flex-direction: column;
   }
-  
-  .ticket-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    margin-bottom: 20px;
-  }
-  
-  .ticket-section {
-    flex-basis: 45%;
-    margin-bottom: 15px;
-    font-size: 1.1rem;
-    font-weight: 500;
-  }
-  
-  .ticket-section h3 {
-    font-size: 1.2rem;
-    color: #2c3e50;
-    margin-bottom: 8px;
-  }
-  
-  .ticket-section p {
-    font-size: 1rem;
-    color: #555;
-  }
-  
-  .ticket-footer {
-    text-align: center;
-    margin-top: 30px;
-    padding-top: 20px;
-    border-top: 1px solid #e3e3e3;
-    font-size: 1.1rem;
-    color: #2c3e50;
-  }
-  
-  .ticket-footer p {
-    margin-bottom: 10px;
-  }
-  
-  .ticket-actions {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
+
+  .ticket-qr {
     margin-top: 20px;
   }
-  
-  .ticket-actions button {
-    padding: 10px 20px;
-    border-radius: 30px;
-    font-size: 1rem;
-    font-weight: 600;
+}
+
+/* Print Styles */
+@media print {
+  body {
+    background-color: white;
   }
-  
-  /* Responsive adjustments for smaller screens */
-  @media (max-width: 768px) {
-    .ticket-section {
-      flex-basis: 100%;
-      text-align: center;
-    }
-  
-    .ticket-details-container {
-      padding: 20px;
-    }
-  
-    .ticket-actions {
-      flex-direction: column;
-      gap: 10px;
-    }
+
+  .ticket-page {
+    width: 210mm;
+    height: 297mm;
+    margin: 0;
+    padding: 0;
   }
-  
-  /* Print styles */
-  @media print {
-    @page {
-      size: A4;
-      margin: 15mm;
-    }
-  
-    body {
-      margin: 0;
-      padding: 0;
-    }
-  
-    .ticket-details-container {
-      border: none;
-      box-shadow: none;
-      background-color: #fff;
-      page-break-after: always;
-    }
-  
-    .ticket-actions {
-      display: none;
-    }
+
+  .ticket {
+    max-width: none;
+    width: 100%;
+    box-shadow: none;
+    page-break-inside: avoid;
+    background-color: white;
   }
-  
+
+  .ticket-actions {
+    display: none;
+  }
+
+  .ticket-header h2 {
+    font-size: 22px;
+  }
+
+  .ticket-section p {
+    font-size: 12px;
+  }
+
+  .ticket-footer {
+    font-size: 10px;
+  }
+}
