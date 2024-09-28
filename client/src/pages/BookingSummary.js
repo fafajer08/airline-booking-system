@@ -36,7 +36,7 @@ export default function BookingSummary() {
 
   const handlePayment = () => {
     setIsLoading(true);  // Start loading when initiating payment
-    const url = 'https://api.paymongo.com/v1/links';
+    const url = 'https://api.paymongo.com/v1/links'; //request payment link from provider
     const options = {
       method: 'POST',
       headers: {
@@ -52,7 +52,7 @@ export default function BookingSummary() {
       .then(json => {
         handlePaymentRedirect(json.data.attributes.checkout_url);
 
-        const statusCheckUrl = `https://api.paymongo.com/v1/links/${json.data.id}`;
+        const statusCheckUrl = `https://api.paymongo.com/v1/links/${json.data.id}`;   //if payment link is received, redirect customer to payment link
         const statusOptions = {
           method: 'GET',
           headers: {
@@ -62,7 +62,7 @@ export default function BookingSummary() {
         };
 
         // Poll for the payment status
-        const checkPaymentStatus = () => {
+        const checkPaymentStatus = () => {  //
           fetch(statusCheckUrl, statusOptions)
             .then(res => res.json())
             .then(res => {
@@ -144,7 +144,8 @@ export default function BookingSummary() {
         });
       })
       .then(() => {
-        handlePayment();
+        //handlePayment();
+        navigate('/payment', { state: { bookingData, totalCost, guestEmail } })
       })
       .catch((error) => {
         notyf.error(`Error booking: ${error.message}`);

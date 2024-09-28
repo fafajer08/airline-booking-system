@@ -7,7 +7,7 @@ import Ticket from '../components/Ticket'; // Import TicketDetails
 export default function Payment() {
   const location = useLocation();
   const navigate = useNavigate(); // Use navigate hook to navigate between routes
-  const { bookedData, totalCost, guestEmail } = location.state;
+  const { bookingData: bookedData, totalCost, guestEmail } = location.state;
   const [showModal, setShowModal] = useState(false); // State to handle credit card modal visibility
   const [showTicket, setShowTicket] = useState(false); // State to handle showing ticket instead of modal
   const [paymentMethod, setPaymentMethod] = useState(''); // State to track the selected payment method

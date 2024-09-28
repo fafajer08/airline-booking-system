@@ -139,6 +139,7 @@ import logo from '../images/logo.png'; // Ensure this logo matches the desired a
 const TicketDetails = () => {
   const location = useLocation();
   const { bookingData: bookedData, guestEmail } = location.state || {};
+  console.log(`TicketDetails`, bookedData);
   const navigate = useNavigate();
 
   const [showEmailModal, setShowEmailModal] = useState(false);
