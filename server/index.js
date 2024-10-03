@@ -13,12 +13,10 @@ const mongodb = process.env.MONGODB_STRING;
 const frontend = process.env.FRONTEND || 'https://airline-booking-system-5n0j.onrender.com';
 console.log("frontend ", frontend);
 
-mongoose.connect(mongodb, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-}).then(() => {
-    console.log('Now connected to MongoDB Atlas');
-}).catch((err) => {
+mongoose.connect(mongodb)
+.then(() => {
+    console.log('Now connected to MongoDB Atlas')})
+.catch((err) => {
     console.error('Failed to connect to MongoDB', err);
 });
 
