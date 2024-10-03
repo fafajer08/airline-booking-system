@@ -4,7 +4,7 @@ import '../styles/selectorpax.css';
 
 
 function PaxSelector({ label, setPaxCount }) { // Accepts setPaxCount as a prop
-  const [paxCount, setLocalPaxCount] = useState(1); // Initialize with 1 passenger
+  const [paxCount, setLocalPaxCount] = useState(0); // Initialize with 1 passenger
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
 

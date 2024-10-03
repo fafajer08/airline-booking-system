@@ -141,7 +141,7 @@
     line-height: .5; 
   }
 
-  .modal-add-body {
+  .modal-add-body, .flight-details-containe {
     font-size: small;
     margin-bottom: 0; 
     padding-bottom: 0; 

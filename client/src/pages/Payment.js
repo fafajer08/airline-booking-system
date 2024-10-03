@@ -46,6 +46,10 @@ export default function Payment() {
       console.error('Error processing payment:', err);
       alert('Payment failed. Please try again.');
     }
+
+    localStorage.removeItem('bookingData');
+    localStorage.removeItem('guestDetailsData');
+    localStorage.removeItem('noOfPassengers');
   };
 
   return (

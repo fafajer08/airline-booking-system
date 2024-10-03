@@ -272,7 +272,7 @@ const filteredPromos = getSortedPromos().filter((promo) =>
   };
 
   return (
-    <div>
+    <div className="dash-container">
       <div className="d-flex justify-content-between mb-3">
         <Button variant="primary" onClick={() => setAddModalVisible(true)}>
           Add Promo
@@ -517,7 +517,7 @@ const filteredPromos = getSortedPromos().filter((promo) =>
           <Modal.Header closeButton>
             <Modal.Title>Promo Details</Modal.Title>
           </Modal.Header>
-          <Modal.Body>
+          <Modal.Body className="modal-details-body">
             <p>
               <strong>Promo Name:</strong> {selectedPromo.promoName || 'N/A'}
             </p>

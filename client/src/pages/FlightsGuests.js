@@ -1,37 +1,74 @@
+
+
 import React, { useState, useEffect } from 'react';
 import GuestDetailsForm from '../components/GuestDetailsForm';
 import { BackButton, ContinueButton } from '../components/Buttons';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Modal, Button, Form } from 'react-bootstrap'; // Import Modal, Button, and Form from react-bootstrap
+import { Modal, Button, Form } from 'react-bootstrap';
 
 function GuestDetailsPage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { data } = location.state || {}; 
-  const [finalGuests, setFinalGuests] = useState([]);
-  const [passengerIds, setPassengerIds] = useState([]);
-  const [showGuestModal, setShowGuestModal] = useState(false); // State to handle showing the modal
-  const [guestEmail, setGuestEmail] = useState(''); // State to track guest email input
-  const [emailError, setEmailError] = useState(''); // State to handle email validation
 
-  const { user, selectedFlight, promo } = data;
+  // Try to get data from location.state or localStorage
+  const [data, setData] = useState(() => {
+    const stateData = location.state && location.state.data;
+    if (stateData) {
+      // Save to localStorage
+      localStorage.setItem('guestDetailsData', JSON.stringify(stateData));
+      console.log('Saved stateData to localStorage:', stateData);
+      return stateData;
+    } else {
+      // Try to retrieve from localStorage
+      const localData = localStorage.getItem('guestDetailsData');
+      console.log('Retrieved localData from localStorage:', localData);
+      return localData ? JSON.parse(localData) : null;
+    }
+  });
+  
+
+  const [finalGuests, setFinalGuests] = useState(() => {
+    const savedGuests = localStorage.getItem('finalGuests');
+    return savedGuests ? JSON.parse(savedGuests) : [];
+  });
+
+  const [guestEmail, setGuestEmail] = useState(() => {
+    return localStorage.getItem('guestEmail') || '';
+  });
+
+
+  const [passengerIds, setPassengerIds] = useState([]);
+  const [showGuestModal, setShowGuestModal] = useState(false);
+  const [emailError, setEmailError] = useState('');
+
+  // Extract data from the data object
+  const { user, selectedFlight, promo } = data || {};
 
   console.log(`flight guest received user: `, user);
   console.log(`flight guest received selected flight: `, selectedFlight);
   console.log(`flight guest received promo: `, promo);
-  
 
   useEffect(() => {
-    if (!selectedFlight) {
-      navigate('/flights');
-      return null; // Exit early if no data is provided
-    }
+    // if (!data) {
+    //   navigate('/flights');
+    //   return;
+    // }
 
     // If the user is not logged in, show the modal
     if (!user) {
       setShowGuestModal(true);
     }
   }, [selectedFlight, user, navigate]);
+
+  // Save finalGuests to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('finalGuests', JSON.stringify(finalGuests));
+  }, [finalGuests]);
+
+  // Save guestEmail to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('guestEmail', guestEmail);
+  }, [guestEmail]);
 
   // Email format validation using regex
   const validateEmailFormat = (email) => {
@@ -53,7 +90,13 @@ function GuestDetailsPage() {
     };
 
     console.log('sending guest email', guestEmail);
-    navigate('/bookings', { state: { bookingData: bookingData, guestEmail:guestEmail } });
+
+    // Clear cached data when navigating away
+    //localStorage.removeItem('guestDetailsData');
+    localStorage.removeItem('finalGuests');
+    localStorage.removeItem('guestEmail');
+
+    navigate('/bookings', { state: { bookingData: bookingData, guestEmail: guestEmail } });
   };
 
   // Close the guest modal and submit email as guest
@@ -72,6 +115,7 @@ function GuestDetailsPage() {
     setEmailError(''); // Clear any previous errors
     setShowGuestModal(false); // Close the modal
   };
+
 
   return (
     <div>

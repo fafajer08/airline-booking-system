@@ -9,31 +9,48 @@ export default function FlightOptions() {
   const { user } = useContext(UserContext);
   const location = useLocation();
   const navigate = useNavigate();
-  const { data } = location.state; 
 
+  // Try to get data from location.state or localStorage
+  const [data, setData] = useState(() => {
+    const stateData = location.state && location.state.data;
+    if (stateData) {
+      // Save to localStorage
+      localStorage.setItem('flightOptionsData', JSON.stringify(stateData));
+      return stateData;
+    } else {
+      // Try to retrieve from localStorage
+      const localData = localStorage.getItem('flightOptionsData');
+      return localData ? JSON.parse(localData) : null;
+    }
+  });
 
-  console.log(data);
-  
-  const { departureCode, destinationCode, defaultDepartureDate, flightsByLocation, promo = null } = data;
+  // Initialize departureDate from localStorage or defaultDepartureDate
+  const [departureDate, setDepartureDate] = useState(() => {
+    const savedDate = localStorage.getItem('departureDate');
+    return savedDate || (data ? data.defaultDepartureDate : null);
+  });
 
-
-  const [departureDate, setDepartureDate] = useState(defaultDepartureDate);
   const [flightsByDate, setFilteredFlights] = useState([]);
-  // const [selectedFlightId, setSelectedFlightId] = useState(null); // Moved state here
-  const [selectedFlight, setSelectedFlight] = useState(null); // Moved state here
+
+  // Initialize selectedFlight from localStorage if available
+  const [selectedFlight, setSelectedFlight] = useState(() => {
+    const savedFlight = localStorage.getItem('selectedFlight');
+    return savedFlight ? JSON.parse(savedFlight) : null;
+  });
+
 
   // useEffect to automatically populate the table based on departureDate
   useEffect(() => {
+    if (!data) return;
 
-    if(!data) {
-      navigate('/flights');
-      return null; // Exit early if no data is provided
+    // Save departureDate to localStorage whenever it changes
+    if (departureDate) {
+      localStorage.setItem('departureDate', departureDate);
     }
-  
 
-    const filteredFlights = flightsByLocation.filter(flight => flight.date === departureDate);
+    const filteredFlights = data.flightsByLocation.filter(flight => flight.date === departureDate);
     setFilteredFlights(filteredFlights);
-  }, [departureDate, flightsByLocation]);
+  }, [departureDate, data]);
 
   // Handler for date selection from the Carousel
   const handleDateSelect = (date) => {
@@ -41,51 +58,45 @@ export default function FlightOptions() {
     setDepartureDate(formattedDate);
   };
 
-  // Handler for flight selection from FlightTable
-  // const handleFlightSelect = (flightId) => {
-  //   setSelectedFlightId(flightId);
-  //   console.log('Selected Flight Id:', flightId);
-  // };
-
   const handleFlightSelect = (flight) => {
     setSelectedFlight(flight);
+    // Save selected flight to localStorage
+    localStorage.setItem('selectedFlight', JSON.stringify(flight));
     console.log('Selected Flight:', flight);
   };
 
-
-  // Handler for Continue button click
   const handleContinue = async () => {
-    // if (!selectedFlightId) {
-    //   alert('Please select a flight before continuing.');
-    //   return;
-    // }
     if (!selectedFlight) {
       alert('Please select a flight before continuing.');
       return;
     }
 
-
-
     if (!user) {
       console.warn("User not logged in, proceeding as guest");
     }
 
-      // Prepare the data to send in the API request
-      const requestData = {
-        user: user ? user : null,  // let  user proceed even when not logged in
-        // selectedFlightId: selectedFlightId,
-        selectedFlight: selectedFlight,
-        // promoId: promo && promo.id ? promo.id : null,
-        promo: promo ? promo : null,
-      }
-        // Include any other necessary data
+    const requestData = {
+      user: user ? user : null,
+      selectedFlight: selectedFlight,
+      promo: data && data.promo ? data.promo : null,
+    };
 
+    // Clear cached data when navigating away
+    localStorage.removeItem('flightOptionsData');
+    localStorage.removeItem('departureDate');
+    localStorage.removeItem('selectedFlight');
 
-      // Perform the API fetch
-      // Navigate to the next page, passing any necessary state
-      navigate('/flights/guests', { state: { data: requestData } });
-
+    navigate('/flights/guests', { state: { data: requestData } });
   };
+
+  // If data is not yet available, render null or a loading indicator
+  if (!data) {
+    return null; // Or display a loading spinner or message
+  }
+
+  //console.log(data);
+
+  const { departureCode, destinationCode } = data;
 
   return (
     <div className="flight-options">
@@ -96,18 +107,17 @@ export default function FlightOptions() {
         </h2>
 
         {/* Use the Carousel component and pass necessary props */}
-        <Carousel 
-          flights={flightsByLocation} 
-          departureDate={departureDate} 
-          onDateSelect={handleDateSelect} 
+        <Carousel
+          flights={data.flightsByLocation}
+          departureDate={departureDate}
+          onDateSelect={handleDateSelect}
         />
 
-        {/* Pass selectedFlightId and handleFlightSelect to FlightTable */}
-        <FlightTable 
-          selectedFlights={flightsByDate} 
-          // selectedFlightId={selectedFlightId} 
-          selectedFlight={selectedFlight} 
-          onSelectFlight={handleFlightSelect} 
+        {/* Pass selectedFlight and handleFlightSelect to FlightTable */}
+        <FlightTable
+          selectedFlights={flightsByDate}
+          selectedFlight={selectedFlight}
+          onSelectFlight={handleFlightSelect}
         />
 
         {/* Navigation Buttons */}
