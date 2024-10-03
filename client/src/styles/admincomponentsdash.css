@@ -148,9 +148,59 @@
     line-height: .5; 
   }
   
-  .form-label, .form-control, .form-select {
+  .form-label, .form-control, .form-select  {
     font-size: small;
-    height: 20px;
+    height: auto;
     margin-bottom: 0px;
     padding-bottom: 0px;
   }
+
+ /* Define your theme colors */
+:root {
+  --theme-color: #274e37;           /* Your primary theme color */
+  --theme-color-dark: #336749;      /* A darker shade for active state */
+  --text-color: #fff;               /* Text color for buttons */
+}
+
+/* Toggle Button Group */
+.toggle-button-group {
+  display: flex;
+  flex-wrap: nowrap;    /* Prevent wrapping */
+  gap: 5px;
+  justify-content: space-between; /* Distribute buttons evenly */
+}
+
+/* Toggle Button Base Styles */
+.toggle-button {
+  flex: 1;
+  margin: 5px 0;
+  text-align: center;
+  padding: 5px 0;
+  font-size: small; /* Reduce the text size */
+}
+
+/* Normal state */
+.toggle-button:not(.active) {
+  background-color: transparent;
+  border: 1px solid var(--theme-color);
+  color: var(--theme-color);
+}
+
+/* Hover effect for normal state */
+.toggle-button:not(.active):hover {
+  background-color: var(--theme-color);
+  border-color: var(--theme-color);
+  color: var(--text-color);
+}
+
+/* Selected (active) state */
+.toggle-button.active {
+  background-color: var(--theme-color-dark);
+  border-color: var(--theme-color-dark);
+  color: var(--text-color);
+}
+
+/* Focus effect */
+.toggle-button:focus {
+  box-shadow: none;
+}

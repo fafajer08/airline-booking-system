@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
-import Modal from 'react-bootstrap/Modal';
-import Button from 'react-bootstrap/Button';
+// import Modal from 'react-bootstrap/Modal';
+// import Button from 'react-bootstrap/Button';
 import { Notyf } from 'notyf';
 import 'notyf/notyf.min.css';
+import { Modal, Button, ToggleButton } from 'react-bootstrap';
+
 
 export default function AdminFlightDash() {
   const notyf = new Notyf({ duration: 3000 });
@@ -22,6 +24,8 @@ export default function AdminFlightDash() {
   const [dateRange, setDateRange] = useState({ start: "", end: "" });
   const [flightToGenerate, setFlightToGenerate] = useState(null);
 
+
+
   // Added columnSearch state for search functionality
   const [columnSearch, setColumnSearch] = useState({
     'flightNo': "",
@@ -37,14 +41,23 @@ export default function AdminFlightDash() {
   });
 
   // For adding a new flight
+  // const [newFlight, setNewFlight] = useState({
+  //   flightNo: "",
+  //   airplane: "",
+  //   route: "",
+  //   day: "",
+  //   time: "",
+  //   isActive: true
+  // });
   const [newFlight, setNewFlight] = useState({
     flightNo: "",
     airplane: "",
     route: "",
-    day: "",
+    days: [], // Changed from 'day' to 'days' array
     time: "",
     isActive: true
   });
+  
 
   // Fetch flights, airplanes, routes, and pricing from backend
   useEffect(() => {
@@ -54,7 +67,7 @@ export default function AdminFlightDash() {
           fetch(`${process.env.REACT_APP_API_URL}/flights/all`),
           fetch(`${process.env.REACT_APP_API_URL}/airplanes/all`),
           fetch(`${process.env.REACT_APP_API_URL}/routes/all`),
-          fetch(`${process.env.REACT_APP_API_URL}/pricing/all`)
+          fetch(`${process.env.REACT_APP_API_URL}/pricing/all`) 
         ]);
         const flightsData = await flightsRes.json();
         const airplanesData = await airplanesRes.json();
@@ -179,36 +192,7 @@ export default function AdminFlightDash() {
   };
 
 
-  // Function to render search inputs
- 
-  // const handleGenerateCommercialFlights = async () => {
-  //   if (!flightToGenerate || !dateRange.start || !dateRange.end || !selectedPrice) {
-  //     notyf.error("Please select a flight, date range, and price.");
-  //     return;
-  //   }
-  
-  //   const startDate = new Date(dateRange.start);
-  //   const endDate = new Date(dateRange.end);
-  //   const generatedFlights = [];
-  
-  //   for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
-  //     if (d.getDay() + 1 === parseInt(flightToGenerate.day)) {
-  //       // Combine date and time from flightToGenerate
-  //       const departureDateTime = new Date(d);
-  //       const [hours, minutes] = flightToGenerate.time.split(':'); // Use the time from flightToGenerate row
-  //       departureDateTime.setHours(hours, minutes, 0, 0); // Set hours, minutes, seconds, milliseconds
-  
-  //       // Format the departureDateTime to preserve the local timezone
-  //       const localDepartureTime = new Date(departureDateTime.getTime() - departureDateTime.getTimezoneOffset() * 60000).toISOString();
-  
-  //       generatedFlights.push({
-  //         flightId: flightToGenerate._id, // Use only the flight ID here
-  //         date: new Date(d).toISOString().split('T')[0],
-  //         priceId: selectedPrice,
-  //         departureTime: localDepartureTime, // Include the adjusted local time
-  //       });
-  //     }
-  //   }
+
     const handleGenerateCommercialFlights = async () => {
       if (!flightToGenerate || !dateRange.start || !dateRange.end || !selectedPrice) {
         notyf.error("Please select a flight, date range, and price.");
@@ -319,37 +303,85 @@ export default function AdminFlightDash() {
   };
 
   // Handle adding a new flight
+  // const handleAddFlight = async (event) => {
+  //   event.preventDefault(); // Prevent default form submission behavior
+
+  //   if (!newFlight.flightNo || !newFlight.airplane || !newFlight.route || !newFlight.day || !newFlight.time) {
+  //     notyf.error('Please fill in all required fields.');
+  //     return;
+  //   }
+
+  //   try {
+  //     const response = await fetch(`${process.env.REACT_APP_API_URL}/flights/`, {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         'Authorization': `Bearer ${localStorage.getItem('token')}`,
+  //       },
+  //       body: JSON.stringify(newFlight),
+  //     });
+
+  //     const responseData = await response.json();
+  //     if (!response.ok) {
+  //       throw new Error(`Failed to add new flight: ${response.status} ${responseData.message}`);
+  //     }
+
+  //     setFlights((prevFlights) => [...prevFlights, responseData]);
+  //     setAddModalVisible(false); // Close the modal after adding the flight
+  //     notyf.success('Flight added successfully.');
+  //   } catch (error) {
+  //     console.error('Error adding flight:', error);
+  //     notyf.error('Error adding flight.');
+  //   }
+  // };
   const handleAddFlight = async (event) => {
     event.preventDefault(); // Prevent default form submission behavior
-
-    if (!newFlight.flightNo || !newFlight.airplane || !newFlight.route || !newFlight.day || !newFlight.time) {
+  
+    if (!newFlight.flightNo || !newFlight.airplane || !newFlight.route || newFlight.days.length === 0 || !newFlight.time) {
       notyf.error('Please fill in all required fields.');
       return;
     }
-
+  
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/flights/`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        },
-        body: JSON.stringify(newFlight),
-      });
-
-      const responseData = await response.json();
-      if (!response.ok) {
-        throw new Error(`Failed to add new flight: ${response.status} ${responseData.message}`);
+      // Loop over selected days and create a flight for each day
+      const createdFlights = [];
+      for (const day of newFlight.days) {
+        const flightData = {
+          ...newFlight,
+          day, // Set the current day
+        };
+  
+        // Remove the 'days' array from flightData
+        delete flightData.days;
+  
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/flights/`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          },
+          body: JSON.stringify(flightData),
+        });
+  
+        const responseData = await response.json();
+        if (!response.ok) {
+          throw new Error(`Failed to add new flight: ${response.status} ${responseData.message}`);
+        }
+  
+        createdFlights.push(responseData);
       }
-
-      setFlights((prevFlights) => [...prevFlights, responseData]);
-      setAddModalVisible(false); // Close the modal after adding the flight
-      notyf.success('Flight added successfully.');
+  
+      setFlights((prevFlights) => [...prevFlights, ...createdFlights]);
+      setAddModalVisible(false); // Close the modal after adding the flights
+      notyf.success('Flights added successfully.');
     } catch (error) {
-      console.error('Error adding flight:', error);
-      notyf.error('Error adding flight.');
+      console.error('Error adding flights:', error);
+      notyf.error('Error adding flights.');
     }
   };
+  
+
+
 
   const handleCloseAddModal = () => {
     setAddModalVisible(false);
@@ -362,6 +394,26 @@ export default function AdminFlightDash() {
       [name]: value
     }));
   };
+
+  const handleDayChange = (e) => {
+    const { value, checked } = e.currentTarget;
+    setNewFlight((prev) => {
+      if (checked) {
+        // Add the day to the array
+        return {
+          ...prev,
+          days: [...prev.days, value],
+        };
+      } else {
+        // Remove the day from the array
+        return {
+          ...prev,
+          days: prev.days.filter((day) => day !== value),
+        };
+      }
+    });
+  };
+  
 
   return (
     <div className="dash-container">
@@ -605,7 +657,7 @@ export default function AdminFlightDash() {
               </select>
             </div>
 
-            <div className="mb-3">
+            {/* <div className="mb-3">
               <label htmlFor="day" className="form-label">Day</label>
               <select
                 className="form-select"
@@ -624,7 +676,40 @@ export default function AdminFlightDash() {
                 <option value="6">Friday</option>
                 <option value="7">Saturday</option>
               </select>
+            </div> */}
+
+            <div className="mb-3">
+              <label className="form-label">Days</label>
+              <div className="toggle-button-group mb-3">
+                {[
+                  { name: 'Sun', value: '1' },
+                  { name: 'Mon', value: '2' },
+                  { name: 'Tue', value: '3' },
+                  { name: 'Wed', value: '4' },
+                  { name: 'Thu', value: '5' },
+                  { name: 'Fri', value: '6' },
+                  { name: 'Sat', value: '7' },
+                ].map((day, idx) => (
+                  <ToggleButton
+                    key={idx}
+                    id={`toggle-day-${idx}`}
+                    type="checkbox"
+                    variant="outline-success"  // Add this back
+                    value={day.value}
+                    checked={newFlight.days.includes(day.value)}
+                    onChange={handleDayChange}
+                    className="toggle-button"
+                  >
+                    {day.name}
+                </ToggleButton>
+
+                ))}
+              </div>
             </div>
+
+
+
+
 
             <div className="mb-3">
               <label htmlFor="time" className="form-label">Time</label>

@@ -27,7 +27,15 @@ export default function AdminRouteDash() {
   // For adding a new route
   const [newRoute, setNewRoute] = useState({
     departure: "",
+    departureAirportName: "",
+    departureAirportCode: "",
+    departureAirportCity: "",
+    departureAirportCountry: "",
     destination: "",
+    destinationAirportName: "",
+    destinationAirportCode: "",
+    destinationAirportCity: "",
+    destinationAirportCountry: "",
     distanceKM: "",
     durationMins: ""
   });
@@ -223,13 +231,51 @@ export default function AdminRouteDash() {
     }
   };
 
+  // const handleInputChange = (e) => {
+  //   const { name, value } = e.target;
+  //   setNewRoute((prev) => ({
+  //     ...prev,
+  //     [name]: value
+  //   }));
+  // };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setNewRoute((prev) => ({
-      ...prev,
-      [name]: value
-    }));
+    setNewRoute((prev) => {
+      if (name === 'departure') {
+        const selectedAirport = airports.find(airport => airport._id === value);
+        if (selectedAirport) {
+          return {
+            ...prev,
+            departure: value,
+            departureAirportName: selectedAirport.airportName,
+            departureAirportCode: selectedAirport.airportCode,
+            departureAirportCity: selectedAirport.airportCity,
+            departureAirportCountry: selectedAirport.airportCountry,
+          };
+        }
+      } else if (name === 'destination') {
+        const selectedAirport = airports.find(airport => airport._id === value);
+        if (selectedAirport) {
+          return {
+            ...prev,
+            destination: value,
+            destinationAirportName: selectedAirport.airportName,
+            destinationAirportCode: selectedAirport.airportCode,
+            destinationAirportCity: selectedAirport.airportCity,
+            destinationAirportCountry: selectedAirport.airportCountry,
+          };
+        }
+      } else {
+        return {
+          ...prev,
+          [name]: value
+        };
+      }
+      return prev;
+    });
   };
+  
 
   return (
     <div className="dash-container">
