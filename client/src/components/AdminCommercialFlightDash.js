@@ -107,7 +107,7 @@ export default function CommercialFlights() {
   console.log('Total Pages:', totalPages); // Debugging: Log the total number of pages
 
   return (
-    <div>
+    <div className="dash-container">
       <div className="d-flex justify-content-between mb-3">
         <Button variant="primary" onClick={handleOpenAddModal}>Add Commercial Flight</Button>
         <select

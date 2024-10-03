@@ -1,4 +1,8 @@
 /* Container for the user dashboard */
+.dash-container {
+  font-size: small;
+}
+
 .admin-users-dash {
     padding: 20px;
     font-family: Arial, sans-serif;
@@ -32,7 +36,7 @@
   
   table thead th {
     background-color: #f5f5f5;
-    padding: 12px;
+    padding: 5px;
     text-align: left;
     border-bottom: 1px solid #ddd;
     cursor: pointer;
@@ -48,13 +52,13 @@
   }
   
   table tbody td {
-    padding: 12px;
+    padding: 1px;
   }
   
   /* Sort arrow */
   th .sort-arrow {
     margin-left: 8px;
-    font-size: 12px;
+    font-size: 10px;
   }
   
   /* Input fields in table headers */
@@ -63,7 +67,7 @@
     width: 90%;
     padding: 5px;
     margin-top: 5px;
-    font-size: 12px;
+    font-size: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
   }
@@ -105,7 +109,7 @@
   }
   
   .modal-body p {
-    margin-bottom: 10px;
+    margin-bottom: 0 px;
   }
   
   .modal-footer button {
@@ -121,3 +125,32 @@
     background-color: #0056b3;
   }
   
+  .action-button {
+    font-size: small;
+  }
+
+  .action-button-commercial {
+    font-size: x-small;
+  }
+
+
+  .modal-details-body p {
+    font-size: small;
+    margin-bottom: 0; 
+    padding-bottom: 0; 
+    line-height: .5; 
+  }
+
+  .modal-add-body {
+    font-size: small;
+    margin-bottom: 0; 
+    padding-bottom: 0; 
+    line-height: .5; 
+  }
+  
+  .form-label, .form-control, .form-select {
+    font-size: small;
+    height: 20px;
+    margin-bottom: 0px;
+    padding-bottom: 0px;
+  }

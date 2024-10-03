@@ -157,34 +157,6 @@ export default function AdminRouteDash() {
     </td>
   );
 
-
-  // Function to toggle route activation
-  // const toggleIsActive = async (id, isActive) => {
-  //   const action = isActive ? 'archive' : 'activate';
-  //   try {
-  //     const response = await fetch(`${process.env.REACT_APP_API_URL}/routes/${action}/${id}`, {
-  //       method: 'PATCH',
-  //       headers: {
-  //         'Authorization': `Bearer ${localStorage.getItem('token')}`
-  //       }
-  //     });
-
-  //     if (response.ok) {
-
-  //       setRoutes((prevRoutes) => 
-  //         prevRoutes.map((route) => 
-  //           route._id === id ? { ...route, isActive: !route.isActive } : route
-  //         )
-  //       );
-  //       notyf.success(`Route ${isActive ? 'archived' : 'activated'} successfully.`);
-  //     } else {
-  //       notyf.error(`Failed to ${isActive ? 'archive' : 'activate'} the route.`);
-  //     }
-  //   } catch (error) {
-  //     console.error('Error updating route status:', error);
-  //     notyf.error('Error updating route status.');
-  //   }
-  // };
   const toggleIsActive = async (id, isActive) => {
     const action = isActive ? 'archive' : 'activate';
     try {
@@ -260,7 +232,7 @@ export default function AdminRouteDash() {
   };
 
   return (
-    <div>
+    <div className="dash-container">
       <div className="d-flex justify-content-between mb-3">
         <Button variant="primary" onClick={() => setAddModalVisible(true)}>Add Route</Button>
         <Button variant="secondary" onClick={() => setColumnSearch({
@@ -315,6 +287,7 @@ export default function AdminRouteDash() {
                 <td>{route?.durationMins ?? 'N/A'}</td>
                 <td>
                   <Button
+                  className="action-button"
                     variant={route?.isActive ? "success" : "danger"}
                     onClick={(e) => {
                       e.stopPropagation(); // Prevent row click event
@@ -357,7 +330,7 @@ export default function AdminRouteDash() {
           <Modal.Header closeButton>
             <Modal.Title>Route Details</Modal.Title>
           </Modal.Header>
-          <Modal.Body>
+          <Modal.Body className="modal-details-body">
             <p><strong>Departure City:</strong> {selectedRoute.departure.airportCity}</p>
             <p><strong>Departure:</strong> {selectedRoute.departure.airportName}</p>
             <p><strong>Destination City:</strong> {selectedRoute.destination.airportCity}</p>
