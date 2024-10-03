@@ -1,12 +1,24 @@
 import React, { useState, useEffect, useRef } from 'react';
 import '../styles/carousel.css';
 
-const Cards = ({ date, flightDetails, isSelected, onClick }) => {
+const Cards = ({ date, flightDetails, isSelected, onClick, promo }) => {
     // Format the date for display in YYYY-MM-DD format
+    
+    const discount = promo?.discount || 0;
+    const absolutePricing = promo?.absolutePricing || 0;
+
     const formattedDate = new Date(date).toISOString().split('T')[0];
   
     const cardClass = isSelected ? 'card selected' : 'card';
   
+    const price = ((flightDetails.flight.route.distanceKM * flightDetails.pricing.distanceFactor) + flightDetails.pricing.basePrice)
+    
+    const finalPrice = (( price * (100 - discount) / 100 ) + absolutePricing).toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      }); 
+    
+
     return (
       <div className={cardClass} onClick={onClick}>
         <p>{formattedDate}</p>
@@ -14,10 +26,7 @@ const Cards = ({ date, flightDetails, isSelected, onClick }) => {
           <>
             {/* Display the lowest price */}
             <p>
-              PHP {((flightDetails.flight.route.distanceKM * flightDetails.pricing.distanceFactor) + flightDetails.pricing.basePrice).toLocaleString('en-US', {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
-              })}
+              PHP {finalPrice}
             </p>
           </>
         ) : (
@@ -28,7 +37,7 @@ const Cards = ({ date, flightDetails, isSelected, onClick }) => {
   };
 
 
-  const Carousel = ({ flights, departureDate, onDateSelect }) => {
+  const Carousel = ({ flights, departureDate, onDateSelect, promo }) => {
     const [selectedCard, setSelectedCard] = useState(null);
     const [startIndex, setStartIndex] = useState(0);
   
@@ -132,6 +141,7 @@ const Cards = ({ date, flightDetails, isSelected, onClick }) => {
   
             return (
               <Cards
+                promo = {promo}
                 key={index}
                 date={card.date}
                 flightDetails={card.flightDetails}

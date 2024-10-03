@@ -96,7 +96,7 @@ export default function FlightOptions() {
 
   //console.log(data);
 
-  const { departureCode, destinationCode } = data;
+  const { departureCode, destinationCode, promo } = data;
 
   return (
     <div className="flight-options">
@@ -110,6 +110,7 @@ export default function FlightOptions() {
         <Carousel
           flights={data.flightsByLocation}
           departureDate={departureDate}
+          promo = {promo || null }
           onDateSelect={handleDateSelect}
         />
 
@@ -117,6 +118,7 @@ export default function FlightOptions() {
         <FlightTable
           selectedFlights={flightsByDate}
           selectedFlight={selectedFlight}
+          promo = {promo || null}
           onSelectFlight={handleFlightSelect}
         />
 
