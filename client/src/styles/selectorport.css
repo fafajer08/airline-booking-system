@@ -3,7 +3,8 @@
   border: 2px solid #d4d4d4; 
   border-radius: 12px;
   height: 65px;
-  width: 300px;
+  /* width: 300px; */
+  width: 260px;
   flex: 0 0 auto;
   background-color: white; /* Match label background */
   margin: 5px; /* To keep consistent spacing with pax selector */
@@ -59,7 +60,7 @@
   .port-selector-city-airport-display {
     display: inline-block;
     position: absolute;
-    left: 100px;
+    left: 95px;
   }
   
   .port-selector-city-display {
@@ -99,10 +100,10 @@
   .port-selector-dropdown-item {
     padding: 10px 15px;
     cursor: pointer;
-    display: flex;
+    display: block;
     justify-content: space-between;
-    align-items: center;
-  }
+    align-items: start;
+  } 
   
   .port-selector-dropdown-item:hover {
     background-color: #f0f0f0;

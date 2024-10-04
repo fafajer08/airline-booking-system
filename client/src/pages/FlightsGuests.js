@@ -42,7 +42,7 @@ function GuestDetailsPage() {
   const [emailError, setEmailError] = useState('');
 
   // Extract data from the data object
-  const { user, selectedFlight, promo } = data || {};
+  const { user, selectedFlight, promo, finalPrice:fare, selectedClass:seatClass } = data || {};
 
   console.log(`flight guest received user: `, user);
   console.log(`flight guest received selected flight: `, selectedFlight);
@@ -86,7 +86,9 @@ function GuestDetailsPage() {
       user: user || null, // If user is null, use guestEmail
       selectedFlight,
       promo,
-      finalGuests,
+      finalGuests: finalGuests.slice(0, -1), //remove the last blank guest
+      seatClass,
+      fare,
     };
 
     console.log('sending guest email', guestEmail);

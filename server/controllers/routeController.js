@@ -4,37 +4,106 @@ const Airport = require('../models/Airport'); // Adjust the path according to yo
 const routeController = {
 
   // Add a new route
+  // async addRoute(req, res) { 
+  //   try {
+  //     const { departure, destination, distanceKM, durationMins } = req.body;
+  
+  //     // Validate airports
+  //     const departureAirport = await Airport.findById(departure);
+  //     const destinationAirport = await Airport.findById(destination);
+  
+  //     if (!departureAirport || !destinationAirport) {
+  //       return res.status(404).json({ message: 'Departure or destination airport not found' });
+  //     }
+  
+  //     const newRoute = new Route({
+  //       departure,
+  //       destination,
+  //       distanceKM,
+  //       durationMins
+  //     });
+  
+  //     const savedRoute = await newRoute.save();
+      
+  //     // Populate the departure and destination fields
+  //     const populatedRoute = await Route.findById(savedRoute._id)
+  //       .populate('departure')
+  //       .populate('destination');
+  
+  //     res.status(201).json(populatedRoute);
+  //   } catch (error) {
+  //     res.status(500).json({ message: 'Error adding route', error });
+  //   }
+  // },
+
   async addRoute(req, res) { 
     try {
       const { departure, destination, distanceKM, durationMins } = req.body;
+  
+      // Log the received request body
+      console.log('Received addRoute request with body:', req.body);
+  
+      // Validate that departure and destination are not the same
+      if (departure === destination) {
+        console.log('Departure and destination airports are the same:', departure);
+        return res.status(400).json({ message: 'Departure and destination airports cannot be the same' });
+      }
   
       // Validate airports
       const departureAirport = await Airport.findById(departure);
       const destinationAirport = await Airport.findById(destination);
   
+      // Log the fetched airports
+      console.log('Fetched departure airport:', departureAirport);
+      console.log('Fetched destination airport:', destinationAirport);
+  
       if (!departureAirport || !destinationAirport) {
+        console.log('One or both airports not found. Departure:', departureAirport, 'Destination:', destinationAirport);
         return res.status(404).json({ message: 'Departure or destination airport not found' });
       }
   
-      const newRoute = new Route({
+      // Construct the new route data based on the revised schema
+      const newRouteData = {
         departure,
+        departureAirportName: departureAirport.airportName,
+        departureAirportCode: departureAirport.airportCode,
+        departureAirportCity: departureAirport.airportCity,
+        departureAirportCountry: departureAirport.airportCountry,
         destination,
+        destinationAirportName: destinationAirport.airportName,
+        destinationAirportCode: destinationAirport.airportCode,
+        destinationAirportCity: destinationAirport.airportCity,
+        destinationAirportCountry: destinationAirport.airportCountry,
         distanceKM,
         durationMins
-      });
+      };
+  
+      // Log the data that will be used to create the new route
+      console.log('Creating new route with data:', newRouteData);
+  
+      const newRoute = new Route(newRouteData);
   
       const savedRoute = await newRoute.save();
+  
+      // Log the saved route
+      console.log('New route saved successfully:', savedRoute);
       
       // Populate the departure and destination fields
       const populatedRoute = await Route.findById(savedRoute._id)
         .populate('departure')
         .populate('destination');
   
+      // Log the populated route
+      console.log('Populated route after saving:', populatedRoute);
+  
       res.status(201).json(populatedRoute);
     } catch (error) {
+      // Log the error details
+      console.error('Error adding route:', error);
       res.status(500).json({ message: 'Error adding route', error });
     }
   },
+  
   
 
 

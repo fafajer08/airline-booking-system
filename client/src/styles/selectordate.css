@@ -14,7 +14,8 @@
     border: 2px solid #d4d4d4;
     border-radius: 12px;
     height: 65px;
-    width: 190px; 
+    /* width: 190px;  */
+    width: 160px; 
     flex: 0 0 auto;
     margin: 10px;
     background-color: white; /* Match label background */
@@ -66,7 +67,7 @@
   .date-selector-day-month-display {
     display: inline-block;
     position: absolute;
-    left: 86px;
+    left: 76px;
   }
   
   

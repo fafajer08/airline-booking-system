@@ -32,7 +32,7 @@ function DateSelector({ label, onDateChange }) {
             <div className="date-selector-inner-container" onClick={handleIconClick}>
                 <img className="date-selector-calendar-icon date-selector-icons" src={calendarIcon} alt="calendar icon" />
                 <span className="date-selector-date-display">{date}</span>
-                <img className="date-selector-division-icon" src={divisionIcon} alt="division icon" />
+                {/* <img className="date-selector-division-icon" src={divisionIcon} alt="division icon" /> */}
                 <div className="date-selector-day-month-display">
                     <div className="date-selector-day-display">{day}</div>
                     <div className="date-selector-mmmyy-display">{month}'{year}</div>

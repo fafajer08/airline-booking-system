@@ -7,11 +7,11 @@ const FlightController = {
   // Add a new flight
   async addFlight(req, res) {
     try {
-      const { flightNo, airplane, route, day, time } = req.body;
+      const { flightNo, airplane, route, days, time } = req.body;
       console.log('Add Flight Request:', req.body); // Debugging input data
 
       // Validate required fields
-      if (!flightNo || !airplane || !route || !day || !time) {
+      if (!flightNo || !airplane || !route || !days || !time) {
         console.log('Missing required fields'); // Debugging
         return res.status(400).json({ message: 'Missing required fields' });
       }
@@ -20,7 +20,7 @@ const FlightController = {
         flightNo,
         airplane,
         route,
-        day,
+        days,
         time
       });
 

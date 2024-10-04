@@ -9,7 +9,7 @@ module.exports = {
   // Add a new booking
   async addBooking(req, res) {
     try {
-      const { userId, passengerIds, commercialFlightId, seatClass, promoId } = req.body;
+      const { userId, passengerIds, commercialFlightId, seatClass, promoId, fare, } = req.body;
       
       // Log incoming data
       console.log('Received booking data:', req.body);
@@ -26,6 +26,9 @@ module.exports = {
         commercialFlightId,
         seatClass,
         promoId: promoId || null, // If promoId exists, use it; otherwise, set to null
+        // fare: parseFloat(fare),
+        fare: typeof fare === 'number' ? fare : parseFloat(fare.replace(/,/g, '')),
+        seatClass
       });
 
       const savedBooking =  await newBooking.save();
@@ -87,36 +90,42 @@ module.exports = {
   },
 
   // Update booking status (confirm, cancel)
-  async updateBookingStatus(req, res) {
+  async updateBookingPayment(req, res) {
     try {
       const bookingId = req.params.id;
-      const { status } = req.body;
-      console.log('Updating booking status for ID:', bookingId, 'with status:', status);
-
-      // Check if status is valid
-      if (!['pending', 'confirmed', 'cancelled'].includes(status)) {
-        console.log('Invalid status:', status);
-        return res.status(400).json({ message: 'Invalid status' });
-      }
-
-      const updatedBooking = await Booking.findByIdAndUpdate(
-        bookingId,
-        { bookingStatus: status, isCancelled: status === 'cancelled' },
-        { new: true } // Return the updated document
-      );
-
-      if (!updatedBooking) {
+      const { paymentId } = req.body;
+  
+      console.log('Attempting to update booking with ID:', bookingId);
+  
+      // Step 1: Find the booking by ID
+      const booking = await Booking.findById(bookingId);
+  
+      if (!booking) {
         console.log('Booking not found for ID:', bookingId);
         return res.status(404).json({ message: 'Booking not found' });
       }
-
-      console.log('Booking status updated:', updatedBooking);
+  
+      // Step 2: Check if paymentId is already set (i.e., not null)
+      if (booking.paymentId) {
+        console.log('Booking already paid with payment ID:', booking.paymentId);
+        return res.status(400).json({ message: 'Booking is already paid', paymentId: booking.paymentId });
+      }
+  
+      // Step 3: Update booking with new paymentId and set status to 'confirmed'
+      booking.paymentId = paymentId;
+      booking.bookingStatus = 'confirmed';
+  
+      const updatedBooking = await booking.save();
+  
+      console.log('Booking updated with payment ID:', paymentId);
       res.status(200).json(updatedBooking);
+  
     } catch (error) {
-      console.error('Error updating booking status:', error);
-      res.status(500).json({ message: 'Error updating booking status', error });
+      console.error('Error updating booking payment:', error);
+      res.status(500).json({ message: 'Error updating booking payment', error });
     }
   },
+  
 
   // View all bookings
   async viewAllBookings(req, res) {

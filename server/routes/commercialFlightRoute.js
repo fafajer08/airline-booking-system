@@ -22,6 +22,9 @@ router.patch('/:id/cancel', commercialFlightController.cancelCommercialFlight);
 // Route to mark a commercial flight as done
 router.patch('/:id/mark-done', commercialFlightController.markCommercialFlightDone);
 
+
+router.patch('/:id/addbooking', commercialFlightController.addBooking);
+
 // Route to view all commercial flights
 router.get('/all', commercialFlightController.viewAllCommercialFlights);
 

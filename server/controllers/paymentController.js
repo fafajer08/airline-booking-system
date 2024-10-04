@@ -8,7 +8,7 @@ exports.createPayment = async (req, res) => {
   console.log('Request Body:', req.body);
   
   try {
-    const { userId, paymentDate, amount, paymentMethod, paymentStatus } = req.body;
+    const { bookingId, amount, paymentMethod } = req.body;
 
     // Optional: Validate if userId corresponds to an existing user
     // console.log('Validating user ID:', userId);
@@ -19,11 +19,11 @@ exports.createPayment = async (req, res) => {
     // }
 
     const payment = new Payment({
-      userId,
-      paymentDate,
-      amount,
+      bookingId,
+      amount: typeof amount === 'number' ? amount : parseFloat(amount.replace(/,/g, '')),
       paymentMethod,
-      paymentStatus,
+      isPaid: "true",
+      paymentStatus: "paid"
     });
 
     console.log('Saving payment to database:', payment);

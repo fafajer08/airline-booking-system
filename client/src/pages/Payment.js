@@ -7,27 +7,34 @@ import Ticket from '../components/Ticket'; // Import TicketDetails
 export default function Payment() {
   const location = useLocation();
   const navigate = useNavigate(); // Use navigate hook to navigate between routes
-  const { bookingData: bookedData, totalCost, guestEmail } = location.state;
+  const { bookedData, guestEmail } = location.state;
   const [showModal, setShowModal] = useState(false); // State to handle credit card modal visibility
   const [showTicket, setShowTicket] = useState(false); // State to handle showing ticket instead of modal
   const [paymentMethod, setPaymentMethod] = useState(''); // State to track the selected payment method
   const [expiryMonth, setExpiryMonth] = useState(''); // State for expiration month
   const [expiryYear, setExpiryYear] = useState(''); // State for expiration year
+  const [isProcessing, setIsProcessing] = useState(false); // Track payment processing state
+
+  console.log('bookedData', bookedData);
+  const bookingId = bookedData._id;
 
   // Handle opening and closing of the credit card modal
   const handleShowModal = () => setShowModal(true);
   const handleCloseModal = () => setShowModal(false);
 
-  console.log('guestEmail payment ',guestEmail,bookedData);
-
+  // Save `bookedData` to localStorage
   useEffect(() => {
-    if (!bookedData){
-      navigate('/flights');
+    if (bookedData) {
+      console.log('Saving bookedData to localStorage'); // Debugging bookedData saving
+      localStorage.setItem('bookedData', JSON.stringify(bookedData)); // Save to localStorage
+    } else {
+      navigate('/flights'); // Redirect to flights if no bookedData found
     }
-  })
+  }, [bookedData, navigate]);
 
   // Handle the radio button change for payment methods
   const handlePaymentChange = (e) => {
+    console.log(`Selected payment method: ${e.target.value}`); // Debugging payment method
     setPaymentMethod(e.target.value);
     if (e.target.value === 'creditCard') {
       handleShowModal(); // Show the modal when Credit Card is selected
@@ -37,19 +44,141 @@ export default function Payment() {
   const currentYear = new Date().getFullYear();
   const expirationYears = Array.from(new Array(15), (val, index) => currentYear + index); // Generate next 15 years
 
-  // Simulate payment request
-  const handlePaymentRequest = async () => {
-    try {
-      // After successful payment, show the ticket
-      setShowTicket(true);
-    } catch (err) {
-      console.error('Error processing payment:', err);
-      alert('Payment failed. Please try again.');
+  // 1. Simulate payment request
+  const redirectToPaymentLink = async () => {
+    console.log(`Redirecting to payment link for: ${paymentMethod}`); // Debugging redirect
+    if (paymentMethod) {
+      // Simulate redirect to external payment provider (e.g., Credit Card, PayPal, etc.)
+      return Promise.resolve({ status: 200, success: true }); // Placeholder for actual redirection
+    }
+    throw new Error('Please select a payment method.');
+  };
+
+  // 2. Simulate successful payment
+  const simulatePaymentSuccess = async () => {
+    console.log('Simulating payment success...'); // Debugging payment simulation
+    const response = await redirectToPaymentLink();
+    console.log('Payment simulation response:', response); // Log the response
+    if (response.status === 200 && response.success) {
+      return Promise.resolve(true);
+    }
+    throw new Error('Payment failed.');
+  };
+
+  // 3. Save payment to database
+  const savePayment = async () => {
+    const paymentPayload = {
+      bookingId,
+      seatClass: bookedData.seatClass,
+      noPassenger: bookedData.passengerIds.length,
+      paymentMethod,
+      amount: bookedData.fare,
+    };
+
+    console.log('Saving payment with payload:', paymentPayload); // Debugging payload
+
+    const response = await fetch(`${process.env.REACT_APP_API_URL}/payments`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+      body: JSON.stringify(paymentPayload),
+    });
+
+    const paymentData = await response.json();
+    console.log('Payment save response:', paymentData); // Debugging payment save response
+
+    if (!response.ok) {
+      const error = await response.json();
+      console.error('Error saving payment:', error.message); // Log error if any
+      throw new Error(error.message);
+    }
+    return paymentData; // Return saved payment data
+  };
+
+  // 4. Update booking with payment ID
+  const updateBookingWithPaymentId = async (paymentId) => {
+    console.log(`Updating booking ID: ${bookingId} with payment ID: ${paymentId}`); // Debugging booking update
+
+    const response = await fetch(`${process.env.REACT_APP_API_URL}/bookings/${bookingId}/updatepayment`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+      body: JSON.stringify({ paymentId, bookingStatus: 'confirmed' }),
+    });
+
+    const updatedBooking = await response.json();
+    console.log('Booking update response:', updatedBooking); // Debugging booking update response
+
+    if (!response.ok) {
+      const error = await response.json();
+      console.error('Error updating booking:', error.message); // Log error if any
+      throw new Error(error.message);
+    }
+    return updatedBooking; // Return updated booking
+  };
+
+  // 5. Update flight with booking ID and seat availability
+  const updateFlightWithBooking = async () => {
+    const updatedSeats = { ...bookedData.selectedFlight.availableSeats };
+
+    // Update seat availability based on seat class
+    if (bookedData.seatClass === 'economySeat') {
+      updatedSeats.economySeat -= bookedData.finalGuests.length;
+    } else if (bookedData.seatClass === 'firstClass') {
+      updatedSeats.firstClass -= bookedData.finalGuests.length;
     }
 
-    localStorage.removeItem('bookingData');
-    localStorage.removeItem('guestDetailsData');
-    localStorage.removeItem('noOfPassengers');
+    console.log('Updating flight with new booking and available seats:', updatedSeats); // Debugging flight update
+
+    const response = await fetch(`${process.env.REACT_APP_API_URL}/commercialflights/${bookedData.selectedFlight._id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+      body: JSON.stringify({ bookings: [...bookedData.bookings, bookingId], availableSeats: updatedSeats }),
+    });
+
+    const updatedFlight = await response.json();
+    console.log('Flight update response:', updatedFlight); // Debugging flight update response
+
+    if (!response.ok) {
+      const error = await response.json();
+      console.error('Error updating flight:', error.message); // Log error if any
+      throw new Error(error.message);
+    }
+    return updatedFlight; // Return updated flight
+  };
+
+  // Main function to handle the entire payment process
+  const handlePaymentRequest = async () => {
+    try {
+      console.log('Initiating payment process...'); // Debugging start of payment process
+      setIsProcessing(true);
+
+      await simulatePaymentSuccess(); // Simulate a successful payment
+      console.log('Payment successful'); // Log successful payment
+
+      const paymentData = await savePayment(); // Save payment details
+      console.log('Payment saved, data:', paymentData); // Log saved payment data
+
+      await updateBookingWithPaymentId(paymentData._id); // Update booking with payment ID
+      console.log('Booking updated with payment ID'); // Log booking update
+
+      await updateFlightWithBooking(); // Update the flight with booking ID and seats
+      console.log('Flight updated with booking'); // Log flight update
+
+      setShowTicket(true); // Show ticket on successful completion
+    } catch (error) {
+      console.error('Error during payment process:', error.message); // Log any errors during process
+      alert(error.message);
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   return (
@@ -59,83 +188,44 @@ export default function Payment() {
           <h5>How would you like to pay?</h5>
           <h2>Payment Method</h2>
           <div className='px-5 py-3'>
+            {/* Payment method selection */}
             <div>
               <h3>Credit or Debit Card</h3>
+              <input type="radio" name="paymentMethod" value="creditCard" onChange={handlePaymentChange} />
+              <label className='px-5 py-3'>Credit, Debit, or Prepaid Cards</label>
             </div>
-            <div className=''>
-              <input
-                className=''
-                type="radio"
-                name="paymentMethod"
-                id="creditCard"
-                value="creditCard"
-                onChange={handlePaymentChange}
-              />
-              <label className='px-5 py-3' htmlFor="creditCard">Credit, Debit or Prepaid Cards</label>
-            </div>
-          </div>
-
-          <div className='px-5 py-3'>
             <div>
               <h3>E-Wallet</h3>
-            </div>
-            <div className=''>
-              <input
-                className=''
-                type="radio"
-                name="paymentMethod"
-                id="alipay"
-                value="alipay"
-                onChange={handlePaymentChange}
-              />
-              <label className='px-5 py-3' htmlFor="alipay">Alipay</label>
+              <input type="radio" name="paymentMethod" value="alipay" onChange={handlePaymentChange} />
+              <label className='px-5 py-3'>Alipay</label>
             </div>
             <div>
-              <input
-                type="radio"
-                name="paymentMethod"
-                id="applepay"
-                value="applepay"
-                onChange={handlePaymentChange}
-              />
-              <label className='px-5 py-3' htmlFor="applepay">Apple Pay</label>
+              <input type="radio" name="paymentMethod" value="applepay" onChange={handlePaymentChange} />
+              <label className='px-5 py-3'>Apple Pay</label>
             </div>
             <div>
-              <input
-                type="radio"
-                name="paymentMethod"
-                id="googlepay"
-                value="googlepay"
-                onChange={handlePaymentChange}
-              />
-              <label className='px-5 py-3' htmlFor="googlepay">Google Pay</label>
+              <input type="radio" name="paymentMethod" value="googlepay" onChange={handlePaymentChange} />
+              <label className='px-5 py-3'>Google Pay</label>
             </div>
             <div>
-              <input
-                type="radio"
-                name="paymentMethod"
-                id="paypal"
-                value="paypal"
-                onChange={handlePaymentChange}
-              />
-              <label className='px-5 py-3' htmlFor="paypal">PayPal</label>
+              <input type="radio" name="paymentMethod" value="paypal" onChange={handlePaymentChange} />
+              <label className='px-5 py-3'>PayPal</label>
             </div>
           </div>
 
           <div>
-            <p>By clicking the ‘Continue’ button below, I confirm that I have read, understood, and accept all the Conditions set by the airline.</p>
+            <p>By clicking the ‘Continue’ button below, I confirm that I have read, understood, and accept all the conditions set by the airline.</p>
           </div>
 
           <div className='d-flex'>
             <div className='ms-auto'>
               <BackButton link="/bookings" />
-              <SubmitButton onClick={handlePaymentRequest} />
+              <SubmitButton onClick={handlePaymentRequest} disabled={isProcessing} />
             </div>
           </div>
         </div>
       ) : (
-        <Ticket guestEmail={guestEmail} bookedData={bookedData} totalCost={totalCost}/>
-
+        <Ticket guestEmail={guestEmail} bookedData={bookedData} />
       )}
 
       {/* Modal for Credit Card details */}
@@ -155,7 +245,6 @@ export default function Payment() {
               <Form.Control type="text" placeholder="Enter card number" />
             </Form.Group>
 
-            {/* Expiration Date - Improved Selection */}
             <Form.Group controlId="expiryDate" className="mt-3">
               <Form.Label>Expiration Date</Form.Label>
               <div className="d-flex">
@@ -206,6 +295,3 @@ export default function Payment() {
     </div>
   );
 }
-
-
-
