@@ -15,7 +15,7 @@ export default function Payment() {
   const [expiryYear, setExpiryYear] = useState(''); // State for expiration year
   const [isProcessing, setIsProcessing] = useState(false); // Track payment processing state
 
-  console.log('bookedData', bookedData);
+  //console.log('bookedData', bookedData);
   const bookingId = bookedData._id;
 
   // Handle opening and closing of the credit card modal
@@ -107,7 +107,7 @@ export default function Payment() {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`,
       },
-      body: JSON.stringify({ paymentId, bookingStatus: 'confirmed' }),
+      body: JSON.stringify({ paymentId }),
     });
 
     const updatedBooking = await response.json();
@@ -118,29 +118,24 @@ export default function Payment() {
       console.error('Error updating booking:', error.message); // Log error if any
       throw new Error(error.message);
     }
-    return updatedBooking; // Return updated booking
+    return updatedBooking.paymentId; // Return updated booking
   };
 
   // 5. Update flight with booking ID and seat availability
   const updateFlightWithBooking = async () => {
-    const updatedSeats = { ...bookedData.selectedFlight.availableSeats };
+    
+    const seatClass = bookedData.seatClass;
+    const noPassenger = bookedData.passengerIds.length;
 
-    // Update seat availability based on seat class
-    if (bookedData.seatClass === 'economySeat') {
-      updatedSeats.economySeat -= bookedData.finalGuests.length;
-    } else if (bookedData.seatClass === 'firstClass') {
-      updatedSeats.firstClass -= bookedData.finalGuests.length;
-    }
+    console.log('Updating flight with new booking and available seats:', bookingId, seatClass,noPassenger); // Debugging flight update
 
-    console.log('Updating flight with new booking and available seats:', updatedSeats); // Debugging flight update
-
-    const response = await fetch(`${process.env.REACT_APP_API_URL}/commercialflights/${bookedData.selectedFlight._id}`, {
+    const response = await fetch(`${process.env.REACT_APP_API_URL}/commercialflights/${bookedData.commercialFlightId._id}/addbooking`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`,
       },
-      body: JSON.stringify({ bookings: [...bookedData.bookings, bookingId], availableSeats: updatedSeats }),
+      body: JSON.stringify({bookingId, seatClass, noPassenger})
     });
 
     const updatedFlight = await response.json();
@@ -172,7 +167,10 @@ export default function Payment() {
       await updateFlightWithBooking(); // Update the flight with booking ID and seats
       console.log('Flight updated with booking'); // Log flight update
 
-      setShowTicket(true); // Show ticket on successful completion
+      // setShowTicket(true); // Show ticket on successful completion
+
+      navigate('/ticket', { state: { bookedData, guestEmail } });
+      
     } catch (error) {
       console.error('Error during payment process:', error.message); // Log any errors during process
       alert(error.message);

@@ -11,6 +11,7 @@
     "bootstrap-icons": "^1.11.3",
     "framer-motion": "^11.5.4",
     "gsap": "^3.12.5",
+    "js-base64": "^3.7.7",
     "notyf": "^3.10.0",
     "prop-types": "^15.8.1",
     "react": "^18.3.1",
