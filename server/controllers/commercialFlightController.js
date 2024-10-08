@@ -445,41 +445,11 @@ const commercialFlightController = {
   async addBooking(req, res) {
     try {
       console.log('Received request to add booking:', req.params, req.body); // Debugging: Log request params and body
-      
+  
       const { id: flightId } = req.params;
-      const { bookingId, noPassenger, seatClass, paymentMethod } = req.body;
-      
-      // Step 1: Simulate successful payment
-      console.log(`Simulating payment for booking ID ${bookingId} with amount: ${req.body.amount}`); // Debugging: Log payment details
-      const payment = new Payment({
-        bookingId,
-        paymentDate: new Date(),
-        amount: parseFloat(req.body.amount), // Use total cost
-        paymentMethod,
-        isPaid: true,
-        paymentStatus: 'paid'
-      });
-      await payment.save();
-      console.log('Payment saved:', payment); // Debugging: Log saved payment
+      const { bookingId, noPassenger, seatClass } = req.body;
   
-      // Step 2: Update the booking with payment ID and confirm booking status
-      console.log(`Updating booking ${bookingId} with payment ID ${payment._id}`); // Debugging: Log booking update attempt
-      const booking = await Booking.findByIdAndUpdate(
-        bookingId,
-        {
-          paymentId: payment._id,
-          bookingStatus: 'confirmed'
-        },
-        { new: true }
-      );
-  
-      if (!booking) {
-        console.log(`Booking not found for ID ${bookingId}`); // Debugging: Log if booking is not found
-        return res.status(404).json({ message: 'Booking not found' });
-      }
-      console.log('Booking updated successfully:', booking); // Debugging: Log updated booking
-  
-      // Step 3: Find the commercial flight and update available seats
+      // Step 1: Find the commercial flight
       console.log(`Fetching flight details for flight ID ${flightId}`); // Debugging: Log flight retrieval
       const flight = await CommercialFlight.findById(flightId);
       if (!flight) {
@@ -488,9 +458,15 @@ const commercialFlightController = {
       }
       console.log('Flight found:', flight); // Debugging: Log found flight details
   
-      // Step 3.1: Update available seats based on seat class
+      // Step 2: Check if the bookingId already exists in flight.bookings
+      if (flight.bookings.includes(bookingId)) {
+        console.log(`Booking ID ${bookingId} already exists in flight ${flightId}`); // Debugging: Log booking exists
+        return res.status(200).json({ message: 'Booking already exists in this flight' });
+      }
+  
+      // Step 3: Update available seats based on seat class
       console.log(`Updating available seats for seat class: ${seatClass} with ${noPassenger} passengers`); // Debugging: Log seat update
-      switch (seatClass.toLowerCase()) {
+      switch (seatClass) {
         case 'economySeat':
           if (flight.availableSeats.economySeat < noPassenger) {
             console.log(`Not enough economy seats: Available - ${flight.availableSeats.economySeat}, Requested - ${noPassenger}`); // Debugging: Log seat error
@@ -524,7 +500,7 @@ const commercialFlightController = {
           return res.status(400).json({ message: 'Invalid seat class' });
       }
   
-      // Step 4: Update flight bookings array and save flight
+      // Step 4: Add booking to flight and save
       console.log(`Adding booking ID ${bookingId} to flight's bookings array`); // Debugging: Log adding booking to flight
       flight.bookings.push(bookingId);
       await flight.save();
@@ -536,13 +512,8 @@ const commercialFlightController = {
       return res.status(500).json({ message: 'Internal server error' });
     }
   },
+  
    
-  
-  
-
-
-
-
 
 async filterByDepartureAndDestinationAirport(req, res) {
   try {

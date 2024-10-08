@@ -108,7 +108,7 @@ module.exports = {
       // Step 2: Check if paymentId is already set (i.e., not null)
       if (booking.paymentId) {
         console.log('Booking already paid with payment ID:', booking.paymentId);
-        return res.status(400).json({ message: 'Booking is already paid', paymentId: booking.paymentId });
+        return res.status(200).json({ message: 'Booking is already paid', paymentId: booking.paymentId });
       }
   
       // Step 3: Update booking with new paymentId and set status to 'confirmed'
@@ -125,7 +125,6 @@ module.exports = {
       res.status(500).json({ message: 'Error updating booking payment', error });
     }
   },
-  
 
   // View all bookings
   async viewAllBookings(req, res) {
@@ -185,7 +184,64 @@ module.exports = {
       console.error('Error fetching my bookings:', error);
       res.status(500).json({ message: 'Error fetching my bookings', error });
     }
-  }
+  },
+
+  async checkin(req, res, next) {
+    try {
+      const { bookingId, firstName, lastName } = req.body;
+      const checkinTime = 4;
+
+      // Find the booking by ID and ensure it contains the passenger
+      const booking = await Booking.findOne({
+        _id: bookingId,
+        'passengerIds.firstName': firstName,
+        'passengerIds.lastName': lastName
+      }).populate('commercialFlightId', 'departureTime date'); // Populate flight details (time and date)
+
+      if (!booking) {
+        return res.status(404).json({ message: 'Booking or Passenger not found' });
+      }
+
+      // Combine the flight date and time into a single moment object for comparison
+      const flightDepartureDateTime = moment(
+        `${booking.commercialFlightId.date} ${booking.commercialFlightId.departureTime}`,
+        'YYYY-MM-DD HH:mm'
+      );
+
+      // Get the current time
+      const currentTime = moment();
+
+      // Calculate the maximum check-in time (4 hours before the flight departure)
+      const maxCheckInTime = flightDepartureDateTime.subtract(checkinTime, 'hours');
+
+      // Check if the current time is within the allowed check-in window
+      if (currentTime.isBefore(maxCheckInTime)) {
+        return res.status(400).json({
+          message: `Check-in is only allowed within ${checkinTime} hours before the flight departure time. Check-in can begin after ${maxCheckInTime.format('HH:mm')} on ${booking.commercialFlightId.date}.`
+        });
+      }
+
+      // Find the specific passenger inside the embedded passengerIds array
+      const passenger = booking.passengerIds.find(
+        (p) => p.firstName === firstName && p.lastName === lastName
+      );
+
+      if (!passenger) {
+        return res.status(404).json({ message: 'Passenger not found in this booking' });
+      }
+
+      // Update the passenger's isCheckedIn status to true
+      passenger.isCheckedIn = true;
+
+      // Save the updated booking
+      await booking.save();
+
+      res.status(200).json({ message: 'Passenger successfully checked in', booking });
+    } catch (error) {
+      console.error('Error checking in passenger:', error);
+      res.status(500).json({ message: 'Error checking in passenger', error });
+    }
+  },
   
   
 };

@@ -20,5 +20,7 @@ router.get('/', bookingController.viewAllBookings);
 
 router.post('/mybookings', verify, bookingController.viewMyBookings);
 
+router.patch('/:id', bookingController.checkin);
+
 
 module.exports = router;
