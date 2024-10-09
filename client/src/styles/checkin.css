@@ -1,0 +1,67 @@
+/* Checkin.css */
+
+  
+  .checkin-container {
+    width: 100%;
+    max-width: 500px; /* Set a max width for the form */
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .checkin-form {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .checkin-form label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+  }
+  
+  .checkin-form input[type="text"] {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .checkin-form input[type="submit"] {
+    padding: 10px 20px;
+    background-color: #336749;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .checkin-form input[type="submit"]:hover {
+    background-color: #285038;
+  }
+  
+  .checkin-info {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #eef6ee;
+    border: 1px solid #d3e2d3;
+    border-radius: 5px;
+  }
+  
+  .toggle-scan-button {
+    margin-bottom: 10px;
+    padding: 10px 20px;
+    background-color: #007bff; /* Bootstrap primary color */
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .toggle-scan-button:hover {
+    background-color: #0056b3; /* Darker shade on hover */
+  }

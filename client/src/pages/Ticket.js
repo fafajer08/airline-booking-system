@@ -1,7 +1,7 @@
 
 
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import QRCode from 'react-qr-code';
 import { FaChair, FaPlaneDeparture, FaPlaneArrival, FaUser, FaPlane, FaCalendarAlt, } from 'react-icons/fa';
 import { FaLocationArrow } from "react-icons/fa6";
@@ -16,7 +16,6 @@ const TicketDetails = () => {
   const location = useLocation();
   const {  bookedData, guestEmail } = location.state || {};
   console.log(`TicketDetails`, bookedData);
-  const navigate = useNavigate();
 
   const [showEmailModal, setShowEmailModal] = useState(false);
   const departureTime = bookedData?.commercialFlightId?.departureTime || '00:00';
@@ -116,7 +115,7 @@ const TicketDetails = () => {
             <div className="ticket-section flight-info">
                 <div className="">
                       <h3>Ticket Information</h3>
-                      <p><IoTicket className="icon" /> Ticket No: {ticketNo} </p>
+                      <p><IoTicket className="icon" /> Booking Reference: {ticketNo} </p>
                       <p><MdAirlineSeatReclineExtra className="icon"/> {mapSeatClass(bookedData.seatClass)}</p>
                       
                 </div>
@@ -133,7 +132,7 @@ const TicketDetails = () => {
                 <div className="ticket-qr">
                   <p>scan to check-in</p>
                   <QRCode
-                    value={`https://airline-booking-front.vercel.app/checkin/${ticketNo}`}
+                    value={`${process.env.REACT_APP_API_URL}/checkin/${ticketNo}/${passenger.firstName}/${passenger.lastName}`}
                     size={80}
                     bgColor="#FFFFFF" // White background
                     fgColor="#000000" // Black QR code

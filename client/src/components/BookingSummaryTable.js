@@ -9,6 +9,7 @@ function BookingSummaryTable({ bookingData }) {
         setShowFlightDetails(!showFlightDetails);
     };
 
+    console.log(`booking Data booking table`, bookingData);
     // Destructure the bookingData for easy access
     const {
         user,
@@ -32,7 +33,7 @@ function BookingSummaryTable({ bookingData }) {
 
     // Assuming passengerIds contains an array of passenger objects
     const passengerList = finalGuests || [];
-    const passengerCount = passengerList.length - 1;
+    const passengerCount = passengerList.length;
 
     // Placeholder for total cost (this could be calculated based on flight details and seat class)
     const addTime = (departureTime, durationMins) => {
