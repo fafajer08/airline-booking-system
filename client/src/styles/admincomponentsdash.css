@@ -1,4 +1,8 @@
 /* Container for the user dashboard */
+.dash-container {
+  font-size: small;
+}
+
 .admin-users-dash {
     padding: 20px;
     font-family: Arial, sans-serif;
@@ -32,7 +36,7 @@
   
   table thead th {
     background-color: #f5f5f5;
-    padding: 12px;
+    padding: 5px;
     text-align: left;
     border-bottom: 1px solid #ddd;
     cursor: pointer;
@@ -48,13 +52,13 @@
   }
   
   table tbody td {
-    padding: 12px;
+    padding: 1px;
   }
   
   /* Sort arrow */
   th .sort-arrow {
     margin-left: 8px;
-    font-size: 12px;
+    font-size: 10px;
   }
   
   /* Input fields in table headers */
@@ -63,7 +67,7 @@
     width: 90%;
     padding: 5px;
     margin-top: 5px;
-    font-size: 12px;
+    font-size: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
   }
@@ -105,7 +109,7 @@
   }
   
   .modal-body p {
-    margin-bottom: 10px;
+    margin-bottom: 0 px;
   }
   
   .modal-footer button {
@@ -121,3 +125,82 @@
     background-color: #0056b3;
   }
   
+  .action-button {
+    font-size: small;
+  }
+
+  .action-button-commercial {
+    font-size: x-small;
+  }
+
+
+  .modal-details-body p {
+    font-size: small;
+    margin-bottom: 0; 
+    padding-bottom: 0; 
+    line-height: .5; 
+  }
+
+  .modal-add-body, .flight-details-containe {
+    font-size: small;
+    margin-bottom: 0; 
+    padding-bottom: 0; 
+    line-height: .5; 
+  }
+  
+  .form-label, .form-control, .form-select  {
+    font-size: small;
+    height: auto;
+    margin-bottom: 0px;
+    padding-bottom: 0px;
+  }
+
+ /* Define your theme colors */
+:root {
+  --theme-color: #274e37;           /* Your primary theme color */
+  --theme-color-dark: #336749;      /* A darker shade for active state */
+  --text-color: #fff;               /* Text color for buttons */
+}
+
+/* Toggle Button Group */
+.toggle-button-group {
+  display: flex;
+  flex-wrap: nowrap;    /* Prevent wrapping */
+  gap: 5px;
+  justify-content: space-between; /* Distribute buttons evenly */
+}
+
+/* Toggle Button Base Styles */
+.toggle-button {
+  flex: 1;
+  margin: 5px 0;
+  text-align: center;
+  padding: 5px 0;
+  font-size: small; /* Reduce the text size */
+}
+
+/* Normal state */
+.toggle-button:not(.active) {
+  background-color: transparent;
+  border: 1px solid var(--theme-color);
+  color: var(--theme-color);
+}
+
+/* Hover effect for normal state */
+.toggle-button:not(.active):hover {
+  background-color: var(--theme-color);
+  border-color: var(--theme-color);
+  color: var(--text-color);
+}
+
+/* Selected (active) state */
+.toggle-button.active {
+  background-color: var(--theme-color-dark);
+  border-color: var(--theme-color-dark);
+  color: var(--text-color);
+}
+
+/* Focus effect */
+.toggle-button:focus {
+  box-shadow: none;
+}

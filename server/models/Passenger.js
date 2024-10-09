@@ -35,6 +35,10 @@ const passengerSchema = new mongoose.Schema({
     type: String,
     required: true,
     trim: true
+  },
+  isCheckedIn: {
+    type: Boolean,
+    default: null,
   }
 }, { timestamps: true });
 

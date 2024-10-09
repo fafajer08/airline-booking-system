@@ -95,5 +95,15 @@ function SubmitButton({ type = "submit", onClick }) {
   );
 }
 
+function PayButton({ type = "submit", onClick }) {
+  return (
+    <BaseButton className="submit-button-link" type={type} onClick={onClick}>
+      <div className="submit-button-container">
+        <span className="submit-button-text">Proceed to payment</span>
+      </div>
+    </BaseButton>
+  );
+}
+
 export default SearchFlightButton;
-export { ContinueButton, BackButton, SelectButton, SubmitButton };
+export { ContinueButton, BackButton, SelectButton, SubmitButton, PayButton };

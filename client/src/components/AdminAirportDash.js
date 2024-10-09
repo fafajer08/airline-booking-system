@@ -646,7 +646,8 @@ export default function AdminAirportDash() {
   };
 
   return (
-    <div>
+    
+    <div className="dash-container">
       <div className="d-flex justify-content-between mb-3">
         <Button 
           variant="primary" 
@@ -732,6 +733,7 @@ export default function AdminAirportDash() {
                   <td>{airport.airportCountry || 'N/A'}</td>
                   <td>
                     <Button
+                     className="action-button"
                       variant={airport.isActive ? "success" : "danger"}
                       onClick={(e) => {
                         e.stopPropagation(); // Prevent row click event
@@ -788,7 +790,7 @@ export default function AdminAirportDash() {
           <Modal.Header closeButton>
             <Modal.Title>Airport Details</Modal.Title>
           </Modal.Header>
-          <Modal.Body>
+          <Modal.Body className="modal-details-body">
             <p><strong>Airport Name:</strong> {selectedAirport.airportName || 'N/A'}</p>
             <p><strong>Code:</strong> {selectedAirport.airportCode || 'N/A'}</p>
             <p><strong>City:</strong> {selectedAirport.airportCity || 'N/A'}</p>

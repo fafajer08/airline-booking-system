@@ -3,6 +3,7 @@ const Booking = require('../models/Booking');
 const Pricing = require('../models/Pricing');
 const Flight = require('../models/Flight');
 const Airplane = require('../models/Airplane'); 
+const Payment = require('../models/Payment'); 
 const Joi = require('joi');
 
 
@@ -379,78 +380,140 @@ const commercialFlightController = {
     }
   },
   
-
-
-
-  // async filterByDepartureAndDestinationAirport(req, res) {
+  // async addBooking(req, res) {
   //   try {
-  //     console.log('Received request to view all commercial flights with filters:', req.body); // Debugging
+  //     const flightId = req.params.id; // flight ID from URL params
+  //     const bookingId = req.body.bookingId; // booking ID from request body
+  //     const noPassenger = req.body.noPassenger; // number of passengers
+  //     const seatClass = req.body.seatClass; // seat class (economy, premium, etc.)
   
-  //     const { departureCode, destinationCode, departureDate } = req.body;
+  //     // Find the commercial flight by ID
+  //     const flight = await CommercialFlight.findById(flightId);
   
-  //     // Validate required parameters
-  //     if (!departureCode || !destinationCode) {
-  //       return res.status(400).json({ message: 'Both departureCode and destinationCode are required' });
+  //     if (!flight) {
+  //       return res.status(404).json({ message: "Flight not found" });
   //     }
   
-  //     if (!departureDate) {
-  //       return res.status(400).json({ message: 'departureDate is required' });
+  //     // Check if there are enough available seats for the given class
+  //     let availableSeats;
+  //     switch (seatClass.toLowerCase()) {
+  //       case 'economy':
+  //         availableSeats = flight.availableSeats.economySeat;
+  //         if (availableSeats < noPassenger) {
+  //           return res.status(400).json({ message: "Not enough economy seats available" });
+  //         }
+  //         flight.availableSeats.economySeat -= noPassenger;
+  //         break;
+  //       case 'premium':
+  //         availableSeats = flight.availableSeats.premiumSeat;
+  //         if (availableSeats < noPassenger) {
+  //           return res.status(400).json({ message: "Not enough premium seats available" });
+  //         }
+  //         flight.availableSeats.premiumSeat -= noPassenger;
+  //         break;
+  //       case 'business':
+  //         availableSeats = flight.availableSeats.businessSeat;
+  //         if (availableSeats < noPassenger) {
+  //           return res.status(400).json({ message: "Not enough business seats available" });
+  //         }
+  //         flight.availableSeats.businessSeat -= noPassenger;
+  //         break;
+  //       case 'first':
+  //         availableSeats = flight.availableSeats.firstClass;
+  //         if (availableSeats < noPassenger) {
+  //           return res.status(400).json({ message: "Not enough first-class seats available" });
+  //         }
+  //         flight.availableSeats.firstClass -= noPassenger;
+  //         break;
+  //       default:
+  //         return res.status(400).json({ message: "Invalid seat class" });
   //     }
   
-  //     // Parse the departureDate and get the current date
-  //     const selectedDepartureDate = new Date(departureDate);
-  //     const today = new Date();
+  //     // Add the bookingId to the bookings array
+  //     flight.bookings.push(bookingId);
   
-  //     // Create date range: 30 days before and 30 days after
-  //     const startDate = new Date(selectedDepartureDate);
-  //     startDate.setDate(startDate.getDate() - 30);
-  //     if (startDate < today) {
-  //       startDate.setTime(today.getTime());
-  //     }
+  //     // Save the updated flight
+  //     await flight.save();
   
-  //     const endDate = new Date(selectedDepartureDate);
-  //     endDate.setDate(endDate.getDate() + 30);
-  
-  //     // Find commercial flights with filters applied at the database level for performance
-  //     const filteredFlights = await CommercialFlight.find({
-  //       'flight.route.departure.airportCode': departureCode,
-  //       'flight.route.destination.airportCode': destinationCode
-  //       // date: { $gte: startDate, $lte: endDate },
-  //     })
-  //       .populate({
-  //         path: 'flight',
-  //         populate: [
-  //           { path: 'airplane' },
-  //           {
-  //             path: 'route',
-  //             populate: [
-  //               { path: 'departure', model: 'Airport' },
-  //               { path: 'destination', model: 'Airport' },
-  //             ],
-  //           },
-  //         ],
-  //       })
-  //       .populate('pricing')
-  //       .populate('bookings');
-  
-  //     if (!filteredFlights || filteredFlights.length === 0) {
-  //       console.log('No commercial flights match the filter criteria'); // Debugging
-  //       return res.status(200).json({ message: 'No commercial flights match the filter criteria' });
-  //     }
-  
-  //     res.status(200).json(filteredFlights);
+  //     return res.status(200).json({ message: "Booking added successfully", flight });
   //   } catch (error) {
-  //     console.error('Error fetching commercial flights:', error); // Debugging
-  //     res.status(500).json({ message: 'Error fetching commercial flights', error });
+  //     console.error(error);
+  //     return res.status(500).json({ message: "Internal server error" });
   //   }
-  // }
+  // },
   
-   // Import necessary modules and models
-
-// Import necessary models
-
-
-// Updated Controller Function
+  async addBooking(req, res) {
+    try {
+      console.log('Received request to add booking:', req.params, req.body); // Debugging: Log request params and body
+  
+      const { id: flightId } = req.params;
+      const { bookingId, noPassenger, seatClass } = req.body;
+  
+      // Step 1: Find the commercial flight
+      console.log(`Fetching flight details for flight ID ${flightId}`); // Debugging: Log flight retrieval
+      const flight = await CommercialFlight.findById(flightId);
+      if (!flight) {
+        console.log(`Flight not found for ID ${flightId}`); // Debugging: Log if flight is not found
+        return res.status(404).json({ message: 'Flight not found' });
+      }
+      console.log('Flight found:', flight); // Debugging: Log found flight details
+  
+      // Step 2: Check if the bookingId already exists in flight.bookings
+      if (flight.bookings.includes(bookingId)) {
+        console.log(`Booking ID ${bookingId} already exists in flight ${flightId}`); // Debugging: Log booking exists
+        return res.status(200).json({ message: 'Booking already exists in this flight' });
+      }
+  
+      // Step 3: Update available seats based on seat class
+      console.log(`Updating available seats for seat class: ${seatClass} with ${noPassenger} passengers`); // Debugging: Log seat update
+      switch (seatClass) {
+        case 'economySeat':
+          if (flight.availableSeats.economySeat < noPassenger) {
+            console.log(`Not enough economy seats: Available - ${flight.availableSeats.economySeat}, Requested - ${noPassenger}`); // Debugging: Log seat error
+            return res.status(400).json({ message: 'Not enough economy seats' });
+          }
+          flight.availableSeats.economySeat -= noPassenger;
+          break;
+        case 'premiumSeat':
+          if (flight.availableSeats.premiumSeat < noPassenger) {
+            console.log(`Not enough premium seats: Available - ${flight.availableSeats.premiumSeat}, Requested - ${noPassenger}`); // Debugging: Log seat error
+            return res.status(400).json({ message: 'Not enough premium seats' });
+          }
+          flight.availableSeats.premiumSeat -= noPassenger;
+          break;
+        case 'businessSeat':
+          if (flight.availableSeats.businessSeat < noPassenger) {
+            console.log(`Not enough business seats: Available - ${flight.availableSeats.businessSeat}, Requested - ${noPassenger}`); // Debugging: Log seat error
+            return res.status(400).json({ message: 'Not enough business seats' });
+          }
+          flight.availableSeats.businessSeat -= noPassenger;
+          break;
+        case 'firstClass':
+          if (flight.availableSeats.firstClass < noPassenger) {
+            console.log(`Not enough first class seats: Available - ${flight.availableSeats.firstClass}, Requested - ${noPassenger}`); // Debugging: Log seat error
+            return res.status(400).json({ message: 'Not enough first class seats' });
+          }
+          flight.availableSeats.firstClass -= noPassenger;
+          break;
+        default:
+          console.log(`Invalid seat class provided: ${seatClass}`); // Debugging: Log invalid seat class
+          return res.status(400).json({ message: 'Invalid seat class' });
+      }
+  
+      // Step 4: Add booking to flight and save
+      console.log(`Adding booking ID ${bookingId} to flight's bookings array`); // Debugging: Log adding booking to flight
+      flight.bookings.push(bookingId);
+      await flight.save();
+      console.log('Flight updated successfully with new booking:', flight); // Debugging: Log flight update
+  
+      return res.status(200).json({ message: 'Booking and payment processed successfully', flight });
+    } catch (error) {
+      console.error('Error processing booking:', error); // Debugging: Log any errors
+      return res.status(500).json({ message: 'Internal server error' });
+    }
+  },
+  
+   
 
 async filterByDepartureAndDestinationAirport(req, res) {
   try {

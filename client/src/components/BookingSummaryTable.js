@@ -2,20 +2,22 @@ import React, { useState } from 'react';
 
 function BookingSummaryTable({ bookingData }) {
     // State to toggle flight details visibility
-    const [showFlightDetails, setShowFlightDetails] = useState(true);
+    const [showFlightDetails, setShowFlightDetails] = useState(false);
 
     // Function to handle toggle click
     const toggleFlightDetails = () => {
         setShowFlightDetails(!showFlightDetails);
     };
 
+    console.log(`booking Data booking table`, bookingData);
     // Destructure the bookingData for easy access
     const {
         user,
         selectedFlight,
         seatClass,
         promo,
-        finalGuests
+        finalGuests,
+        fare
     } = bookingData || {};
 
     console.log(bookingData);
@@ -26,22 +28,34 @@ function BookingSummaryTable({ bookingData }) {
     const arrivalAirport = selectedFlight?.flight?.route?.destination?.airportCode || 'Unknown';
     const departureDate = selectedFlight?.date || 'N/A';
     const departureTime = selectedFlight?.departureTime || 'N/A';
-    const arrivalTime = selectedFlight?.flight?.arrivalTime
-        ? new Date(selectedFlight.flight.arrivalTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-        : 'N/A';
+    const duration = selectedFlight?.flight?.route?.durationMins || 'N/A';
+
 
     // Assuming passengerIds contains an array of passenger objects
     const passengerList = finalGuests || [];
-    const passengerCount = passengerList.length - 1;
+    const passengerCount = passengerList.length;
 
     // Placeholder for total cost (this could be calculated based on flight details and seat class)
-    const totalCost = (
-        (selectedFlight.flight.route.distanceKM * selectedFlight.pricing.distanceFactor + selectedFlight.pricing.basePrice)
-        * passengerCount
-      ).toLocaleString('en-US', {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-      }) || 'PHP 0.00';
+    const addTime = (departureTime, durationMins) => {
+        const [departureHours, departureMinutes] = departureTime.split(':').map(Number);
+        const durationHours = Math.floor(durationMins / 60);
+        const durationRemainingMinutes = durationMins % 60;
+    
+        let totalHours = departureHours + durationHours;
+        let totalMinutes = departureMinutes + durationRemainingMinutes;
+    
+        if (totalMinutes >= 60) {
+          totalHours += Math.floor(totalMinutes / 60);
+          totalMinutes = totalMinutes % 60;
+        }
+    
+        totalHours = totalHours % 24;
+    
+        const formattedHours = totalHours.toString().padStart(2, '0');
+        const formattedMinutes = totalMinutes.toString().padStart(2, '0');
+    
+        return `${formattedHours}:${formattedMinutes}`;
+      };
       
 
     return (
@@ -50,7 +64,7 @@ function BookingSummaryTable({ bookingData }) {
             <div className="d-flex justify-content-between flight-summary px-5 mx-5 mb-5">
                 <div className="flight-route">
                     <div>{departureAirport} - {arrivalAirport} on flight {flightNumber}</div>
-                    <div>{departureDate} {departureTime} - {arrivalTime}</div>
+                    <div>{departureDate} {departureTime} - {addTime(departureTime, duration)}</div>
                 </div>
                 {/* Toggle button for flight details */}
                 <div className="toggle-details" onClick={toggleFlightDetails} style={{ cursor: 'pointer' }}>
@@ -74,7 +88,7 @@ function BookingSummaryTable({ bookingData }) {
                     <div className="flight-info d-flex mb-5">
                         <div className="pe-5">
                             <div>{departureDate}</div>
-                            <div>{arrivalTime}</div>
+                            <div>{addTime(departureTime, duration)}</div>
                         </div>
                         <div>
                             <div>ARRIVAL - FLIGHT NO {flightNumber}</div>
@@ -101,7 +115,7 @@ function BookingSummaryTable({ bookingData }) {
             {/* Total cost */}
             <div className="d-flex justify-content-between total-summary px-5 mx-5">
                 <h4>Total</h4>
-                <h4>PHP {totalCost}</h4>
+                <h4>PHP {fare}</h4>
             </div>
         </div>
     );

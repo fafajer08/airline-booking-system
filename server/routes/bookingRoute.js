@@ -12,12 +12,15 @@ router.post('/', bookingController.addBooking);
 router.get('/:id', bookingController.getBookingDetails);
 
 // Route to update booking status (e.g., confirm, cancel)
-router.patch('/:id/status', bookingController.updateBookingStatus);
+router.patch('/:id/updatepayment', bookingController.updateBookingPayment);
+
 
 // Route to view all bookings
 router.get('/', bookingController.viewAllBookings);
 
 router.post('/mybookings', verify, bookingController.viewMyBookings);
+
+router.patch('/:id', bookingController.checkin);
 
 
 module.exports = router;

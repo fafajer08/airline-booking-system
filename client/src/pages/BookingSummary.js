@@ -1,146 +1,146 @@
-import React, { useEffect } from 'react';  // Import useEffect
-import { useLocation, useNavigate } from 'react-router-dom';  // Import useLocation and useNavigate
-import BookingSummaryTable from '../components/BookingSummaryTable';  // Import the BookingSummaryTable component
-import { BackButton, ContinueButton } from '../components/Buttons';  // Import BackButton and ContinueButton components
-import { Notyf } from 'notyf';  // Import Notyf
-import 'notyf/notyf.min.css';   // Import Notyf styles
-
+import React, { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import BookingSummaryTable from '../components/BookingSummaryTable';
+import { BackButton, PayButton } from '../components/Buttons';
+import { Notyf } from 'notyf';
+import 'notyf/notyf.min.css';
+import { Spinner } from 'react-bootstrap';
 
 export default function BookingSummary() {
   const notyf = new Notyf();
   const location = useLocation();
   const navigate = useNavigate();
-  const { bookingData, guestEmail } = location.state || {};
-  const { user, selectedFlight, promo, finalGuests } = bookingData;
-  console.log(`user`, user);
 
-  const totalCost = (
-    (selectedFlight.flight.route.distanceKM * selectedFlight.pricing.distanceFactor + selectedFlight.pricing.basePrice)
-    * finalGuests.length - 1
-  ).toLocaleString('en-US', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-  }) || 'PHP 0.00';
-
-  useEffect(() => {
-    if (!bookingData){
-      navigate('/flights');
+  const [bookingData, setBookingData] = useState(() => {
+    const stateData = location.state?.bookingData;
+    const localData = localStorage.getItem('bookingData');
+    if (stateData) {
+      localStorage.setItem('bookingData', JSON.stringify(stateData));
+      return stateData;
     }
-  })
+    return localData ? JSON.parse(localData) : null;
+  });
 
+  const [guestEmail, setGuestEmail] = useState(() => {
+    const stateEmail = location.state?.guestEmail;
+    const localEmail = localStorage.getItem('guestEmail');
+    if (stateEmail) {
+      localStorage.setItem('guestEmail', stateEmail);
+      return stateEmail;
+    }
+    return localEmail || '';
+  });
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [isPaymentProcessing, setIsPaymentProcessing] = useState(false);
 
   useEffect(() => {
     if (!bookingData) {
-      console.warn('No booking data found, redirecting...');
-      navigate('/flights/guests'); // Redirect to a suitable page if no data
+      navigate('/flights');
     }
   }, [bookingData, navigate]);
 
-  console.log('Booking data in BookingSummary:', bookingData);
-
-
-
-    const handleCreateBooking = () => {
-    // Destructure userId and selectedFlightId from data
-    // const { userId=null, selectedFlightId, promoId } = data;
-    // const { user, selectedFlight, promo, finalGuests } = bookingData;
-
-    // Exclude the last guest from the list and format their birthday
-    const guestsToSubmit = finalGuests.slice(0, -1).map((guest) => {
-        const birthday = guest.year && guest.month && guest.day
-            ? `${guest.year}-${String(guest.month).padStart(2, '0')}-${String(guest.day).padStart(2, '0')}`
-            : '';
-
-        return {
-            ...guest,
-            birthday,
-        };
-    });
-
-    console.log('Guests to Submit: ', guestsToSubmit);
-
-    if (guestsToSubmit.length === 0) {
-        console.log('No guests to submit');
-        return;
+  useEffect(() => {
+    if (bookingData) {
+      localStorage.setItem('bookingData', JSON.stringify(bookingData));
     }
+  }, [bookingData]);
 
-    // Submit passengers first
-    fetch(`${process.env.REACT_APP_API_URL}/passengers/addmultiple`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        },
-        body: JSON.stringify({ passengers: guestsToSubmit }),
-    })
-    .then((response) => {
-        if (!response.ok) {
-            throw new Error('Failed to add guests');
-        }
-        return response.json();
-    })
-    .then((data) => {
-        notyf.success('Guests added successfully');
-        console.log('Guests added successfully:', data);
-        const passengerIds = data.passengerIds; // Use the passenger IDs from the response
+  useEffect(() => {
+    if (guestEmail) {
+      localStorage.setItem('guestEmail', guestEmail);
+    }
+  }, [guestEmail]);
 
-
-        const bookingData = {
-          userId: user.id, // Use userId from destructured data
-          passengerIds: passengerIds, // Use the fetched passenger IDs
-          commercialFlightId: selectedFlight, // Use selectedFlightId from destructured data
-          promoId: promo || null, // Use promoId from destructured data
-          seatClass: 'economy'
-       
-      };
-
-
-        console.log('Booking data to submit:', bookingData);
-
-        // Make the booking
-        return fetch(`${process.env.REACT_APP_API_URL}/bookings/`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('token')}`,
-            },
-            body: JSON.stringify(bookingData), // Pass the correct booking data object
-        });
-    })
-    .then((response) => {
-        if (!response.ok) {
-            throw new Error('Failed to add booking data');
-        }
-        return response.json();
-    })
-    .then((data) => {
-        notyf.success('Booking created successfully');
-        console.log('Successfully logged booking:', data);
-        console.log('guestEmail-booking summary:', guestEmail);
-        // Navigate to bookings page
-        navigate('/payment', { state: { bookedData: data, totalCost:totalCost, guestEmail:guestEmail } });
-    })
-    .catch((error) => {
-        notyf.error(`Error booking: ${error.message}`);
-        console.error('Error booking:', error);
+  const createPassengers = async (guests) => {
+    const response = await fetch(`${process.env.REACT_APP_API_URL}/passengers/addmultiple`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+      },
+      body: JSON.stringify({ passengers: guests }),
     });
-};
+    return response.json();
+  };
 
+  const createBooking = async (passengerIds) => {
+    const bookingPayload = {
+      userId: bookingData?.user?.id || null,
+      passengerIds,
+      commercialFlightId: bookingData?.selectedFlight?._id,
+      promoId: bookingData?.promo || null,
+      fare: bookingData?.fare,
+      seatClass: bookingData?.seatClass,
+    };
 
+    const response = await fetch(`${process.env.REACT_APP_API_URL}/bookings/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+      },
+      body: JSON.stringify(bookingPayload),
+    });
+    return response.json();
+  };
+
+  const handleCreateBooking = async () => {
+    try {
+      const guestsToSubmit = bookingData?.finalGuests.map((guest) => {
+        const birthday = guest.year && guest.month && guest.day
+          ? `${guest.year}-${String(guest.month).padStart(2, '0')}-${String(guest.day).padStart(2, '0')}`
+          : '';
+        return { ...guest, birthday };
+      });
+
+      if (!guestsToSubmit?.length) return;
+
+      setIsPaymentProcessing(true);
+      console.log(`guestTosubmit`, guestsToSubmit);
+      const passengerData = await createPassengers(guestsToSubmit);
+      console.log(`passengerData`, passengerData);
+      
+      const bookedData = await createBooking(passengerData.passengerIds);
+      console.log(`bookingData`, bookedData);
+      // setBookingData(bookedData)
+      
+
+      localStorage.removeItem('guestEmail');
+      navigate('/payment', { state: { bookedData, guestEmail } });
+    } catch (error) {
+      notyf.error(`Error booking: ${error.message}`);
+    } finally {
+      setIsPaymentProcessing(false);
+    }
+  };
+
+  if (!bookingData) return null; // Or display a loading spinner or message
 
   return (
     <div>
       <div className="container">
+        {isLoading && (
+          <div className="d-flex justify-content-center my-4">
+            <Spinner animation="border" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </Spinner>
+          </div>
+        )}
         <h5>Please review your booking before proceeding to payment</h5>
         <h2>Booking Summary</h2>
-        {bookingData && <BookingSummaryTable bookingData={bookingData} />}
+        <BookingSummaryTable bookingData={bookingData} />
         <div>
-          <p>By clicking the ‘Continue’ button below, I confirm that I have read, understood, and accept all the conditions set by the airline.</p>
+          <p>
+            By clicking the ‘Continue’ button below, I confirm that I have read, understood, and accept all the conditions set by the airline.
+          </p>
         </div>
-        <div className='d-flex'>
-          <div className='ms-auto'>
+        <div className="d-flex">
+          <div className="ms-auto">
             <BackButton link="/flights/guests" />
-            <ContinueButton onClick={handleCreateBooking} /> {/* Now both onClick and link are passed */}
+            {!isLoading && (
+              <PayButton onClick={handleCreateBooking} disabled={isPaymentProcessing} />
+            )}
           </div>
         </div>
       </div>

@@ -245,7 +245,7 @@ export default function AdminUserDash() {
   };
 
   return (
-    <div>
+    <div className="dash-container">
       <div className="d-flex justify-content-between mb-3">
         <Button 
           variant="primary" 
@@ -362,7 +362,7 @@ export default function AdminUserDash() {
           <Modal.Header closeButton>
             <Modal.Title>User Details</Modal.Title>
           </Modal.Header>
-          <Modal.Body>
+          <Modal.Body className="modal-details-body">
             <p><strong>First Name:</strong> {selectedUser.firstName || 'N/A'}</p>
             <p><strong>Last Name:</strong> {selectedUser.lastName || 'N/A'}</p>
             <p><strong>Email:</strong> {selectedUser.email || 'N/A'}</p>

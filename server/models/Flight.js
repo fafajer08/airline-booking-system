@@ -15,12 +15,12 @@ const flightSchema = new mongoose.Schema({
     ref: 'Route', 
     required: true 
   },
-  day: {
+  days: [{
     type: Number,
     required: true,
     min: 1,
     max: 7
-  },
+  }],
   time: {
     type: String,
     required: true,
